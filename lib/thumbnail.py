@@ -93,6 +93,18 @@ def add_channel_branding(image_path: str, channel_config: dict, output_path: str
     return output_path
 
 
+def _draw_channel_name_display(img: Image.Image, channel_config: dict) -> Image.Image:
+    name = channel_config.get("thumbnail", {}).get("channel_name_display", "")
+    if not name:
+        return img
+    accent = _hex_to_rgb(channel_config.get("color_scheme", {}).get("accent", "#FFFFFF"))
+    color = accent + (int(255 * 0.7),)
+    draw = ImageDraw.Draw(img)
+    font = _get_font(18)
+    draw.text((20, img.height - 36), name, font=font, fill=color)
+    return img
+
+
 def _apply_dark_impact(img: Image.Image, title: str, channel_config: dict) -> Image.Image:
     w, h = img.size
     left = Image.new("RGBA", (w // 2, h), (10, 10, 15, 230))
@@ -189,6 +201,7 @@ def generate_thumbnail(
     else:
         result = _apply_dark_impact(img, title, channel_config)
 
+    result = _draw_channel_name_display(result, channel_config)
     result.convert("RGB").save(out, "PNG")
     add_channel_branding(str(out), channel_config, str(out))
     return str(out)

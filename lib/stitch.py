@@ -46,60 +46,58 @@ def create_scene_video(
     broll_at_second: int = 5,
     transition: str = "crossfade",
     use_broll: bool = True,
+    fps: int = 30,
+    max_segment_seconds: float = 7.0,
 ) -> str:
-    main_path = image_path
-    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    duration = get_audio_duration(audio_path)
-    duration = max(duration, 1.0)
-    _log(f"Creating scene video ({duration:.1f}s) -> {Path(output_path).name}")
+    """
+    Build one scene: multiple Ken Burns segments (hard cuts), then mux narration audio.
+    Avoids b-roll overlay glitches and keeps visuals changing every few seconds.
+    """
+    from lib.motion import build_scene_timeline, render_scene_visual, split_visual_duration
 
-    scale_vf = "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2"
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    duration = max(get_audio_duration(audio_path), 1.0)
+    timeline = build_scene_timeline(
+        duration,
+        image_path,
+        broll_path,
+        use_broll=use_broll,
+        broll_at_second=broll_at_second,
+        max_segment=max_segment_seconds,
+    )
+    beat_count = len(timeline)
+    _log(
+        f"Creating scene video ({duration:.1f}s, {beat_count} beats, "
+        f"broll={'yes' if use_broll else 'no'}) -> {Path(output_path).name}"
+    )
+
+    # Normalize segment lengths to match audio exactly
+    total_planned = sum(seg for _, seg in timeline)
+    if total_planned > 0 and abs(total_planned - duration) > 0.05:
+        ratio = duration / total_planned
+        timeline = [(img, round(seg * ratio, 3)) for img, seg in timeline]
+        drift = round(duration - sum(seg for _, seg in timeline), 3)
+        if timeline and abs(drift) > 0.01:
+            img, last = timeline[-1]
+            timeline[-1] = (img, round(last + drift, 3))
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        main_video = tmp / "main.mp4"
+        visual_path = tmp / "visual.mp4"
+        render_scene_visual(timeline, str(visual_path), fps=fps, segment_transition="cut")
 
-        if _is_video(main_path):
-            _run_ffmpeg([
-                "ffmpeg", "-y", "-stream_loop", "-1", "-i", main_path,
-                "-i", audio_path,
-                "-c:v", "libx264", "-c:a", "aac", "-b:a", "192k",
-                "-pix_fmt", "yuv420p", "-t", str(duration),
-                "-vf", scale_vf,
-                "-shortest", str(main_video),
-            ])
-        else:
-            _run_ffmpeg([
-                "ffmpeg", "-y", "-loop", "1", "-i", main_path,
-                "-i", audio_path,
-                "-c:v", "libx264", "-tune", "stillimage",
-                "-c:a", "aac", "-b:a", "192k",
-                "-pix_fmt", "yuv420p", "-t", str(duration),
-                "-vf", scale_vf,
-                "-shortest", str(main_video),
-            ])
-
-        if use_broll and Path(broll_path).exists() and broll_at_second < duration:
-            broll_dur = min(3.0, duration - broll_at_second)
-            broll_video = tmp / "broll.mp4"
-            _run_ffmpeg([
-                "ffmpeg", "-y", "-loop", "1", "-i", broll_path,
-                "-c:v", "libx264", "-t", str(broll_dur),
-                "-vf", "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2",
-                "-pix_fmt", "yuv420p", "-an", str(broll_video),
-            ])
-            merged = tmp / "merged.mp4"
-            _run_ffmpeg([
-                "ffmpeg", "-y",
-                "-i", str(main_video), "-i", str(broll_video),
-                "-filter_complex",
-                f"[0:v][1:v]overlay=enable='between(t,{broll_at_second},{broll_at_second + broll_dur})'[v]",
-                "-map", "[v]", "-map", "0:a",
-                "-c:v", "libx264", "-c:a", "aac", str(merged),
-            ])
-            main_video = merged
-
-        _run_ffmpeg(["ffmpeg", "-y", "-i", str(main_video), "-c", "copy", output_path])
+        _run_ffmpeg([
+            "ffmpeg", "-y",
+            "-i", str(visual_path),
+            "-i", audio_path,
+            "-map", "0:v:0", "-map", "1:a:0",
+            "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+            "-pix_fmt", "yuv420p", "-r", str(fps),
+            "-c:a", "aac", "-b:a", "192k",
+            "-t", str(duration),
+            "-shortest",
+            output_path,
+        ])
 
     return output_path
 

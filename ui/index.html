@@ -48,6 +48,8 @@
       background: var(--bg); border: 1px solid var(--border);
       color: var(--text); padding: 0.45rem 0.75rem; border-radius: 8px; font-size: 0.85rem;
     }
+    .channel-select-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 0.15rem; }
+    .channel-handle { font-size: 0.7rem; color: var(--muted); }
     .shell { display: flex; flex: 1; min-height: 0; }
 
     /* —— Sidebar —— */
@@ -251,7 +253,10 @@
           <span>Faceless YouTube pipeline</span>
         </div>
       </div>
-      <select id="channel" title="Channel"></select>
+      <div class="channel-select-wrap">
+        <select id="channel" title="Channel"></select>
+        <span class="channel-handle" id="channelHandle"></span>
+      </div>
     </header>
 
     <div class="shell">
@@ -405,6 +410,8 @@
     };
     const CHANNEL_DEFAULT_STYLE = { finance: 'cartoon', business: 'realistic' };
 
+    const CHANNEL_HANDLES = { business: '@CorporateArc', finance: '@WiredBroke' };
+
     // —— Init ——
     async function init() {
       const channels = await fetch(`${API}/channels/list`).then(r => r.json());
@@ -413,9 +420,15 @@
         const opt = document.createElement('option');
         opt.value = c.niche_id;
         opt.textContent = c.name;
+        opt.dataset.handle = CHANNEL_HANDLES[c.niche_id] || '';
         sel.appendChild(opt);
       });
-      sel.addEventListener('change', () => { applyChannelStyleDefault(); updateTopicPlaceholder(); loadJobs(); });
+      function updateChannelHandle() {
+        const opt = sel.options[sel.selectedIndex];
+        document.getElementById('channelHandle').textContent = opt?.dataset.handle || '';
+      }
+      sel.addEventListener('change', () => { updateChannelHandle(); applyChannelStyleDefault(); updateTopicPlaceholder(); loadJobs(); });
+      updateChannelHandle();
 
       const voices = await fetch(`${API}/audio/voices`).then(r => r.json());
       const vsel = document.getElementById('voice');

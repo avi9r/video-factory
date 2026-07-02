@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 
 from lib.audio import generate_all_voiceovers, get_audio_duration
-from lib.motion import apply_motion_batch
 from lib.config import OUTPUT_BASE
 from lib.cost_tracker import get_cost_estimate, record_image_cost, record_script_cost
 from lib.image import HERO_IMAGE_NAME, generate_scene_images_batch, _hero_visual_prompt
@@ -657,6 +656,16 @@ async def continue_after_approval(
     save_json(job_dir / "script_approved.json", approved_script)
     update_job(job_id, "script", "approved", niche_id=niche_id)
 
+    desc_path = job_dir / "description.txt"
+    if not desc_path.exists():
+        save_text(desc_path, approved_script.get("description", ""))
+    disclaimer = channel.get("script", {}).get("disclaimer", "")
+    if disclaimer.strip():
+        existing = desc_path.read_text(encoding="utf-8") if desc_path.exists() else ""
+        if disclaimer.strip() not in existing:
+            with open(desc_path, "a", encoding="utf-8") as f:
+                f.write(f"\n\n{disclaimer.strip()}")
+
     if speed is None:
         status = get_job_status(job_id)
         speed = status.get("steps", {}).get("script", {}).get("data", {}).get("speed", 0.85)
@@ -858,24 +867,7 @@ def assemble_video(
     transition_type = channel_config.get("video", {}).get("transition_type", "crossfade")
     fps = channel_config.get("video", {}).get("fps", 30)
     broll_freq = channel_config.get("video", {}).get("broll_frequency", 3)
-
-    main_images, durations, scene_order = [], [], []
-    for i, scene in enumerate(all_scenes):
-        scene_id = scene.get("scene_id", f"scene_{i}")
-        main = image_paths.get(scene_id, {}).get("main", "")
-        audio = audio_paths.get(scene_id, "")
-        if main and audio:
-            main_images.append(main)
-            durations.append(max(get_audio_duration(audio), 1.0))
-            scene_order.append(scene_id)
-
-    motion_map: dict[str, str] = {}
-    if main_images:
-        _log(f"Applying Ken Burns motion to {len(main_images)} scenes")
-        motion_clips = apply_motion_batch(
-            main_images, str(job_dir / "motion"), durations, fps=fps
-        )
-        motion_map = dict(zip(scene_order, motion_clips))
+    max_segment = channel_config.get("video", {}).get("max_visual_segment_seconds", 7.0)
 
     use_broll = layout_uses_broll(image_layout)
     scene_video_map: dict[str, str] = {}
@@ -888,13 +880,14 @@ def assemble_video(
         if not main or not audio:
             _log(f"Skipping scene {scene_id} - missing assets")
             continue
-        main_visual = motion_map.get(scene_id, main)
         out = scenes_dir / f"{scene_id}.mp4"
         create_scene_video(
-            main_visual, broll, audio, str(out),
+            main, broll, audio, str(out),
             broll_at_second=broll_freq,
             transition=transition_type,
             use_broll=use_broll,
+            fps=fps,
+            max_segment_seconds=max_segment,
         )
         scene_video_map[scene_id] = str(out)
 
