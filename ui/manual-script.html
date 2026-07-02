@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual Script — YouTube Factory</title>
+  <style>
+    :root { --bg:#0A0A0F; --surface:#14141F; --primary:#10B981; --text:#fff; --muted:#888; --error:#EF4444; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); padding:2rem; max-width:960px; margin:0 auto; }
+    h1 { margin-bottom:0.25rem; }
+    .subtitle { color:var(--muted); margin-bottom:1.5rem; }
+    .card { background:var(--surface); border:1px solid #222; border-radius:12px; padding:1.25rem; margin-bottom:1rem; }
+    .guide { font-size:0.85rem; color:var(--muted); line-height:1.6; }
+    .guide ol { margin:0.5rem 0 0 1.25rem; }
+    .tabs { display:flex; gap:0.5rem; margin-bottom:1rem; }
+    .tab { background:#222; border:1px solid #333; color:var(--text); padding:0.5rem 1rem; border-radius:8px; cursor:pointer; }
+    .tab.active { border-color:var(--primary); color:var(--primary); }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    label { display:block; font-size:0.8rem; color:var(--muted); margin:0.75rem 0 0.25rem; }
+    input, textarea, select { width:100%; padding:0.6rem; background:var(--bg); border:1px solid #333; border-radius:8px; color:var(--text); font-size:0.95rem; }
+    textarea { min-height:320px; font-family:ui-monospace,monospace; font-size:0.85rem; }
+    button { background:var(--primary); color:#fff; border:none; padding:0.75rem 1.25rem; border-radius:8px; font-weight:600; cursor:pointer; margin-right:0.5rem; margin-top:1rem; }
+    button.secondary { background:#333; }
+    .error { color:var(--error); margin-top:0.5rem; font-size:0.875rem; }
+    .ok { color:var(--primary); margin-top:0.5rem; font-size:0.875rem; }
+    .act-block { border-top:1px solid #333; margin-top:1rem; padding-top:1rem; }
+    .act-block h3 { font-size:0.95rem; margin-bottom:0.5rem; color:var(--primary); }
+    .scene-mini { background:var(--bg); border:1px solid #333; border-radius:8px; padding:0.75rem; margin-top:0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Manual Script Editor</h1>
+  <p class="subtitle">Paste JSON from Cursor/ChatGPT or fill the structured form below.</p>
+
+  <div class="card">
+    <details open>
+      <summary style="cursor:pointer;font-weight:600">Required script format</summary>
+      <div class="guide" style="margin-top:0.75rem">
+        <ol>
+          <li><strong>Outline</strong> — title, title_variations, description, tags</li>
+          <li><strong>Hook</strong> — text, visual_prompt, broll_prompt, duration_seconds</li>
+          <li><strong>Act 1</strong> — act_title + scenes (scene_id, narration, visual_prompt, broll_prompt)</li>
+          <li><strong>Act 2</strong> — same structure</li>
+          <li><strong>Act 3</strong> — same structure</li>
+          <li><strong>Outro</strong> — text, visual_prompt, duration_seconds</li>
+        </ol>
+        <p style="margin-top:0.5rem">scene_id naming: <code>hook</code>, <code>act1_scene1</code>, <code>act2_scene1</code>, …, <code>outro</code></p>
+      </div>
+    </details>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('form')">Structured Form</button>
+    <button class="tab" onclick="showTab('json')">Paste JSON</button>
+  </div>
+
+  <div id="formPanel" class="panel active card">
+    <label>Title</label>
+    <input id="f_title" type="text">
+    <label>Description</label>
+    <textarea id="f_description" rows="3"></textarea>
+    <label>Tags (comma-separated)</label>
+    <input id="f_tags" type="text" placeholder="finance, psychology, money">
+    <label>Hook text</label>
+    <textarea id="f_hook" rows="3"></textarea>
+    <label>Hook visual prompt</label>
+    <input id="f_hook_vis" type="text">
+    <div class="act-block"><h3>Act 1</h3>
+      <input id="f_act1_title" placeholder="Act title" type="text">
+      <div id="act1_scenes"></div>
+      <button class="secondary" type="button" onclick="addScene(1)">+ Add scene</button>
+    </div>
+    <div class="act-block"><h3>Act 2</h3>
+      <input id="f_act2_title" placeholder="Act title" type="text">
+      <div id="act2_scenes"></div>
+      <button class="secondary" type="button" onclick="addScene(2)">+ Add scene</button>
+    </div>
+    <div class="act-block"><h3>Act 3</h3>
+      <input id="f_act3_title" placeholder="Act title" type="text">
+      <div id="act3_scenes"></div>
+      <button class="secondary" type="button" onclick="addScene(3)">+ Add scene</button>
+    </div>
+    <label>Outro text</label>
+    <textarea id="f_outro" rows="2"></textarea>
+    <label>Outro visual prompt</label>
+    <input id="f_outro_vis" type="text">
+  </div>
+
+  <div id="jsonPanel" class="panel card">
+    <button class="secondary" type="button" onclick="loadTemplate()">Load Template</button>
+    <label>JSON script</label>
+    <textarea id="jsonInput" placeholder="Paste full script JSON here..."></textarea>
+  </div>
+
+  <button onclick="validateScript()">Validate</button>
+  <button onclick="saveAndReview()">Save &amp; Review</button>
+  <a href="/ui/index.html"><button class="secondary" type="button">Back</button></a>
+  <p class="error" id="errMsg"></p>
+  <p class="ok" id="okMsg"></p>
+
+  <script>
+    const API = '';
+    let jobId, nicheId;
+    const sceneCounts = {1:0, 2:0, 3:0};
+
+    function showTab(name) {
+      document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (name==='form'?0:1)===i));
+      document.getElementById('formPanel').classList.toggle('active', name==='form');
+      document.getElementById('jsonPanel').classList.toggle('active', name==='json');
+    }
+
+    function addScene(actNum, data={}) {
+      sceneCounts[actNum]++;
+      const n = sceneCounts[actNum];
+      const sid = data.scene_id || `act${actNum}_scene${n}`;
+      const div = document.createElement('div');
+      div.className = 'scene-mini';
+      div.dataset.act = actNum;
+      div.innerHTML = `
+        <label>Scene ${n} (${sid})</label>
+        <textarea class="sc-narr" rows="2" placeholder="narration">${data.narration||''}</textarea>
+        <input class="sc-vis" type="text" placeholder="visual prompt" value="${data.visual_prompt||''}">
+        <input class="sc-broll" type="text" placeholder="broll prompt" value="${data.broll_prompt||''}">
+        <input type="hidden" class="sc-id" value="${sid}">
+      `;
+      document.getElementById(`act${actNum}_scenes`).appendChild(div);
+    }
+
+    function buildFromForm() {
+      const acts = [1,2,3].map(n => ({
+        act_number: n,
+        act_title: document.getElementById(`f_act${n}_title`).value || `Act ${n}`,
+        scenes: [...document.querySelectorAll(`#act${n}_scenes .scene-mini`)].map(el => ({
+          scene_id: el.querySelector('.sc-id').value,
+          narration: el.querySelector('.sc-narr').value,
+          visual_prompt: el.querySelector('.sc-vis').value,
+          broll_prompt: el.querySelector('.sc-broll').value,
+          duration_seconds: 30,
+          emotion: 'neutral',
+        })),
+      }));
+      return {
+        title: document.getElementById('f_title').value,
+        title_variations: [document.getElementById('f_title').value],
+        description: document.getElementById('f_description').value,
+        tags: document.getElementById('f_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+        hook: {
+          scene_id: 'hook', text: document.getElementById('f_hook').value,
+          visual_prompt: document.getElementById('f_hook_vis').value,
+          broll_prompt: document.getElementById('f_hook_vis').value,
+          duration_seconds: 45,
+        },
+        acts,
+        outro: {
+          scene_id: 'outro', text: document.getElementById('f_outro').value,
+          visual_prompt: document.getElementById('f_outro_vis').value,
+          duration_seconds: 30,
+        },
+      };
+    }
+
+    function getScriptPayload() {
+      if (document.getElementById('jsonPanel').classList.contains('active')) {
+        return JSON.parse(document.getElementById('jsonInput').value);
+      }
+      return buildFromForm();
+    }
+
+    async function loadTemplate() {
+      const data = await fetch(`${API}/generate/script-template`).then(r=>r.json());
+      document.getElementById('jsonInput').value = JSON.stringify(data.template, null, 2);
+    }
+
+    async function validateScript() {
+      document.getElementById('errMsg').textContent = '';
+      document.getElementById('okMsg').textContent = '';
+      try {
+        const script = getScriptPayload();
+        const res = await fetch(`${API}/generate/script/validate`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({script}),
+        });
+        const data = await res.json();
+        if (!data.valid) {
+          document.getElementById('errMsg').textContent = data.errors.join('; ');
+          return;
+        }
+        document.getElementById('okMsg').textContent = 'Script is valid.';
+        if (document.getElementById('jsonPanel').classList.contains('active')) {
+          document.getElementById('jsonInput').value = JSON.stringify(data.script, null, 2);
+        }
+      } catch(e) {
+        document.getElementById('errMsg').textContent = e.message;
+      }
+    }
+
+    async function saveAndReview() {
+      document.getElementById('errMsg').textContent = '';
+      try {
+        const script = getScriptPayload();
+        const res = await fetch(`${API}/generate/manual-script`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({job_id: jobId, niche_id: nicheId, script}),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Save failed');
+        location.href = data.review_url || `/ui/review.html?job_id=${jobId}`;
+      } catch(e) {
+        document.getElementById('errMsg').textContent = e.message;
+      }
+    }
+
+    async function init() {
+      const p = new URLSearchParams(location.search);
+      jobId = p.get('job_id');
+      nicheId = p.get('niche_id');
+      if (!jobId || !nicheId) {
+        document.getElementById('errMsg').textContent = 'Missing job_id or niche_id — create a job from the home page first.';
+        return;
+      }
+      [1,2,3].forEach(n => addScene(n));
+      await loadTemplate();
+    }
+    init();
+  </script>
+</body>
+</html>

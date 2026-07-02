@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Recorder — YouTube Factory</title>
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --surface: #14141F;
+      --primary: #8B5CF6;
+      --text: #FFFFFF;
+      --muted: #888;
+      --record: #EF4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { margin-bottom: 0.25rem; }
+    .progress { color: var(--primary); margin-bottom: 1.5rem; }
+    .preview-section { margin-bottom: 1.5rem; }
+    #scenePreview { width: 100%; border-radius: 8px; background: #000; display: none; }
+    #scenePreviewImg { width: 100%; border-radius: 8px; display: none; }
+    #previewPlaceholder { color: var(--muted); padding: 2rem; text-align: center; background: var(--surface); border-radius: 8px; border: 1px solid #222; }
+    .hybrid-section { margin-bottom: 1.5rem; padding: 1rem; background: var(--surface); border-radius: 8px; border: 1px solid #222; display: none; }
+    .hybrid-section.visible { display: block; }
+    .hybrid-section label { color: var(--muted); font-size: 0.875rem; }
+    #aiAudio { width: 100%; margin: 0.5rem 0 1rem; }
+    .script-display {
+      background: var(--surface);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-size: 1.25rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      min-height: 150px;
+    }
+    .pause { color: #FBBF24; }
+    .slow { color: #60A5FA; }
+    .emphasis { color: #F87171; }
+    .breath { color: #9CA3AF; }
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    #recordControls { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button.record { background: var(--record); }
+    button:disabled { opacity: 0.5; }
+    button.secondary { background: #333; }
+    select {
+      padding: 0.75rem;
+      background: var(--surface);
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .status { color: var(--muted); margin-top: 0.5rem; }
+    .complete-bar { margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>Voice Recorder</h1>
+  <p class="progress" id="progress">Loading...</p>
+
+  <div class="preview-section">
+    <video id="scenePreview" controls muted></video>
+    <img id="scenePreviewImg" alt="Scene preview">
+    <p id="previewPlaceholder">Scene preview available after generation</p>
+    <button onclick="playScene()" id="playSceneBtn" class="secondary" style="margin-top:0.75rem">▶ Play Scene</button>
+  </div>
+
+  <div class="hybrid-section" id="hybridSection">
+    <label>AI Voice (reference)</label>
+    <audio id="aiAudio" controls></audio>
+    <div class="controls" style="margin-bottom:0">
+      <button onclick="playAiVoice()" class="secondary" id="playAiBtn">▶ Play AI Voice</button>
+      <button onclick="keepAi()" id="keepAiBtn">✓ Keep AI</button>
+      <button onclick="recordMyVoice()" class="record" id="recordMyBtn">🔴 Record My Voice</button>
+    </div>
+  </div>
+
+  <label>Microphone</label><br>
+  <select id="micSelect"></select>
+
+  <div class="script-display" id="scriptDisplay"></div>
+
+  <div class="controls" id="recordControls">
+    <button onclick="startRecord()" class="record" id="recordBtn">🔴 Record</button>
+    <button onclick="stopRecord()" id="stopBtn" disabled>⏹ Stop</button>
+    <button onclick="playBack()" id="playBtn" disabled>▶ Play Back</button>
+    <button onclick="saveAndNext()" id="saveBtn" disabled>✓ Save & Next</button>
+    <button onclick="reRecord()" class="secondary">↺ Re-record</button>
+  </div>
+  <p class="status" id="statusMsg"></p>
+
+  <div class="complete-bar">
+    <button onclick="completeRecording()" id="completeBtn" style="display:none">
+      Complete Recording
+    </button>
+  </div>
+
+  <audio id="playback" style="display:none"></audio>
+
+  <script>
+    const API = '';
+    let jobId, nicheId, mode, scenes = [], currentIndex = 0;
+    let recordedPaths = {}, currentPath = null;
+    let aiAudioPaths = {};
+
+    function sceneVideoUrl(sceneId) {
+      return `/output/${nicheId}/${jobId}/scenes/${sceneId}.mp4`;
+    }
+
+    function sceneImageUrl(sceneId) {
+      return `/output/${nicheId}/${jobId}/images/${sceneId}_main.png`;
+    }
+
+    function sceneAiAudioUrl(sceneId) {
+      return `/output/${nicheId}/${jobId}/audio/${sceneId}_voice.wav`;
+    }
+
+    function highlightMarkers(text) {
+      return (text || '')
+        .replace(/\[pause\]/gi, '<span class="pause">[pause]</span>')
+        .replace(/\[slow\]/gi, '<span class="slow">[slow]</span>')
+        .replace(/\[fast\]/gi, '<span class="slow">[fast]</span>')
+        .replace(/\[emphasis\]/gi, '<span class="emphasis">[emphasis]</span>')
+        .replace(/\[breath\]/gi, '<span class="breath">[breath]</span>');
+    }
+
+    async function init() {
+      const params = new URLSearchParams(location.search);
+      jobId = params.get('job_id');
+      mode = params.get('mode') || 'human';
+      if (!jobId) return;
+
+      const status = await fetch(`${API}/status/${jobId}`).then(r => r.json());
+      nicheId = status.niche_id;
+      const audioData = status.steps?.audio?.data || {};
+      scenes = audioData.scenes || [];
+      aiAudioPaths = audioData.ai_audio_paths || {};
+
+      if (!scenes.length) {
+        const script = await fetch(`${API}/generate/script-review/${jobId}`).then(r => r.json());
+        const s = script.script;
+        scenes = [{ scene_id: 'hook', narration: s.hook?.text }];
+        s.acts?.forEach(a => a.scenes?.forEach(sc => scenes.push(sc)));
+        scenes.push({ scene_id: 'outro', narration: s.outro?.text });
+      }
+
+      const devices = await fetch(`${API}/audio/devices`).then(r => r.json());
+      const sel = document.getElementById('micSelect');
+      devices.devices.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.name;
+        sel.appendChild(opt);
+      });
+
+      if (mode === 'hybrid') {
+        document.getElementById('hybridSection').classList.add('visible');
+        document.getElementById('recordControls').style.display = 'none';
+      }
+
+      showScene();
+    }
+
+    function loadScenePreview(sceneId) {
+      const video = document.getElementById('scenePreview');
+      const img = document.getElementById('scenePreviewImg');
+      const placeholder = document.getElementById('previewPlaceholder');
+
+      video.style.display = 'none';
+      img.style.display = 'none';
+      placeholder.style.display = 'block';
+      placeholder.textContent = 'Loading preview...';
+
+      video.onloadeddata = () => {
+        video.style.display = 'block';
+        img.style.display = 'none';
+        placeholder.style.display = 'none';
+      };
+      video.onerror = () => {
+        video.style.display = 'none';
+        img.onload = () => {
+          img.style.display = 'block';
+          placeholder.style.display = 'none';
+        };
+        img.onerror = () => {
+          img.style.display = 'none';
+          placeholder.style.display = 'block';
+          placeholder.textContent = 'Scene preview available after images are generated';
+        };
+        img.src = sceneImageUrl(sceneId);
+      };
+
+      video.src = sceneVideoUrl(sceneId);
+      video.load();
+    }
+
+    function showScene() {
+      const scene = scenes[currentIndex];
+      const text = scene.narration || scene.text || '';
+      document.getElementById('scriptDisplay').innerHTML = highlightMarkers(text);
+      document.getElementById('progress').textContent =
+        `Scene ${currentIndex + 1} of ${scenes.length} — ${scene.scene_id}`;
+
+      loadScenePreview(scene.scene_id);
+
+      if (mode === 'hybrid') {
+        const aiUrl = aiAudioPaths[scene.scene_id] || sceneAiAudioUrl(scene.scene_id);
+        document.getElementById('aiAudio').src = aiUrl.startsWith('/output')
+          ? aiUrl
+          : sceneAiAudioUrl(scene.scene_id);
+        document.getElementById('recordControls').style.display = 'none';
+      }
+
+      document.getElementById('completeBtn').style.display =
+        currentIndex >= scenes.length - 1 && recordedPaths[scene.scene_id] ? 'block' : 'none';
+      resetControls();
+    }
+
+    function resetControls() {
+      document.getElementById('recordBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      document.getElementById('playBtn').disabled = !currentPath;
+      document.getElementById('saveBtn').disabled = !currentPath;
+      document.getElementById('playSceneBtn').textContent = '▶ Play Scene';
+    }
+
+    function playScene() {
+      const video = document.getElementById('scenePreview');
+      const img = document.getElementById('scenePreviewImg');
+      const btn = document.getElementById('playSceneBtn');
+      if (video.style.display !== 'none') {
+        video.currentTime = 0;
+        video.play();
+        btn.textContent = 'Playing...';
+        video.onended = () => { btn.textContent = '▶ Play Scene'; };
+      } else if (img.style.display !== 'none') {
+        btn.textContent = 'Showing image preview';
+        setTimeout(() => { btn.textContent = '▶ Play Scene'; }, 1500);
+      }
+    }
+
+    function playAiVoice() {
+      document.getElementById('aiAudio').play();
+    }
+
+    function outputUrlFromPath(path) {
+      if (!path) return '';
+      const idx = path.indexOf('/output/');
+      if (idx >= 0) return path.substring(idx);
+      const rel = path.split('/output/').pop();
+      if (rel && path.includes('youtube-factory/output')) {
+        return `/output/${rel}`;
+      }
+      return path;
+    }
+
+    function keepAi() {
+      const scene = scenes[currentIndex];
+      const path = aiAudioPaths[scene.scene_id];
+      if (!path) {
+        document.getElementById('statusMsg').textContent = 'AI audio not found for this scene';
+        return;
+      }
+      recordedPaths[scene.scene_id] = path;
+      currentPath = null;
+      advanceOrComplete();
+    }
+
+    function advanceOrComplete() {
+      if (currentIndex < scenes.length - 1) {
+        currentIndex++;
+        showScene();
+      } else {
+        document.getElementById('completeBtn').style.display = 'block';
+        document.getElementById('statusMsg').textContent = 'All scenes complete!';
+      }
+    }
+
+    function recordMyVoice() {
+      document.getElementById('recordControls').style.display = 'flex';
+    }
+
+    async function startRecord() {
+      const scene = scenes[currentIndex];
+      const deviceId = parseInt(document.getElementById('micSelect').value) || null;
+      document.getElementById('statusMsg').textContent = 'Recording...';
+      document.getElementById('recordBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+      await fetch(`${API}/audio/record/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_id: jobId, scene_id: scene.scene_id, device_id: deviceId }),
+      });
+    }
+
+    async function stopRecord() {
+      const scene = scenes[currentIndex];
+      const res = await fetch(`${API}/audio/record/stop`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_id: jobId, scene_id: scene.scene_id }),
+      });
+      const data = await res.json();
+      currentPath = data.path;
+      document.getElementById('statusMsg').textContent = `Recorded ${data.duration?.toFixed(1)}s`;
+      document.getElementById('recordBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      document.getElementById('playBtn').disabled = false;
+      document.getElementById('saveBtn').disabled = false;
+    }
+
+    function playBack() {
+      if (!currentPath) return;
+      const audio = document.getElementById('playback');
+      audio.src = outputUrlFromPath(currentPath) || currentPath;
+      audio.play();
+    }
+
+    function saveAndNext() {
+      const scene = scenes[currentIndex];
+      recordedPaths[scene.scene_id] = currentPath;
+      currentPath = null;
+      advanceOrComplete();
+    }
+
+    function reRecord() {
+      currentPath = null;
+      resetControls();
+      document.getElementById('statusMsg').textContent = '';
+    }
+
+    async function completeRecording() {
+      document.getElementById('completeBtn').disabled = true;
+      await fetch(`${API}/generate/complete-human-recording`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_id: jobId, niche_id: nicheId, audio_paths: recordedPaths }),
+      });
+      location.href = `/ui/index.html?job_id=${jobId}`;
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Video Factory</title>
+  <style>
+    :root {
+      --bg: #08080c;
+      --surface: #111118;
+      --surface2: #18181f;
+      --border: #252530;
+      --primary: #10B981;
+      --primary-dim: rgba(16,185,129,0.12);
+      --text: #f4f4f5;
+      --muted: #71717a;
+      --success: #10B981;
+      --error: #ef4444;
+      --warn: #f59e0b;
+      --sidebar-w: 300px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* —— App shell —— */
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);
+      background: var(--surface); flex-shrink: 0;
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), #059669);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.75rem; color: #000;
+    }
+    .brand h1 { font-size: 1rem; font-weight: 600; }
+    .brand span { font-size: 0.7rem; color: var(--muted); display: block; }
+    .topbar select {
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0.45rem 0.75rem; border-radius: 8px; font-size: 0.85rem;
+    }
+    .shell { display: flex; flex: 1; min-height: 0; }
+
+    /* —— Sidebar —— */
+    .sidebar {
+      width: var(--sidebar-w); border-right: 1px solid var(--border);
+      background: var(--surface); display: flex; flex-direction: column; flex-shrink: 0;
+    }
+    .sidebar-head {
+      padding: 1rem; border-bottom: 1px solid var(--border);
+    }
+    .sidebar-head button {
+      width: 100%; background: var(--primary); color: #000;
+      border: none; padding: 0.65rem; border-radius: 8px;
+      font-weight: 600; font-size: 0.875rem; cursor: pointer;
+    }
+    .sidebar-head button:hover { opacity: 0.9; }
+    .sidebar-head button.secondary { background: var(--surface2); color: var(--text); margin-top: 0.5rem; border: 1px solid var(--border); }
+    .jobs-scroll { flex: 1; overflow-y: auto; padding: 0.5rem; }
+    .job-item {
+      display: block; width: 100%; text-align: left;
+      background: transparent; border: 1px solid transparent;
+      border-radius: 10px; padding: 0.75rem; margin-bottom: 0.35rem;
+      cursor: pointer; color: inherit; transition: background 0.15s, border-color 0.15s;
+    }
+    .job-item:hover { background: var(--surface2); }
+    .job-item.active { background: var(--primary-dim); border-color: rgba(16,185,129,0.35); }
+    .job-item-top { display: flex; align-items: flex-start; gap: 0.5rem; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; margin-top: 0.35rem; flex-shrink: 0;
+      background: var(--muted);
+    }
+    .status-dot.complete { background: var(--success); }
+    .status-dot.error { background: var(--error); }
+    .status-dot.running, .status-dot.generating { background: var(--primary); animation: pulse 1.5s infinite; }
+    .status-dot.review { background: var(--warn); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .job-item-title {
+      font-size: 0.85rem; font-weight: 600; line-height: 1.3;
+      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    .job-item-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
+    .sidebar-empty { padding: 1.5rem 1rem; color: var(--muted); font-size: 0.8rem; text-align: center; }
+
+    /* —— Main —— */
+    .main { flex: 1; overflow-y: auto; min-width: 0; }
+    .panel { padding: 1.5rem; max-width: 1100px; }
+
+    /* —— New video form —— */
+    .form-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem;
+    }
+    .form-card h2 { font-size: 1.1rem; margin-bottom: 0.25rem; }
+    .form-card .hint { color: var(--muted); font-size: 0.8rem; margin-bottom: 1.25rem; }
+    label { display: block; margin-bottom: 0.35rem; color: var(--muted); font-size: 0.75rem; font-weight: 500; }
+    input, select, textarea {
+      width: 100%; padding: 0.6rem 0.75rem; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+      margin-bottom: 0.85rem; font-size: 0.9rem;
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+    .row > div label { margin-top: 0; }
+    button {
+      background: var(--primary); color: #000; border: none;
+      padding: 0.6rem 1.1rem; border-radius: 8px; font-size: 0.875rem;
+      cursor: pointer; font-weight: 600;
+    }
+    button:hover { opacity: 0.92; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    button.secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    button.danger { background: #7f1d1d; color: #fecaca; border: none; }
+    button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .error-msg { color: var(--error); font-size: 0.8rem; margin-top: 0.5rem; }
+
+    /* —— Job workspace —— */
+    .ws-header {
+      display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between;
+      gap: 1rem; margin-bottom: 1.25rem;
+    }
+    .ws-title { font-size: 1.25rem; font-weight: 600; line-height: 1.3; }
+    .ws-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; font-family: ui-monospace, monospace; }
+    .badge {
+      display: inline-block; font-size: 0.7rem; padding: 0.2rem 0.55rem;
+      border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.complete { background: rgba(16,185,129,0.15); color: var(--success); }
+    .badge.error { background: rgba(239,68,68,0.15); color: var(--error); }
+    .badge.generating { background: rgba(16,185,129,0.1); color: var(--primary); }
+    .badge.review { background: rgba(245,158,11,0.15); color: var(--warn); }
+    .ws-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .pipeline {
+      display: flex; gap: 0; margin-bottom: 1.25rem; overflow-x: auto;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.35rem;
+    }
+    .pipe-step {
+      flex: 1; min-width: 80px; text-align: center; padding: 0.5rem 0.35rem;
+      font-size: 0.7rem; color: var(--muted); border-radius: 6px; cursor: default;
+    }
+    .pipe-step.done { color: var(--success); }
+    .pipe-step.active { background: var(--primary-dim); color: var(--primary); font-weight: 600; }
+    .pipe-step.err { color: var(--error); }
+
+    .tabs {
+      display: flex; gap: 0.25rem; border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem; overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent; border: none; color: var(--muted);
+      padding: 0.65rem 1rem; font-size: 0.8rem; font-weight: 500;
+      border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .alert {
+      padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .alert.info { background: var(--primary-dim); border: 1px solid rgba(16,185,129,0.3); }
+    .alert.warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+    .alert.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+    .alert a { color: var(--primary); }
+
+    .empty-tab { color: var(--muted); font-size: 0.9rem; padding: 2rem; text-align: center; }
+
+    /* —— Assets in tabs —— */
+    .asset-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.85rem;
+    }
+    .asset-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+    }
+    .asset-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .asset-card video { width: 100%; aspect-ratio: 16/9; background: #000; display: block; }
+    .asset-card audio { width: 100%; padding: 0.5rem; }
+    .asset-card .label { padding: 0.5rem 0.65rem; font-size: 0.7rem; color: var(--muted); }
+
+    /* Output tab — only place for hero video */
+    .output-hero {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; margin-bottom: 1.25rem;
+    }
+    .output-hero video { width: 100%; max-height: 480px; display: block; background: #000; }
+    .output-meta { padding: 1.25rem; }
+    .output-meta h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.75rem; }
+    .meta-field { margin-bottom: 0.85rem; }
+    .meta-field label { margin-bottom: 0.25rem; }
+    .meta-field input, .meta-field textarea {
+      margin-bottom: 0; font-size: 0.85rem; resize: vertical;
+    }
+    .copy-row { display: flex; gap: 0.5rem; margin-top: 0.35rem; }
+    .copy-row button { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+    .thumb-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin-top: 1rem; }
+    .thumb-row img { max-width: 240px; border-radius: 8px; border: 1px solid var(--border); }
+
+    .scene-preview {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem;
+    }
+    .scene-preview h4 {
+      color: var(--primary); font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 0.5rem;
+    }
+    .scene-preview textarea {
+      margin-bottom: 0.5rem; min-height: 5rem; font-size: 0.85rem; line-height: 1.5;
+    }
+    .scene-preview textarea.visual { min-height: 3rem; color: var(--muted); font-size: 0.8rem; }
+    .field-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+
+    .overview-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem;
+    }
+    .overview-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem; cursor: pointer; transition: border-color 0.15s;
+    }
+    .overview-card:hover { border-color: var(--primary); }
+    .overview-card h4 { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.35rem; }
+    .overview-card p { font-size: 0.85rem; font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .shell { flex-direction: column; }
+      .sidebar { width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">YF</div>
+        <div>
+          <h1>Video Factory</h1>
+          <span>Faceless YouTube pipeline</span>
+        </div>
+      </div>
+      <select id="channel" title="Channel"></select>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <button type="button" onclick="showNewVideo()">+ New Video</button>
+        </div>
+        <div class="jobs-scroll" id="jobsList"></div>
+      </aside>
+
+      <main class="main" id="mainContent">
+        <!-- New video panel (default) -->
+        <div class="panel" id="newVideoPanel">
+          <div class="form-card">
+            <h2>Create a new video</h2>
+            <p class="hint">Configure script, images, and audio — then track progress in the job list.</p>
+
+            <label>Video Topic</label>
+            <input type="text" id="topic" placeholder="e.g. Why your brain sabotages your wealth">
+
+            <div class="row">
+              <div>
+                <label>Duration</label>
+                <select id="duration">
+                  <option value="8">8 min</option>
+                  <option value="10" selected>10 min</option>
+                  <option value="12">12 min</option>
+                  <option value="15">15 min</option>
+                </select>
+              </div>
+              <div>
+                <label>Script</label>
+                <select id="scriptMode" onchange="onScriptModeChange()">
+                  <option value="ai">AI Generate</option>
+                  <option value="manual">Paste or Type</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Images</label>
+                <select id="imageMode">
+                  <option value="ai">AI Generate</option>
+                  <option value="upload">Upload</option>
+                </select>
+              </div>
+              <div>
+                <label>Visual style</label>
+                <select id="visualStyle">
+                  <option value="realistic">Realistic / Cinematic</option>
+                  <option value="cartoon">Cartoon / Illustrated</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Image layout</label>
+                <select id="imageLayout">
+                  <option value="one_image" selected>One image (entire video)</option>
+                  <option value="per_scene">One image per scene</option>
+                  <option value="multiple">Per scene + B-roll</option>
+                </select>
+              </div>
+              <div>
+                <label>Audio</label>
+                <select id="audioMode">
+                  <option value="ai">AI Voiceover</option>
+                  <option value="human">Human</option>
+                  <option value="hybrid">Hybrid</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div id="voiceSection">
+                <label>Voice</label>
+                <div style="display:flex;gap:0.5rem">
+                  <select id="voice" style="flex:1;margin-bottom:0"></select>
+                  <button type="button" class="secondary" onclick="previewVoice()" id="previewVoiceBtn">Preview</button>
+                </div>
+              </div>
+            </div>
+            <div id="speedSection">
+              <label>Speed: <span id="speedVal">0.85</span></label>
+              <input type="range" id="speed" min="0.5" max="1.2" step="0.05" value="0.85" style="margin-bottom:0">
+            </div>
+
+            <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button id="generateBtn" onclick="startGeneration()">Generate Video</button>
+              <button id="manualScriptBtn" class="secondary" style="display:none" onclick="openManualScript()">Open Script Editor</button>
+            </div>
+            <p class="error-msg" id="errorMsg"></p>
+          </div>
+        </div>
+
+        <!-- Job workspace (hidden until job selected) -->
+        <div class="panel" id="jobPanel" style="display:none">
+          <div class="ws-header">
+            <div>
+              <div class="ws-title" id="wsTitle">—</div>
+              <div class="ws-sub" id="wsJobId">—</div>
+              <span class="badge" id="wsBadge">—</span>
+            </div>
+            <div class="ws-actions" id="wsActions"></div>
+          </div>
+
+          <div class="pipeline" id="pipeline"></div>
+          <div id="wsAlerts"></div>
+
+          <div class="tabs" id="tabBar">
+            <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+            <button class="tab-btn" data-tab="script" onclick="switchTab('script')">Script</button>
+            <button class="tab-btn" data-tab="images" onclick="switchTab('images')">Images</button>
+            <button class="tab-btn" data-tab="thumbnail" onclick="switchTab('thumbnail')">Thumbnail</button>
+            <button class="tab-btn" data-tab="audio" onclick="switchTab('audio')">Audio</button>
+            <button class="tab-btn" data-tab="output" onclick="switchTab('output')">Output</button>
+          </div>
+
+          <div class="tab-panel active" id="tab-overview"></div>
+          <div class="tab-panel" id="tab-script"></div>
+          <div class="tab-panel" id="tab-images"></div>
+          <div class="tab-panel" id="tab-thumbnail"></div>
+          <div class="tab-panel" id="tab-audio"></div>
+          <div class="tab-panel" id="tab-output"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <audio id="voicePreviewAudio" style="display:none"></audio>
+
+  <script>
+    const API = '';
+    const STEP_NAMES = ['script', 'images', 'thumbnail', 'audio', 'assembly', 'complete'];
+    const REGEN_STAGES = [
+      { id: 'script', label: 'Script' },
+      { id: 'images', label: 'Images' },
+      { id: 'thumbnail', label: 'Thumbnail' },
+      { id: 'audio', label: 'Audio' },
+      { id: 'assembly', label: 'Assembly' },
+    ];
+
+    let selectedJobId = null;
+    let activeTab = 'overview';
+    let pollInterval = null;
+    let jobStatusCache = null;
+    let scriptDataCache = null;
+
+    const TOPIC_PLACEHOLDERS = {
+      finance: 'e.g. Why millionaires still feel broke',
+      business: 'e.g. How Costco broke every retail rule',
+    };
+    const CHANNEL_DEFAULT_STYLE = { finance: 'cartoon', business: 'realistic' };
+
+    // —— Init ——
+    async function init() {
+      const channels = await fetch(`${API}/channels/list`).then(r => r.json());
+      const sel = document.getElementById('channel');
+      channels.channels.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.niche_id;
+        opt.textContent = c.name;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', () => { applyChannelStyleDefault(); updateTopicPlaceholder(); loadJobs(); });
+
+      const voices = await fetch(`${API}/audio/voices`).then(r => r.json());
+      const vsel = document.getElementById('voice');
+      voices.voices.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v.replace(/_/g, ' ');
+        vsel.appendChild(opt);
+      });
+
+      const savedSpeed = localStorage.getItem('ytf_speed');
+      if (savedSpeed) {
+        document.getElementById('speed').value = savedSpeed;
+        document.getElementById('speedVal').textContent = savedSpeed;
+      }
+      const savedVoice = localStorage.getItem('ytf_voice');
+      if (savedVoice) vsel.value = savedVoice;
+
+      document.getElementById('speed').oninput = e => {
+        document.getElementById('speedVal').textContent = e.target.value;
+        localStorage.setItem('ytf_speed', e.target.value);
+      };
+      vsel.addEventListener('change', () => localStorage.setItem('ytf_voice', vsel.value));
+      document.getElementById('audioMode').addEventListener('change', toggleVoiceSection);
+      toggleVoiceSection();
+      loadModePrefs();
+      updateTopicPlaceholder();
+      await loadJobs();
+
+      const params = new URLSearchParams(location.search);
+      if (params.get('job_id')) selectJob(params.get('job_id'));
+    }
+
+    function showNewVideo() {
+      selectedJobId = null;
+      jobStatusCache = null;
+      history.replaceState(null, '', location.pathname);
+      if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+      document.getElementById('newVideoPanel').style.display = 'block';
+      document.getElementById('jobPanel').style.display = 'none';
+      document.querySelectorAll('.job-item').forEach(el => el.classList.remove('active'));
+    }
+
+    // —— Sidebar jobs ——
+    async function loadJobs() {
+      const nicheId = document.getElementById('channel').value;
+      const url = nicheId ? `${API}/status/list/${nicheId}?dedupe=true` : `${API}/status/list?dedupe=true`;
+      try {
+        const data = await fetch(url).then(r => r.json());
+        renderSidebar(data.jobs || []);
+      } catch (e) { console.error(e); }
+    }
+
+    function jobDotClass(job) {
+      if (job.overall_status === 'complete') return 'complete';
+      if (job.overall_status === 'error' || Object.values(job.steps || {}).some(s => s.status === 'error')) return 'error';
+      if (job.steps?.script?.status === 'pending_review') return 'review';
+      if (job.overall_status === 'generating') return 'running';
+      return '';
+    }
+
+    function renderSidebar(jobs) {
+      const list = document.getElementById('jobsList');
+      if (!jobs.length) {
+        list.innerHTML = '<div class="sidebar-empty">No jobs yet.<br>Create your first video above.</div>';
+        return;
+      }
+      list.innerHTML = '';
+      jobs.slice(0, 30).forEach(job => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'job-item' + (job.job_id === selectedJobId ? ' active' : '');
+        btn.dataset.jobId = job.job_id;
+        const stepLabel = job.steps?.script?.status === 'pending_review' ? 'Needs review'
+          : job.overall_status === 'complete' ? 'Complete'
+          : job.overall_status === 'error' ? 'Failed'
+          : 'In progress';
+        btn.innerHTML = `
+          <div class="job-item-top">
+            <span class="status-dot ${jobDotClass(job)}"></span>
+            <div style="min-width:0;flex:1">
+              <div class="job-item-title">${escapeHtml(job.topic || 'Untitled')}</div>
+              <div class="job-item-meta">${stepLabel} · ${job.job_id.slice(-8)}</div>
+            </div>
+          </div>`;
+        btn.onclick = () => selectJob(job.job_id);
+        list.appendChild(btn);
+      });
+    }
+
+    // —— Job selection ——
+    async function selectJob(jobId) {
+      selectedJobId = jobId;
+      activeTab = 'overview';
+      history.replaceState(null, '', `?job_id=${jobId}`);
+      document.getElementById('newVideoPanel').style.display = 'none';
+      document.getElementById('jobPanel').style.display = 'block';
+      document.querySelectorAll('.job-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.jobId === jobId);
+      });
+      await refreshJobWorkspace();
+      startPollingIfNeeded();
+      loadJobs();
+    }
+
+    async function refreshJobWorkspace() {
+      if (!selectedJobId) return;
+      try {
+        jobStatusCache = await fetch(`${API}/status/${selectedJobId}`).then(r => r.json());
+        renderWorkspace(jobStatusCache);
+        await loadTabContent(activeTab);
+      } catch (e) { console.error(e); }
+    }
+
+    function renderWorkspace(status) {
+      document.getElementById('wsTitle').textContent = status.topic || 'Untitled';
+      document.getElementById('wsJobId').textContent = status.job_id;
+
+      const badge = document.getElementById('wsBadge');
+      if (status.overall_status === 'complete') {
+        badge.className = 'badge complete'; badge.textContent = 'Complete';
+      } else if (status.overall_status === 'error') {
+        badge.className = 'badge error'; badge.textContent = 'Failed';
+      } else if (status.steps?.script?.status === 'pending_review') {
+        badge.className = 'badge review'; badge.textContent = 'Review';
+      } else {
+        badge.className = 'badge generating'; badge.textContent = 'In progress';
+      }
+
+      // Pipeline
+      const pipe = document.getElementById('pipeline');
+      pipe.innerHTML = '';
+      STEP_NAMES.forEach(name => {
+        const step = status.steps?.[name] || { status: 'pending' };
+        const el = document.createElement('div');
+        el.className = 'pipe-step';
+        if (step.status === 'complete' || step.status === 'approved') el.classList.add('done');
+        else if (step.status === 'running') el.classList.add('active');
+        else if (step.status === 'error') el.classList.add('err');
+        el.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+        pipe.appendChild(el);
+      });
+
+      // Actions
+      const actions = document.getElementById('wsActions');
+      let html = '';
+      if (status.steps?.script?.status === 'pending_review') {
+        html += `<button onclick="location.href='/ui/review.html?job_id=${status.job_id}'">Review Script</button>`;
+      }
+      if (status.steps?.images?.status === 'pending_upload') {
+        const url = status.steps.images.data?.assets_url || `/ui/assets.html?job_id=${status.job_id}`;
+        html += `<button onclick="location.href='${url}'">Upload Images</button>`;
+      }
+      html += `<button class="secondary" onclick="resumeJob('${status.job_id}')">Resume</button>`;
+      html += `<button class="danger" onclick="deleteJob('${status.job_id}')">Delete</button>`;
+      actions.innerHTML = html;
+
+      // Alerts
+      const alerts = document.getElementById('wsAlerts');
+      alerts.innerHTML = '';
+      if (status.steps?.script?.status === 'pending_review') {
+        alerts.innerHTML = `<div class="alert info">Script ready for review.
+          <button onclick="location.href='/ui/review.html?job_id=${status.job_id}'">Open Review</button></div>`;
+      }
+      const audioSt = status.steps?.audio?.status;
+      if (audioSt === 'pending_human' || audioSt === 'pending_hybrid') {
+        const mode = audioSt === 'pending_hybrid' ? 'hybrid' : 'human';
+        alerts.innerHTML += `<div class="alert warn">Voiceover recording required.
+          <a href="/ui/recorder.html?job_id=${status.job_id}&mode=${mode}">Open Recorder</a></div>`;
+      }
+      if (status.overall_status === 'error') {
+        const errStep = Object.entries(status.steps || {}).find(([, s]) => s.status === 'error');
+        const errMsg = errStep?.[1]?.data?.error || 'Generation failed';
+        alerts.innerHTML += `<div class="alert error">${escapeHtml(errMsg)}
+          <button class="secondary" onclick="resumeJob('${status.job_id}')">Retry</button></div>`;
+      }
+
+      // Tab bar highlight
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === activeTab);
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.toggle('active', p.id === `tab-${activeTab}`);
+      });
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.toggle('active', p.id === `tab-${tab}`);
+      });
+      loadTabContent(tab);
+    }
+
+    async function loadTabContent(tab) {
+      if (!selectedJobId) return;
+      const panel = document.getElementById(`tab-${tab}`);
+      panel.innerHTML = '<p class="empty-tab">Loading…</p>';
+
+      if (tab === 'overview') {
+        renderOverviewTab(panel);
+        return;
+      }
+      if (tab === 'output') {
+        await renderOutputTab(panel);
+        return;
+      }
+
+      const stageMap = { script: 'script', images: 'images', thumbnail: 'thumbnail', audio: 'audio' };
+      const stage = stageMap[tab];
+      if (!stage) return;
+
+      try {
+        const data = await fetch(`${API}/generate/stage/${selectedJobId}/${stage}`).then(r => {
+          if (!r.ok) throw new Error('Not available yet');
+          return r.json();
+        });
+        if (stage === 'script') {
+          scriptDataCache = data.script || null;
+          panel.innerHTML = renderScriptTab(data, selectedJobId);
+        } else {
+          panel.innerHTML = renderAssetsTab(data);
+        }
+      } catch (e) {
+        panel.innerHTML = `<p class="empty-tab">${escapeHtml(e.message)}</p>`;
+      }
+    }
+
+    function renderOverviewTab(panel) {
+      const s = jobStatusCache;
+      if (!s) { panel.innerHTML = '<p class="empty-tab">No data</p>'; return; }
+      let html = '<div class="overview-grid">';
+      REGEN_STAGES.forEach(st => {
+        const step = s.steps?.[st.id] || { status: 'pending' };
+        const icon = step.status === 'complete' || step.status === 'approved' ? '✓'
+          : step.status === 'error' ? '✗' : step.status === 'running' ? '…' : '○';
+        html += `<div class="overview-card" onclick="switchTab('${st.id === 'assembly' ? 'output' : st.id}')">
+          <h4>${st.label}</h4><p>${icon} ${step.status}</p></div>`;
+      });
+      html += '</div>';
+      html += '<div style="margin-top:1.25rem"><h4 style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem">REGENERATE STAGE</h4><div style="display:flex;gap:0.5rem;flex-wrap:wrap">';
+      REGEN_STAGES.forEach(st => {
+        html += `<button class="ghost" onclick="regenerateStage('${selectedJobId}','${st.id}')">${st.label}</button>`;
+      });
+      html += '</div></div>';
+      panel.innerHTML = html;
+    }
+
+    async function renderOutputTab(panel) {
+      const s = jobStatusCache;
+      if (!s || s.overall_status !== 'complete') {
+        panel.innerHTML = '<p class="empty-tab">Final video will appear here when the job completes.<br><span style="font-size:0.8rem">Select this tab after generation finishes.</span></p>';
+        return;
+      }
+
+      const outputPath = s.steps?.complete?.data?.output_path || s.steps?.assembly?.data?.output_path;
+      const thumbPath = s.steps?.thumbnail?.data?.thumbnail_path;
+      const nicheId = s.niche_id;
+      const jobId = s.job_id;
+
+      let videoUrl = '';
+      if (outputPath) {
+        const rel = outputPath.split('/output/').pop() || `${nicheId}/${jobId}/final_video.mp4`;
+        videoUrl = `/output/${rel}`;
+      }
+
+      let title = '', desc = '', tags = '';
+      try {
+        const script = await fetch(`${API}/generate/script-review/${jobId}`).then(r => r.json());
+        title = script.script?.title || '';
+        desc = script.script?.description || '';
+        tags = (script.script?.tags || []).join(', ');
+      } catch (e) {}
+
+      let thumbHtml = '';
+      if (thumbPath) {
+        const rel = thumbPath.split('/output/').pop();
+        thumbHtml = `<div class="thumb-row"><img src="/output/${rel}" alt="Thumbnail"><a href="/output/${rel}" download><button class="secondary">Download Thumbnail</button></a></div>`;
+      }
+
+      panel.innerHTML = `
+        <div class="output-hero">
+          ${videoUrl ? `<video id="heroVideo" controls preload="metadata" src="${videoUrl}"></video>` : '<p class="empty-tab">Video file not found</p>'}
+        </div>
+        <div class="output-meta">
+          <h3>Publish metadata</h3>
+          <div class="meta-field">
+            <label>Title</label>
+            <input id="titleOut" readonly value="${escapeHtml(title)}">
+            <div class="copy-row"><button class="secondary" onclick="copyField('titleOut')">Copy</button></div>
+          </div>
+          <div class="meta-field">
+            <label>Description</label>
+            <textarea id="descOut" rows="4" readonly>${escapeHtml(desc)}</textarea>
+            <div class="copy-row"><button class="secondary" onclick="copyField('descOut')">Copy</button></div>
+          </div>
+          <div class="meta-field">
+            <label>Tags</label>
+            <textarea id="tagsOut" rows="2" readonly>${escapeHtml(tags)}</textarea>
+            <div class="copy-row"><button class="secondary" onclick="copyField('tagsOut')">Copy</button></div>
+          </div>
+          ${videoUrl ? `<a href="${videoUrl}" download><button style="margin-top:0.5rem">Download Video</button></a>` : ''}
+          ${thumbHtml}
+        </div>`;
+    }
+
+    function renderScriptTab(data, jobId) {
+      if (!data.has_content) return '<p class="empty-tab">No script yet. Start generation or paste a manual script.</p>';
+      let html = `<div style="margin-bottom:1rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+        <a href="/ui/review.html?job_id=${jobId}"><button>Open Full Editor</button></a>
+        <button class="secondary" onclick="saveScriptTab()">Save Changes</button>
+        <span id="scriptSaveMsg" style="font-size:0.8rem;color:var(--primary);align-self:center"></span>
+      </div>`;
+      if (data.title !== undefined) {
+        html += `<label class="field-label">Title</label>
+          <input type="text" id="scriptTitleInput" value="${escapeHtml(data.title || '')}" style="margin-bottom:1rem">`;
+      }
+      for (const scene of data.scenes || []) {
+        const sid = escapeHtml(scene.scene_id || '');
+        html += `<div class="scene-preview">
+          <h4>${escapeHtml(scene.label || scene.scene_id)}</h4>
+          <label class="field-label">Narration</label>
+          <textarea class="script-text" data-scene-id="${sid}">${escapeHtml(scene.text || '')}</textarea>
+          <label class="field-label">Visual prompt</label>
+          <textarea class="visual script-visual" data-scene-id="${sid}" data-field="visual">${escapeHtml(scene.visual_prompt || '')}</textarea>
+        </div>`;
+      }
+      return html;
+    }
+
+    function renderAssetsTab(data) {
+      if (!data.assets?.length) return '<p class="empty-tab">Nothing generated for this stage yet.</p>';
+      let html = '';
+      if (data.placeholder_count > 0) {
+        html += `<div class="alert warn" style="margin-bottom:1rem">${data.placeholder_count} placeholder image(s) used — consider regenerating.</div>`;
+      }
+      html += '<div class="asset-grid">';
+      for (const asset of data.assets) {
+        html += '<div class="asset-card">';
+        if (asset.type === 'image') {
+          html += `<img src="${asset.url}" alt="${escapeHtml(asset.label)}" loading="lazy">`;
+        } else if (asset.type === 'audio') {
+          html += `<audio src="${asset.url}" controls></audio>`;
+        } else if (asset.type === 'video') {
+          html += `<video src="${asset.url}" controls preload="metadata"></video>`;
+        }
+        html += `<div class="label">${escapeHtml(asset.label)}</div></div>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    async function saveScriptTab() {
+      if (!scriptDataCache || !selectedJobId) return;
+      const edited = collectScriptFromTab();
+      const msg = document.getElementById('scriptSaveMsg');
+      try {
+        const res = await fetch(`${API}/generate/script/${selectedJobId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ edited_script: edited }),
+        });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Save failed');
+        scriptDataCache = edited;
+        if (msg) { msg.textContent = 'Saved'; setTimeout(() => msg.textContent = '', 2000); }
+      } catch (e) {
+        if (msg) { msg.textContent = e.message; msg.style.color = 'var(--error)'; }
+      }
+    }
+
+    function collectScriptFromTab() {
+      const edited = JSON.parse(JSON.stringify(scriptDataCache));
+      const titleInput = document.getElementById('scriptTitleInput');
+      if (titleInput) edited.title = titleInput.value;
+      document.querySelectorAll('#tab-script .script-text').forEach(ta => {
+        const sid = ta.dataset.sceneId;
+        if (sid === 'hook') { edited.hook = edited.hook || {}; edited.hook.text = ta.value; }
+        else if (sid === 'outro') { edited.outro = edited.outro || {}; edited.outro.text = ta.value; }
+        else {
+          for (const act of edited.acts || [])
+            for (const scene of act.scenes || [])
+              if (scene.scene_id === sid) scene.narration = ta.value;
+        }
+      });
+      document.querySelectorAll('#tab-script .script-visual').forEach(ta => {
+        const sid = ta.dataset.sceneId;
+        if (sid === 'hook') { edited.hook = edited.hook || {}; edited.hook.visual_prompt = ta.value; }
+        else if (sid === 'outro') { edited.outro = edited.outro || {}; edited.outro.visual_prompt = ta.value; }
+        else {
+          for (const act of edited.acts || [])
+            for (const scene of act.scenes || [])
+              if (scene.scene_id === sid) scene.visual_prompt = ta.value;
+        }
+      });
+      return edited;
+    }
+
+    // —— Polling ——
+    function startPollingIfNeeded() {
+      if (!selectedJobId || !jobStatusCache) return;
+      const done = jobStatusCache.overall_status === 'complete';
+      const err = jobStatusCache.overall_status === 'error';
+      const review = jobStatusCache.steps?.script?.status === 'pending_review';
+      const upload = jobStatusCache.steps?.images?.status === 'pending_upload';
+      const recording = ['pending_human', 'pending_hybrid'].includes(jobStatusCache.steps?.audio?.status);
+      if (done || err || review || upload || recording) {
+        if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+        return;
+      }
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(async () => {
+        if (!selectedJobId) return;
+        const prev = jobStatusCache?.overall_status;
+        jobStatusCache = await fetch(`${API}/status/${selectedJobId}`).then(r => r.json());
+        renderWorkspace(jobStatusCache);
+        loadJobs();
+
+        if (jobStatusCache.overall_status === 'complete' && prev !== 'complete') {
+          clearInterval(pollInterval); pollInterval = null;
+          if (activeTab === 'output') loadTabContent('output');
+        } else if (jobStatusCache.overall_status === 'error') {
+          clearInterval(pollInterval); pollInterval = null;
+        } else if (['pending_review', 'pending_upload', 'pending_human', 'pending_hybrid']
+          .some(st => Object.values(jobStatusCache.steps || {}).some(s => s.status === st))) {
+          clearInterval(pollInterval); pollInterval = null;
+        }
+      }, 3000);
+    }
+
+    // —— Actions ——
+    async function startGeneration(skipRedirect) {
+      const topic = document.getElementById('topic').value.trim();
+      if (!topic) { showError('Enter a topic'); return; }
+      const scriptMode = document.getElementById('scriptMode').value;
+      document.getElementById('generateBtn').disabled = true;
+      document.getElementById('errorMsg').textContent = '';
+      try {
+        const res = await fetch(`${API}/generate/video`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic,
+            niche_id: document.getElementById('channel').value,
+            duration_minutes: parseInt(document.getElementById('duration').value),
+            audio_mode: document.getElementById('audioMode').value,
+            voice: document.getElementById('voice').value,
+            speed: parseFloat(document.getElementById('speed').value),
+            script_mode: scriptMode,
+            image_mode: document.getElementById('imageMode').value,
+            image_layout: document.getElementById('imageLayout').value,
+            visual_style: document.getElementById('visualStyle').value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Generation failed');
+        localStorage.setItem('ytf_speed', document.getElementById('speed').value);
+        localStorage.setItem('ytf_voice', document.getElementById('voice').value);
+
+        if (data.status === 'awaiting_manual_script' || (scriptMode === 'manual' && !data.review_url)) {
+          location.href = data.manual_script_url ||
+            `/ui/manual-script.html?job_id=${data.job_id}&niche_id=${document.getElementById('channel').value}`;
+          return;
+        }
+        await loadJobs();
+        selectJob(data.job_id);
+        if (data.status === 'pending_script_review' && scriptMode === 'manual' && skipRedirect !== true) {
+          location.href = `/ui/review.html?job_id=${data.job_id}`;
+        }
+      } catch (e) { showError(e.message); }
+      finally { document.getElementById('generateBtn').disabled = false; }
+    }
+
+    async function regenerateStage(jobId, stage) {
+      if (!confirm(`Regenerate ${stage}? This re-runs ${stage} and all later stages.`)) return;
+      try {
+        const res = await fetch(`${API}/generate/regenerate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job_id: jobId, stage }),
+        });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Failed');
+        selectJob(jobId);
+      } catch (e) { alert(e.message); }
+    }
+
+    async function deleteJob(jobId) {
+      if (!confirm('Delete this job and all files?')) return;
+      try {
+        const res = await fetch(`${API}/generate/job/${jobId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Delete failed');
+        if (selectedJobId === jobId) showNewVideo();
+        loadJobs();
+      } catch (e) { alert(e.message); }
+    }
+
+    async function resumeJob(jobId) {
+      try {
+        const res = await fetch(`${API}/generate/resume`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job_id: jobId }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Resume failed');
+        if (data.review_url) { location.href = data.review_url; return; }
+        if (data.recorder_url) { location.href = data.recorder_url; return; }
+        selectJob(jobId);
+      } catch (e) { alert(e.message); }
+    }
+
+    function copyField(id) {
+      const el = document.getElementById(id);
+      if (el) navigator.clipboard.writeText(el.value);
+    }
+
+    function escapeHtml(text) {
+      const d = document.createElement('div');
+      d.textContent = text ?? '';
+      return d.innerHTML;
+    }
+
+    function showError(msg) { document.getElementById('errorMsg').textContent = msg; }
+
+    function applyChannelStyleDefault() {
+      const ch = document.getElementById('channel').value;
+      if (CHANNEL_DEFAULT_STYLE[ch] && !localStorage.getItem('ytf_visual_style')) {
+        document.getElementById('visualStyle').value = CHANNEL_DEFAULT_STYLE[ch];
+      }
+    }
+
+    function loadModePrefs() {
+      const sm = localStorage.getItem('ytf_script_mode');
+      const im = localStorage.getItem('ytf_image_mode');
+      let il = localStorage.getItem('ytf_image_layout');
+      const vs = localStorage.getItem('ytf_visual_style');
+      if (il === 'single') il = 'per_scene';
+      if (sm) document.getElementById('scriptMode').value = sm;
+      if (im) document.getElementById('imageMode').value = im;
+      if (il) document.getElementById('imageLayout').value = il;
+      if (vs) document.getElementById('visualStyle').value = vs;
+      else applyChannelStyleDefault();
+      onScriptModeChange();
+      const keys = {
+        scriptMode: 'ytf_script_mode',
+        imageMode: 'ytf_image_mode',
+        imageLayout: 'ytf_image_layout',
+        visualStyle: 'ytf_visual_style',
+      };
+      Object.entries(keys).forEach(([id, key]) => {
+        document.getElementById(id).addEventListener('change', () => {
+          localStorage.setItem(key, document.getElementById(id).value);
+          onScriptModeChange();
+        });
+      });
+    }
+
+    function onScriptModeChange() {
+      const manual = document.getElementById('scriptMode').value === 'manual';
+      document.getElementById('manualScriptBtn').style.display = manual ? 'inline-block' : 'none';
+      document.getElementById('generateBtn').textContent = manual ? 'Create Job & Open Editor' : 'Generate Video';
+    }
+
+    function openManualScript() { startGeneration(true); }
+
+    function toggleVoiceSection() {
+      const show = ['ai', 'hybrid'].includes(document.getElementById('audioMode').value);
+      document.getElementById('voiceSection').style.display = show ? 'block' : 'none';
+      document.getElementById('speedSection').style.display = show ? 'block' : 'none';
+    }
+
+    function updateTopicPlaceholder() {
+      document.getElementById('topic').placeholder =
+        TOPIC_PLACEHOLDERS[document.getElementById('channel').value] || 'Enter your video topic';
+    }
+
+    async function previewVoice() {
+      const btn = document.getElementById('previewVoiceBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`${API}/audio/preview`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: 'This is how your narration will sound.',
+            voice: document.getElementById('voice').value,
+            speed: parseFloat(document.getElementById('speed').value),
+            niche_id: document.getElementById('channel').value,
+          }),
+        });
+        if (!res.ok) throw new Error('Preview failed');
+        const blob = await res.blob();
+        const audio = document.getElementById('voicePreviewAudio');
+        audio.src = URL.createObjectURL(blob);
+        audio.play();
+      } catch (e) { showError(e.message); }
+      finally { btn.disabled = false; }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Review — YouTube Factory</title>
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --surface: #14141F;
+      --primary: #8B5CF6;
+      --text: #FFFFFF;
+      --muted: #888;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { margin-bottom: 0.5rem; }
+    .subtitle { color: var(--muted); margin-bottom: 2rem; }
+    .scene-card {
+      background: var(--surface);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .scene-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    .visual-prompt { color: var(--muted); font-size: 0.8rem; margin-bottom: 0.75rem; }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      background: var(--bg);
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: var(--text);
+      padding: 0.75rem;
+      font-size: 1rem;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .marker-preview {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: var(--bg);
+      border-radius: 6px;
+      line-height: 1.8;
+    }
+    .pause { background: #854d0e; padding: 0 4px; border-radius: 3px; }
+    .slow { background: #1e3a5f; padding: 0 4px; border-radius: 3px; }
+    .emphasis { background: #7f1d1d; padding: 0 4px; border-radius: 3px; }
+    .breath { background: #374151; padding: 0 4px; border-radius: 3px; }
+    .scene-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      align-items: center;
+    }
+    input[type=text] {
+      flex: 1;
+      padding: 0.5rem;
+      background: var(--bg);
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: var(--text);
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.625rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.5; }
+    button.secondary { background: #333; }
+    .approve-bar {
+      position: sticky;
+      bottom: 0;
+      background: var(--surface);
+      border-top: 1px solid #333;
+      padding: 1rem;
+      margin: 2rem -2rem -2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    select {
+      padding: 0.625rem;
+      background: var(--bg);
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: var(--text);
+    }
+    .loading { text-align: center; padding: 3rem; color: var(--muted); }
+    .badges { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .badge { background:#222; border:1px solid #444; padding:0.25rem 0.6rem; border-radius:12px; font-size:0.75rem; color:var(--muted); }
+    .meta-card { background:var(--surface); border:1px solid #222; border-radius:12px; padding:1rem; margin-bottom:1rem; }
+    .meta-card label { display:block; font-size:0.75rem; color:var(--muted); margin:0.5rem 0 0.25rem; }
+    .meta-card input, .meta-card textarea { width:100%; padding:0.5rem; background:var(--bg); border:1px solid #333; border-radius:6px; color:var(--text); }
+    .prompt-row { margin-top:0.5rem; }
+    .prompt-row label { font-size:0.7rem; color:var(--muted); }
+    .prompt-row input { width:100%; padding:0.4rem; background:var(--bg); border:1px solid #333; border-radius:6px; color:var(--text); font-size:0.85rem; margin-top:0.15rem; }
+    .act-header { font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <h1>Script Review</h1>
+  <p class="subtitle">Edit and approve your script before video generation</p>
+  <div class="badges" id="modeBadges"></div>
+  <div id="content" class="loading">Loading script...</div>
+
+  <div class="approve-bar" id="approveBar" style="display:none">
+    <select id="audioMode">
+      <option value="ai">AI Voiceover</option>
+      <option value="human">Human Voiceover</option>
+      <option value="hybrid">Hybrid</option>
+    </select>
+    <select id="voice"></select>
+    <label style="color:var(--muted);font-size:0.875rem">Speed: <span id="speedVal">0.85</span></label>
+    <input type="range" id="speed" min="0.5" max="1.2" step="0.05" value="0.85" style="width:120px">
+    <button class="secondary" onclick="regenerateFull()">↺ Regenerate Full Script</button>
+    <input type="text" id="fullInstruction" placeholder="Optional instruction for full rewrite">
+    <button onclick="approveScript()" id="approveBtn">✓ Approve & Generate Video</button>
+  </div>
+
+  <script>
+    const API = '';
+    let jobId, nicheId, scriptData, imageMode = 'ai', imageLayout = 'one_image', visualStyle = null, scriptMode = 'ai';
+
+    function highlightMarkers(text) {
+      if (!text) return '';
+      return String(text)
+        .replace(/\[pause\]/gi, '<span class="pause">[pause]</span>')
+        .replace(/\[slow\]/gi, '<span class="slow">[slow]</span>')
+        .replace(/\[fast\]/gi, '<span class="slow">[fast]</span>')
+        .replace(/\[emphasis\]/gi, '<span class="emphasis">[emphasis]</span>')
+        .replace(/\[breath\]/gi, '<span class="breath">[breath]</span>');
+    }
+
+    function layoutLabel(layout) {
+      const labels = {
+        one_image: 'One image (entire video)',
+        per_scene: 'One per scene',
+        multiple: 'Per scene + B-roll',
+        single: 'One per scene',
+      };
+      return labels[layout] || layout;
+    }
+
+    function escapeHtml(text) {
+      const d = document.createElement('div');
+      d.textContent = text ?? '';
+      return d.innerHTML;
+    }
+
+    function renderScene(id, label, text, visualPrompt, brollPrompt) {
+      const safeText = escapeHtml(text || '');
+      const safeVis = escapeHtml(visualPrompt || '');
+      const safeBroll = escapeHtml(brollPrompt || '');
+      const brollField = imageLayout === 'multiple' ? `
+        <div class="prompt-row"><label>B-roll prompt</label>
+        <input type="text" id="broll_${id}" value="${safeBroll}"></div>` : '';
+      return `
+        <div class="scene-card" data-scene-id="${id}">
+          <div class="scene-label">${escapeHtml(label)}</div>
+          <textarea id="ta_${id}">${safeText}</textarea>
+          <div class="marker-preview">${highlightMarkers(text || '')}</div>
+          <div class="prompt-row"><label>Visual prompt</label>
+          <input type="text" id="vis_${id}" value="${safeVis}"></div>
+          ${brollField}
+          <div class="scene-actions">
+            <input type="text" id="instr_${id}" placeholder="e.g. make more emotional">
+            <button onclick="regenerateScene('${id}')" id="btn_${id}">Regenerate Scene</button>
+          </div>
+        </div>`;
+    }
+
+    async function loadScript() {
+      const content = document.getElementById('content');
+      try {
+      const params = new URLSearchParams(location.search);
+      jobId = params.get('job_id');
+      if (!jobId) { content.textContent = 'No job_id provided'; return; }
+
+      const scriptRes = await fetch(`${API}/generate/script-review/${jobId}`);
+      const data = await scriptRes.json();
+      if (!scriptRes.ok) throw new Error(data.detail || 'Failed to load script');
+      scriptData = data.script;
+      nicheId = data.niche_id;
+
+      const statusRes = await fetch(`${API}/status/${jobId}`);
+      const status = await statusRes.json();
+      if (!statusRes.ok) throw new Error(status.detail || 'Failed to load job status');
+      const scriptData_step = status.steps?.script?.data || {};
+      scriptMode = scriptData_step.script_mode || 'ai';
+      imageMode = scriptData_step.image_mode || localStorage.getItem('ytf_image_mode') || 'ai';
+      imageLayout = scriptData_step.image_layout || localStorage.getItem('ytf_image_layout') || 'one_image';
+      if (imageLayout === 'single') imageLayout = 'per_scene';
+      visualStyle = scriptData_step.visual_style || localStorage.getItem('ytf_visual_style') || null;
+
+      document.getElementById('modeBadges').innerHTML = `
+        <span class="badge">Script: ${scriptMode === 'manual' ? 'Manual' : 'AI'}</span>
+        <span class="badge">Images: ${imageMode === 'upload' ? 'Upload' : 'AI'}</span>
+        <span class="badge">Layout: ${layoutLabel(imageLayout)}</span>
+        ${visualStyle ? `<span class="badge">Style: ${visualStyle}</span>` : ''}`;
+
+      let html = `
+        <div class="meta-card">
+          <label>Title</label><input type="text" id="meta_title" value="${escapeHtml(scriptData.title || '')}">
+          <label>Description</label><textarea id="meta_desc" rows="3">${escapeHtml(scriptData.description || '')}</textarea>
+          <label>Tags (comma-separated)</label><input type="text" id="meta_tags" value="${escapeHtml((scriptData.tags || []).join(', '))}">
+        </div>`;
+      html += renderScene('hook', 'Hook', scriptData.hook?.text || '', scriptData.hook?.visual_prompt, scriptData.hook?.broll_prompt);
+      scriptData.acts?.forEach(act => {
+        html += `<div class="act-header">Act ${act.act_number}: ${act.act_title}</div>`;
+        act.scenes?.forEach(scene => {
+          html += renderScene(scene.scene_id, scene.scene_id, scene.narration || '', scene.visual_prompt, scene.broll_prompt);
+        });
+      });
+      html += renderScene('outro', 'Outro', scriptData.outro?.text || '', scriptData.outro?.visual_prompt, scriptData.outro?.broll_prompt);
+
+      document.getElementById('content').innerHTML = html;
+      document.getElementById('approveBar').style.display = 'flex';
+
+      document.querySelectorAll('textarea').forEach(ta => {
+        ta.addEventListener('input', () => {
+          const preview = ta.parentElement.querySelector('.marker-preview');
+          if (preview) preview.innerHTML = highlightMarkers(ta.value);
+        });
+      });
+
+      const voices = await fetch(`${API}/audio/voices`).then(r => r.json());
+      const vsel = document.getElementById('voice');
+      voices.voices.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v.replace(/_/g, ' ');
+        vsel.appendChild(opt);
+      });
+
+      const status2 = status;
+      const speed = scriptData_step.speed || localStorage.getItem('ytf_speed') || 0.85;
+      const voice = scriptData_step.voice || localStorage.getItem('ytf_voice');
+      document.getElementById('speed').value = speed;
+      document.getElementById('speedVal').textContent = speed;
+      if (voice) vsel.value = voice;
+      if (scriptData_step.audio_mode) {
+        document.getElementById('audioMode').value = scriptData_step.audio_mode;
+      }
+      document.getElementById('speed').oninput = e => {
+        document.getElementById('speedVal').textContent = e.target.value;
+      };
+      } catch (e) {
+        content.innerHTML = `<p style="color:#EF4444">Failed to load script: ${escapeHtml(e.message)}</p>
+          <p style="color:var(--muted);margin-top:0.75rem"><a href="/ui/manual-script.html?job_id=${jobId || ''}&niche_id=${nicheId || ''}" style="color:var(--primary)">Back to script editor</a></p>`;
+      }
+    }
+
+    async function regenerateScene(sceneId) {
+      const btn = document.getElementById(`btn_${sceneId}`);
+      btn.disabled = true;
+      const instruction = document.getElementById(`instr_${sceneId}`).value || 'improve this section';
+      try {
+        const res = await fetch(`${API}/generate/script-review/regenerate-scene`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job_id: jobId, niche_id: nicheId, scene_id: sceneId, instruction }),
+        });
+        const data = await res.json();
+        const ta = document.getElementById(`ta_${sceneId}`);
+        ta.value = data.new_narration;
+        ta.dispatchEvent(new Event('input'));
+      } catch (e) { alert('Regeneration failed'); }
+      btn.disabled = false;
+    }
+
+    async function regenerateFull() {
+      const instruction = document.getElementById('fullInstruction').value;
+      const status = await fetch(`${API}/status/${jobId}`).then(r => r.json());
+      try {
+        const res = await fetch(`${API}/generate/script-review/regenerate-full`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            job_id: jobId, niche_id: nicheId,
+            topic: status.topic, instruction, duration_minutes: 10,
+          }),
+        });
+        scriptData = await res.json();
+        document.getElementById('content').innerHTML = '';
+        await loadScript();
+      } catch (e) { alert('Full regeneration failed'); }
+    }
+
+    function collectScript() {
+      const edited = JSON.parse(JSON.stringify(scriptData));
+      edited.title = document.getElementById('meta_title').value;
+      edited.description = document.getElementById('meta_desc').value;
+      edited.tags = document.getElementById('meta_tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+      edited.hook.text = document.getElementById('ta_hook').value;
+      edited.hook.visual_prompt = document.getElementById('vis_hook').value;
+      if (document.getElementById('broll_hook')) edited.hook.broll_prompt = document.getElementById('broll_hook').value;
+      edited.outro.text = document.getElementById('ta_outro').value;
+      edited.outro.visual_prompt = document.getElementById('vis_outro').value;
+      edited.acts?.forEach(act => {
+        act.scenes?.forEach(scene => {
+          const ta = document.getElementById(`ta_${scene.scene_id}`);
+          if (ta) scene.narration = ta.value;
+          const vis = document.getElementById(`vis_${scene.scene_id}`);
+          if (vis) scene.visual_prompt = vis.value;
+          const broll = document.getElementById(`broll_${scene.scene_id}`);
+          if (broll) scene.broll_prompt = broll.value;
+        });
+      });
+      return edited;
+    }
+
+    async function approveScript() {
+      const btn = document.getElementById('approveBtn');
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      try {
+        await fetch(`${API}/generate/script-review/approve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            job_id: jobId,
+            niche_id: nicheId,
+            edited_script: collectScript(),
+            audio_mode: document.getElementById('audioMode').value,
+            voice: document.getElementById('voice').value,
+            speed: parseFloat(document.getElementById('speed').value),
+            image_mode: imageMode,
+            image_layout: imageLayout,
+            visual_style: visualStyle,
+          }),
+        });
+        location.href = `/ui/index.html?job_id=${jobId}`;
+      } catch (e) {
+        alert('Approval failed');
+        btn.disabled = false;
+        btn.textContent = '✓ Approve & Generate Video';
+      }
+    }
+
+    loadScript();
+  </script>
+</body>
+</html>

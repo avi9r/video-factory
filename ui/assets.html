@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Images — YouTube Factory</title>
+  <style>
+    :root { --bg:#0A0A0F; --surface:#14141F; --primary:#10B981; --text:#fff; --muted:#888; --success:#10B981; --warn:#F59E0B; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); padding:2rem; max-width:960px; margin:0 auto; padding-bottom:6rem; }
+    h1 { margin-bottom:0.25rem; }
+    .subtitle { color:var(--muted); margin-bottom:1rem; }
+    .progress-bar { background:var(--surface); border:1px solid #333; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; font-size:0.9rem; }
+    .progress-bar strong { color:var(--primary); }
+    .scene-group { margin-bottom:1.5rem; }
+    .scene-header { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--primary); margin-bottom:0.5rem; }
+    .narration-hint { font-size:0.8rem; color:var(--muted); font-style:italic; margin-bottom:0.75rem; line-height:1.4; }
+    .slot-card {
+      background:var(--surface); border:1px solid #222; border-radius:12px;
+      padding:1rem 1.25rem; margin-bottom:0.75rem;
+    }
+    .slot-card.done { border-color:var(--success); }
+    .slot-card.missing { border-color:#444; }
+    .slot-top { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; margin-bottom:0.75rem; }
+    .slot-title { font-weight:600; font-size:0.95rem; }
+    .slot-type { font-size:0.75rem; color:var(--muted); margin-top:0.15rem; }
+    .status-pill { font-size:0.7rem; padding:0.2rem 0.55rem; border-radius:12px; white-space:nowrap; flex-shrink:0; }
+    .status-pill.done { background:#064e3b; color:var(--success); }
+    .status-pill.need { background:#422006; color:var(--warn); }
+    .prompt-box {
+      background:var(--bg); border:1px solid #333; border-radius:8px;
+      padding:0.75rem; margin-bottom:0.75rem;
+    }
+    .prompt-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.35rem; }
+    .prompt-text { font-size:0.875rem; line-height:1.5; color:#ddd; }
+    .upload-row { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+    .upload-row input[type=file] { font-size:0.85rem; color:var(--muted); max-width:100%; }
+    .preview { margin-top:0.75rem; }
+    .preview img { max-width:100%; max-height:160px; border-radius:8px; border:1px solid #333; }
+    button { background:var(--primary); color:#fff; border:none; padding:0.75rem 1.25rem; border-radius:8px; font-weight:600; cursor:pointer; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
+    button.secondary { background:#333; margin-left:0.5rem; }
+    .bar { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid #333; padding:1rem 2rem; display:flex; align-items:center; gap:1rem; }
+  </style>
+</head>
+<body>
+  <h1>Upload Scene Images</h1>
+  <p class="subtitle" id="layoutHint">Each field below matches a required image from your script.</p>
+  <div class="progress-bar" id="progressBar">Loading…</div>
+  <div id="scenes"></div>
+
+  <div class="bar">
+    <button id="continueBtn" disabled onclick="continuePipeline()">Continue Pipeline</button>
+    <a href="/ui/index.html"><button class="secondary" type="button">Back to Jobs</button></a>
+  </div>
+
+  <script>
+    const API = '';
+    let jobId;
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderSlot(slot) {
+      const done = slot.uploaded;
+      return `
+        <div class="slot-card ${done ? 'done' : 'missing'}">
+          <div class="slot-top">
+            <div>
+              <div class="slot-title">${escapeHtml(slot.scene_label)} — ${escapeHtml(slot.slot_label)}</div>
+              <div class="slot-type">${escapeHtml(slot.scene_id)} · ${escapeHtml(slot.asset_type)}</div>
+            </div>
+            <span class="status-pill ${done ? 'done' : 'need'}">${done ? 'Uploaded' : 'Required'}</span>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-label">Image prompt / description</div>
+            <div class="prompt-text">${escapeHtml(slot.prompt)}</div>
+          </div>
+          <div class="upload-row">
+            <input type="file" accept="image/png,image/jpeg,image/webp,image/*"
+              id="file_${slot.scene_id}_${slot.asset_type}"
+              onchange="upload('${slot.scene_id}','${slot.asset_type}',this)">
+          </div>
+          ${done && slot.url ? `<div class="preview"><img src="${slot.url}?t=${Date.now()}" alt="preview"></div>` : ''}
+        </div>`;
+    }
+
+    async function loadStatus() {
+      const data = await fetch(`${API}/generate/assets/${jobId}`).then(r => r.json());
+      const layout = data.image_layout || 'one_image';
+      const layoutHints = {
+        one_image: 'One image mode — upload a single hero image used for the entire video.',
+        per_scene: 'Per scene mode — one main image upload per scene.',
+        multiple: 'Main + B-roll mode — two uploads per scene.',
+        single: 'Per scene mode — one main image upload per scene.',
+      };
+      document.getElementById('layoutHint').textContent =
+        layoutHints[layout] || layoutHints.one_image;
+
+      document.getElementById('progressBar').innerHTML =
+        `<strong>${data.uploaded_count || 0}</strong> of <strong>${data.required_count || 0}</strong> required images uploaded`;
+
+      const container = document.getElementById('scenes');
+      container.innerHTML = '';
+
+      (data.scenes || []).forEach(scene => {
+        const group = document.createElement('div');
+        group.className = 'scene-group';
+        let inner = `<div class="scene-header">${escapeHtml(scene.label)}</div>`;
+        if (scene.narration_preview) {
+          inner += `<div class="narration-hint">"${escapeHtml(scene.narration_preview)}"</div>`;
+        }
+        (scene.slots || []).forEach(slot => {
+          inner += renderSlot(slot);
+        });
+        group.innerHTML = inner;
+        container.appendChild(group);
+      });
+
+      document.getElementById('continueBtn').disabled = !data.ready;
+    }
+
+    async function upload(sceneId, assetType, input) {
+      const file = input.files[0];
+      if (!file) return;
+      input.disabled = true;
+      try {
+        const fd = new FormData();
+        fd.append('scene_id', sceneId);
+        fd.append('asset_type', assetType);
+        fd.append('file', file);
+        const res = await fetch(`${API}/generate/assets/${jobId}/upload`, { method: 'POST', body: fd });
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.detail || 'Upload failed');
+        }
+        await loadStatus();
+      } finally {
+        input.disabled = false;
+      }
+    }
+
+    async function continuePipeline() {
+      const res = await fetch(`${API}/generate/assets/${jobId}/continue`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) { alert(data.detail || 'Continue failed'); return; }
+      location.href = `/ui/index.html?job_id=${jobId}`;
+    }
+
+    const p = new URLSearchParams(location.search);
+    jobId = p.get('job_id');
+    if (!jobId) document.getElementById('scenes').textContent = 'Missing job_id';
+    else loadStatus();
+  </script>
+</body>
+</html>
