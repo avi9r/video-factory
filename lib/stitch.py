@@ -9,7 +9,7 @@ from pathlib import Path
 from lib.audio import get_audio_duration
 from lib.color_grade import apply_lut
 from lib.music import get_music_for_act
-from lib.text_overlay import create_intro_card, create_title_card
+from lib.text_overlay import create_act_title_card, create_intro_card, create_title_card
 
 
 def _log(msg: str) -> None:
@@ -48,6 +48,9 @@ def create_scene_video(
     use_broll: bool = True,
     fps: int = 30,
     max_segment_seconds: float = 7.0,
+    *,
+    channel_config: dict | None = None,
+    caption_cues: list | None = None,
 ) -> str:
     """
     Build one scene: multiple Ken Burns segments (hard cuts), then mux narration audio.
@@ -86,9 +89,23 @@ def create_scene_video(
         visual_path = tmp / "visual.mp4"
         render_scene_visual(timeline, str(visual_path), fps=fps, segment_transition="cut")
 
+        mux_input = visual_path
+        if channel_config and caption_cues:
+            from lib.captions import burn_captions_on_video, captions_enabled
+
+            if captions_enabled(channel_config):
+                captioned = tmp / "visual_captioned.mp4"
+                burn_captions_on_video(
+                    str(visual_path),
+                    caption_cues,
+                    str(captioned),
+                    channel_config,
+                )
+                mux_input = captioned
+
         _run_ffmpeg([
             "ffmpeg", "-y",
-            "-i", str(visual_path),
+            "-i", str(mux_input),
             "-i", audio_path,
             "-map", "0:v:0", "-map", "1:a:0",
             "-c:v", "libx264", "-preset", "medium", "-crf", "18",
@@ -113,6 +130,33 @@ def _probe_duration(path: str) -> float:
         check=True,
     )
     return float(json.loads(probe.stdout)["format"]["duration"])
+
+
+def concatenate_audio_wavs(wav_paths: list[str], output_path: str) -> str:
+    """Concatenate narration WAVs in order into one file."""
+    if not wav_paths:
+        raise ValueError("No audio paths provided")
+    out = Path(output_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    if len(wav_paths) == 1:
+        _run_ffmpeg(["ffmpeg", "-y", "-i", wav_paths[0], "-c", "copy", str(out)])
+        return str(out)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        list_file = Path(tmp) / "list.txt"
+        list_file.write_text(
+            "\n".join(f"file '{Path(p).resolve()}'" for p in wav_paths),
+            encoding="utf-8",
+        )
+        _run_ffmpeg([
+            "ffmpeg", "-y",
+            "-f", "concat", "-safe", "0",
+            "-i", str(list_file),
+            "-c", "copy",
+            str(out),
+        ])
+    _log(f"Concatenated {len(wav_paths)} audio clips -> {out.name}")
+    return str(out)
 
 
 def concatenate_scenes(
@@ -202,35 +246,73 @@ def concatenate_scenes(
     raise ValueError(f"Unknown transition: {transition}")
 
 
+def overlay_act_title_intro(
+    video_path: str,
+    act_title: str,
+    channel_config: dict,
+    output_path: str,
+    fps: int = 30,
+    *,
+    act_number: int = 1,
+    background_image: str | None = None,
+    overlay_sec: float = 1.4,
+) -> str:
+    """Overlay act title on the opening beat — narration continues with no added silence."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        card = tmp / "act_card.png"
+        card_video = tmp / "act_card.mp4"
+        create_act_title_card(
+            act_title,
+            channel_config,
+            str(card),
+            act_number=act_number,
+            background_image=background_image,
+        )
+        fade_start = max(0.0, overlay_sec - 0.35)
+        _run_ffmpeg([
+            "ffmpeg", "-y", "-loop", "1", "-i", str(card),
+            "-c:v", "libx264", "-t", str(overlay_sec), "-pix_fmt", "yuv420p",
+            "-r", str(fps),
+            "-vf", f"scale=1920:1080,fade=t=out:st={fade_start}:d=0.35",
+            "-an", str(card_video),
+        ])
+        _run_ffmpeg([
+            "ffmpeg", "-y",
+            "-i", video_path,
+            "-i", str(card_video),
+            "-filter_complex",
+            (
+                f"[1:v]format=rgba,colorchannelmixer=aa=0.9[ov];"
+                f"[0:v][ov]overlay=0:0:enable='between(t,0,{overlay_sec})'[v]"
+            ),
+            "-map", "[v]", "-map", "0:a",
+            *_encode_flags(fps),
+            output_path,
+        ])
+    return output_path
+
+
 def add_act_transition(
     video_path: str,
     act_title: str,
     channel_config: dict,
     output_path: str,
     fps: int = 30,
+    *,
+    act_number: int = 1,
+    background_image: str | None = None,
 ) -> str:
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp = Path(tmp)
-        card = tmp / "act_card.png"
-        card_video = tmp / "act_card.mp4"
-        create_title_card(act_title, channel_config, str(card))
-        card_dur = 2.0
-        _run_ffmpeg([
-            "ffmpeg", "-y", "-loop", "1", "-i", str(card),
-            "-c:v", "libx264", "-t", str(card_dur), "-pix_fmt", "yuv420p",
-            "-r", str(fps), "-vf", "scale=1920:1080", "-an", str(card_video),
-        ])
-        main_dur = _probe_duration(video_path)
-        total_dur = main_dur + card_dur
-        _run_ffmpeg([
-            "ffmpeg", "-y", "-i", video_path, "-i", str(card_video),
-            "-filter_complex",
-            f"[0:v][1:v]concat=n=2:v=1:a=0[v];[0:a]apad=whole_dur={total_dur}[a]",
-            "-map", "[v]", "-map", "[a]",
-            *_encode_flags(fps),
-            output_path,
-        ])
-    return output_path
+    """Legacy: overlay act title without extending audio (replaces old append+silence)."""
+    return overlay_act_title_intro(
+        video_path,
+        act_title,
+        channel_config,
+        output_path,
+        fps=fps,
+        act_number=act_number,
+        background_image=background_image,
+    )
 
 
 def mix_background_music(
@@ -255,10 +337,12 @@ def mix_background_music(
         "-stream_loop", "-1",
         "-i", str(music_path),
         "-filter_complex",
+        f"[0:a]volume=1.0[voice];"
         f"[1:a]volume={music_volume},"
         f"afade=t=in:st=0:d={fade_in},"
         f"afade=t=out:st={fade_out_start}:d={fade_out}[music];"
-        f"[0:a][music]amix=inputs=2:duration=first[aout]",
+        f"[voice][music]amix=inputs=2:duration=first:weights=1 0.18:normalize=0,"
+        f"alimiter=limit=0.98:attack=5:release=50[aout]",
         "-map", "0:v",
         "-map", "[aout]",
         "-c:v", "copy",
@@ -274,6 +358,8 @@ def add_intro_outro(
     channel_config: dict,
     output_path: str,
     fps: int = 30,
+    *,
+    background_image: str | None = None,
 ) -> str:
     intro_dur = 3.0
     outro_dur = 5.0
@@ -283,9 +369,11 @@ def add_intro_outro(
         outro_card = tmp / "outro.png"
         intro_vid = tmp / "intro.mp4"
         outro_vid = tmp / "outro.mp4"
-        create_intro_card(channel_config, str(intro_card))
+        create_intro_card(channel_config, str(intro_card), background_image=background_image)
         outro_text = channel_config.get("script", {}).get("outro_text", "Subscribe for more")
-        create_title_card(outro_text, channel_config, str(outro_card))
+        create_title_card(
+            outro_text, channel_config, str(outro_card), background_image=background_image
+        )
         for card, vid, dur in [(intro_card, intro_vid, intro_dur), (outro_card, outro_vid, outro_dur)]:
             _run_ffmpeg([
                 "ffmpeg", "-y", "-loop", "1", "-i", str(card),
@@ -317,6 +405,7 @@ def final_render(
     _run_ffmpeg([
         "ffmpeg", "-y", "-i", video_path,
         "-vf", f"scale={w}:{h}",
+        "-af", "loudnorm=I=-14:TP=-1:LRA=11:print_format=none",
         "-r", str(fps), "-c:v", "libx264", "-preset", "medium",
         "-c:a", "aac", "-b:a", "192k", "-pix_fmt", "yuv420p",
         output_path,

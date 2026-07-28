@@ -1,0 +1,1028 @@
+aircraft_fly_by:
+  default_volume: 0.09
+  file: transport/aircraft_fly_by.mp3
+  tags:
+  - aircraft
+  - plane
+  - travel
+  volume_range:
+  - 0.05
+  - 0.13
+alarm_clock_ringing:
+  default_volume: 0.08
+  file: domestic/alarm_clock_ringing.mp3
+  tags:
+  - alarm
+  - clock
+  - urgency
+  volume_range:
+  - 0.05
+  - 0.12
+applause:
+  default_volume: 0.12
+  file: crowd/applause.mp3
+  tags:
+  - applause
+  - crowd
+  - celebration
+  volume_range:
+  - 0.08
+  - 0.16
+bank_lobby:
+  default_volume: 0.06
+  file: office/bank_lobby.mp3
+  tags:
+  - bank
+  - finance
+  - lobby
+  volume_range:
+  - 0.03
+  - 0.09
+beach_waves:
+  default_volume: 0.07
+  file: water/beach_waves.mp3
+  tags:
+  - beach
+  - waves
+  - peace
+  volume_range:
+  - 0.04
+  - 0.11
+beep_alert:
+  default_volume: 0.07
+  file: fx/beep_alert.mp3
+  tags:
+  - beep
+  - alert
+  - warning
+  volume_range:
+  - 0.04
+  - 0.1
+beep_short:
+  default_volume: 0.07
+  file: fx/beep_short.mp3
+  tags:
+  - beep
+  - alert
+  - tech
+  volume_range:
+  - 0.04
+  - 0.1
+bees_buzzing:
+  default_volume: 0.06
+  file: nature/bees_buzzing.mp3
+  tags:
+  - bees
+  - nature
+  - summer
+  volume_range:
+  - 0.03
+  - 0.09
+birds_chirping:
+  default_volume: 0.07
+  file: nature/birds_chirping.mp3
+  tags:
+  - birds
+  - nature
+  - morning
+  volume_range:
+  - 0.04
+  - 0.11
+brook:
+  default_volume: 0.06
+  file: water/brook.mp3
+  tags:
+  - brook
+  - stream
+  - gentle
+  volume_range:
+  - 0.03
+  - 0.1
+bus_pass_by:
+  default_volume: 0.08
+  file: transport/bus_pass_by.mp3
+  tags:
+  - bus
+  - transit
+  volume_range:
+  - 0.05
+  - 0.12
+business_lobby:
+  default_volume: 0.06
+  file: office/business_lobby.mp3
+  tags:
+  - business
+  - lobby
+  - corporate
+  volume_range:
+  - 0.03
+  - 0.09
+cafeteria:
+  default_volume: 0.08
+  file: office/cafeteria.mp3
+  tags:
+  - cafeteria
+  - crowd
+  - workplace
+  volume_range:
+  - 0.05
+  - 0.12
+campfire:
+  default_volume: 0.08
+  file: nature/campfire.mp3
+  tags:
+  - campfire
+  - fire
+  - outdoor
+  volume_range:
+  - 0.04
+  - 0.12
+car_pass_by:
+  default_volume: 0.08
+  file: transport/car_pass_by.mp3
+  tags:
+  - car
+  - traffic
+  - street
+  volume_range:
+  - 0.05
+  - 0.12
+cars_drive_by:
+  default_volume: 0.08
+  file: transport/cars_drive_by.mp3
+  tags:
+  - cars
+  - traffic
+  - city
+  volume_range:
+  - 0.05
+  - 0.12
+cash_register:
+  default_volume: 0.08
+  file: money/cash_register.mp3
+  tags:
+  - cash
+  - register
+  - retail
+  volume_range:
+  - 0.05
+  - 0.12
+chainsaw:
+  default_volume: 0.09
+  file: industrial/chainsaw.mp3
+  tags:
+  - chainsaw
+  - industrial
+  volume_range:
+  - 0.05
+  - 0.13
+champagne_pop:
+  default_volume: 0.08
+  file: fx/champagne_pop.mp3
+  tags:
+  - champagne
+  - celebration
+  - pop
+  volume_range:
+  - 0.05
+  - 0.12
+city_ambience:
+  default_volume: 0.07
+  file: ambient/city_ambience.mp3
+  tags:
+  - city
+  - urban
+  - ambient
+  volume_range:
+  - 0.04
+  - 0.11
+clock_chime:
+  default_volume: 0.08
+  file: domestic/clock_chime.mp3
+  tags:
+  - clock
+  - chime
+  - hour
+  volume_range:
+  - 0.05
+  - 0.11
+clock_ticking:
+  default_volume: 0.07
+  file: domestic/clock_ticking.mp3
+  tags:
+  - clock
+  - ticking
+  - time
+  volume_range:
+  - 0.04
+  - 0.1
+coffee_maker_brewing:
+  default_volume: 0.07
+  file: domestic/coffee_maker_brewing.mp3
+  tags:
+  - coffee
+  - brew
+  - kitchen
+  volume_range:
+  - 0.04
+  - 0.1
+coffee_pour:
+  default_volume: 0.07
+  file: domestic/coffee_pour.mp3
+  tags:
+  - coffee
+  - pour
+  - morning
+  volume_range:
+  - 0.04
+  - 0.1
+coffee_shop:
+  default_volume: 0.07
+  file: office/coffee_shop.mp3
+  tags:
+  - coffee
+  - cafe
+  - ambient
+  volume_range:
+  - 0.04
+  - 0.11
+coin_spin:
+  default_volume: 0.07
+  file: money/coin_spin.mp3
+  tags:
+  - coin
+  - gamble
+  - chance
+  volume_range:
+  - 0.04
+  - 0.1
+coins_collecting:
+  default_volume: 0.08
+  file: money/coins_collecting.mp3
+  tags:
+  - coins
+  - money
+  - counting
+  volume_range:
+  - 0.05
+  - 0.12
+coins_drop:
+  default_volume: 0.08
+  file: money/coins_drop.mp3
+  tags:
+  - coins
+  - money
+  - finance
+  volume_range:
+  - 0.05
+  - 0.12
+computer_keyboard:
+  default_volume: 0.07
+  file: office/computer_keyboard.mp3
+  tags:
+  - typing
+  - computer
+  - office
+  volume_range:
+  - 0.04
+  - 0.11
+computers_processing:
+  default_volume: 0.07
+  file: office/computers_processing.mp3
+  tags:
+  - computer
+  - data
+  - tech
+  volume_range:
+  - 0.04
+  - 0.1
+construction:
+  default_volume: 0.09
+  file: industrial/construction.mp3
+  tags:
+  - construction
+  - building
+  volume_range:
+  - 0.05
+  - 0.13
+crowd_chatter:
+  default_volume: 0.08
+  file: crowd/crowd_chatter.mp3
+  tags:
+  - crowd
+  - chatter
+  - social
+  volume_range:
+  - 0.05
+  - 0.12
+crowd_cheer:
+  default_volume: 0.12
+  file: crowd/cheer_stadium.mp3
+  tags:
+  - crowd
+  - cheer
+  - victory
+  volume_range:
+  - 0.08
+  - 0.16
+crowd_cheering_outside:
+  default_volume: 0.11
+  file: crowd/crowd_cheering_outside.mp3
+  tags:
+  - crowd
+  - cheer
+  - outdoor
+  volume_range:
+  - 0.07
+  - 0.15
+crowd_murmur:
+  default_volume: 0.08
+  file: crowd/crowd_murmur.mp3
+  tags:
+  - crowd
+  - murmur
+  - tension
+  volume_range:
+  - 0.05
+  - 0.12
+crumpling_paper:
+  default_volume: 0.07
+  file: fx/crumpling_paper.mp3
+  tags:
+  - paper
+  - reject
+  - failure
+  volume_range:
+  - 0.04
+  - 0.1
+door_close:
+  default_volume: 0.07
+  file: domestic/door_close.mp3
+  tags:
+  - door
+  - close
+  volume_range:
+  - 0.04
+  - 0.1
+door_creak:
+  default_volume: 0.07
+  file: domestic/door_creak.mp3
+  tags:
+  - door
+  - creak
+  - tension
+  volume_range:
+  - 0.04
+  - 0.1
+door_knock:
+  default_volume: 0.08
+  file: domestic/door_knock.mp3
+  tags:
+  - door
+  - knock
+  - tension
+  volume_range:
+  - 0.05
+  - 0.12
+doorbell:
+  default_volume: 0.08
+  file: domestic/doorbell.mp3
+  tags:
+  - doorbell
+  - door
+  - arrival
+  volume_range:
+  - 0.05
+  - 0.12
+dramatic_drums:
+  default_volume: 0.08
+  file: fx/dramatic_drums.mp3
+  tags:
+  - drums
+  - dramatic
+  - impact
+  volume_range:
+  - 0.05
+  - 0.12
+drill:
+  default_volume: 0.08
+  file: industrial/drill.mp3
+  tags:
+  - drill
+  - construction
+  volume_range:
+  - 0.05
+  - 0.12
+electric_typewriter:
+  default_volume: 0.07
+  file: office/electric_typewriter.mp3
+  tags:
+  - typewriter
+  - vintage
+  volume_range:
+  - 0.04
+  - 0.11
+elevator_interior:
+  default_volume: 0.06
+  file: office/elevator_interior.mp3
+  tags:
+  - elevator
+  - office
+  volume_range:
+  - 0.03
+  - 0.09
+error_buzzer:
+  default_volume: 0.08
+  file: fx/error_buzzer.mp3
+  tags:
+  - error
+  - buzzer
+  - fail
+  volume_range:
+  - 0.05
+  - 0.12
+explosion:
+  default_volume: 0.1
+  file: fx/explosion.mp3
+  tags:
+  - explosion
+  - impact
+  - disaster
+  volume_range:
+  - 0.06
+  - 0.14
+explosion_distant:
+  default_volume: 0.09
+  file: fx/explosion_distant.mp3
+  tags:
+  - explosion
+  - boom
+  - war
+  volume_range:
+  - 0.05
+  - 0.13
+factory_machine:
+  default_volume: 0.09
+  file: industrial/factory_machine.mp3
+  tags:
+  - factory
+  - manufacturing
+  volume_range:
+  - 0.05
+  - 0.13
+fax_machine:
+  default_volume: 0.07
+  file: office/fax_machine.mp3
+  tags:
+  - fax
+  - office
+  - vintage
+  volume_range:
+  - 0.04
+  - 0.1
+fire_crackle:
+  default_volume: 0.08
+  file: nature/fire_crackle.mp3
+  tags:
+  - fire
+  - crackle
+  - warmth
+  volume_range:
+  - 0.04
+  - 0.12
+fire_crackling:
+  default_volume: 0.08
+  file: nature/fire_crackling.mp3
+  tags:
+  - fire
+  - crackling
+  volume_range:
+  - 0.05
+  - 0.12
+fireplace:
+  default_volume: 0.07
+  file: nature/fireplace.mp3
+  tags:
+  - fireplace
+  - fire
+  - home
+  volume_range:
+  - 0.04
+  - 0.11
+forest_ambience:
+  default_volume: 0.06
+  file: nature/forest_ambience.mp3
+  tags:
+  - forest
+  - nature
+  - ambient
+  volume_range:
+  - 0.03
+  - 0.1
+glass_break:
+  default_volume: 0.1
+  file: fx/glass_break.mp3
+  tags:
+  - glass
+  - break
+  - shock
+  volume_range:
+  - 0.06
+  - 0.14
+heartbeat_fast:
+  default_volume: 0.09
+  file: fx/heartbeat_fast.mp3
+  tags:
+  - heartbeat
+  - panic
+  - stress
+  volume_range:
+  - 0.05
+  - 0.13
+heartbeat_slow:
+  default_volume: 0.09
+  file: fx/heartbeat_slow.mp3
+  tags:
+  - heartbeat
+  - tension
+  - dread
+  volume_range:
+  - 0.05
+  - 0.13
+helicopter_fly_over:
+  default_volume: 0.1
+  file: transport/helicopter_fly_over.mp3
+  tags:
+  - helicopter
+  - crisis
+  volume_range:
+  - 0.06
+  - 0.14
+highway_traffic:
+  default_volume: 0.08
+  file: ambient/highway_traffic.mp3
+  tags:
+  - traffic
+  - highway
+  - urban
+  volume_range:
+  - 0.05
+  - 0.12
+hurricane:
+  default_volume: 0.11
+  file: ambient/hurricane.mp3
+  tags:
+  - hurricane
+  - storm
+  - disaster
+  volume_range:
+  - 0.07
+  - 0.15
+jackhammer:
+  default_volume: 0.09
+  file: industrial/jackhammer.mp3
+  tags:
+  - jackhammer
+  - construction
+  volume_range:
+  - 0.05
+  - 0.13
+laptop_typing:
+  default_volume: 0.07
+  file: office/laptop_typing.mp3
+  tags:
+  - typing
+  - laptop
+  - work
+  volume_range:
+  - 0.04
+  - 0.1
+magic_chime:
+  default_volume: 0.07
+  file: fx/magic_chime.mp3
+  tags:
+  - chime
+  - reveal
+  - insight
+  volume_range:
+  - 0.04
+  - 0.1
+mall_ambience:
+  default_volume: 0.08
+  file: office/mall_ambience.mp3
+  tags:
+  - mall
+  - shopping
+  - retail
+  volume_range:
+  - 0.05
+  - 0.12
+metro_interior:
+  default_volume: 0.08
+  file: transport/metro_interior.mp3
+  tags:
+  - metro
+  - subway
+  - interior
+  volume_range:
+  - 0.05
+  - 0.12
+money_bills_rustle:
+  default_volume: 0.07
+  file: money/money_bills_rustle.mp3
+  tags:
+  - money
+  - bills
+  - cash
+  volume_range:
+  - 0.04
+  - 0.11
+motorcycle_pass_by:
+  default_volume: 0.08
+  file: transport/motorcycle_pass_by.mp3
+  tags:
+  - motorcycle
+  - street
+  volume_range:
+  - 0.05
+  - 0.12
+multimedia_alert:
+  default_volume: 0.07
+  file: fx/multimedia_alert.mp3
+  tags:
+  - alert
+  - notification
+  - ui
+  volume_range:
+  - 0.04
+  - 0.1
+notification_ping:
+  default_volume: 0.07
+  file: fx/notification_ping.mp3
+  tags:
+  - notification
+  - alert
+  - tech
+  volume_range:
+  - 0.04
+  - 0.11
+ocean_waves:
+  default_volume: 0.08
+  file: water/ocean_waves.mp3
+  tags:
+  - ocean
+  - waves
+  - nature
+  volume_range:
+  - 0.04
+  - 0.12
+office_ambience:
+  default_volume: 0.06
+  file: ambient/office_ambience.mp3
+  tags:
+  - office
+  - corporate
+  - ambient
+  volume_range:
+  - 0.03
+  - 0.1
+page_flip:
+  default_volume: 0.06
+  file: fx/page_flip.mp3
+  tags:
+  - page
+  - book
+  - document
+  volume_range:
+  - 0.03
+  - 0.09
+paper_rustle:
+  default_volume: 0.06
+  file: fx/paper_rustle.mp3
+  tags:
+  - paper
+  - document
+  - office
+  volume_range:
+  - 0.03
+  - 0.09
+phone_dial:
+  default_volume: 0.07
+  file: domestic/phone_dial.mp3
+  tags:
+  - phone
+  - dial
+  volume_range:
+  - 0.04
+  - 0.1
+phone_ring:
+  default_volume: 0.08
+  file: domestic/phone_ring.mp3
+  tags:
+  - phone
+  - ring
+  - call
+  volume_range:
+  - 0.05
+  - 0.12
+piggy_bank_shake:
+  default_volume: 0.07
+  file: money/piggy_bank_shake.mp3
+  tags:
+  - savings
+  - money
+  - finance
+  volume_range:
+  - 0.04
+  - 0.1
+printer:
+  default_volume: 0.07
+  file: office/printer.mp3
+  tags:
+  - printer
+  - office
+  - tech
+  volume_range:
+  - 0.04
+  - 0.1
+rain_01:
+  default_volume: 0.07
+  file: ambient/rain_01.mp3
+  tags:
+  - rain
+  - weather
+  - ambient
+  - soft
+  volume_range:
+  - 0.04
+  - 0.12
+rain_02:
+  default_volume: 0.08
+  file: ambient/rain_02.mp3
+  tags:
+  - rain
+  - weather
+  - steady
+  volume_range:
+  - 0.05
+  - 0.13
+rain_03:
+  default_volume: 0.1
+  file: ambient/rain_03.mp3
+  tags:
+  - rain
+  - storm
+  - heavy
+  volume_range:
+  - 0.06
+  - 0.15
+rain_heavy:
+  default_volume: 0.1
+  file: ambient/rain_heavy.mp3
+  tags:
+  - rain
+  - storm
+  - dramatic
+  - tension
+  volume_range:
+  - 0.06
+  - 0.16
+rain_light:
+  default_volume: 0.08
+  file: ambient/rain_light.mp3
+  tags:
+  - rain
+  - weather
+  - melancholy
+  - ambient
+  volume_range:
+  - 0.04
+  - 0.14
+rain_on_window:
+  default_volume: 0.07
+  file: ambient/rain_on_window.mp3
+  tags:
+  - rain
+  - indoor
+  - melancholy
+  volume_range:
+  - 0.04
+  - 0.11
+rain_thunder:
+  default_volume: 0.09
+  file: ambient/rain_thunder.mp3
+  tags:
+  - rain
+  - thunder
+  - storm
+  - dread
+  volume_range:
+  - 0.05
+  - 0.14
+restaurant_ambience:
+  default_volume: 0.08
+  file: office/restaurant_ambience.mp3
+  tags:
+  - restaurant
+  - dining
+  volume_range:
+  - 0.05
+  - 0.12
+river:
+  default_volume: 0.07
+  file: water/river.mp3
+  tags:
+  - river
+  - water
+  - nature
+  volume_range:
+  - 0.04
+  - 0.11
+siren:
+  default_volume: 0.09
+  file: fx/siren.mp3
+  tags:
+  - siren
+  - emergency
+  - police
+  volume_range:
+  - 0.05
+  - 0.13
+stapler_press:
+  default_volume: 0.07
+  file: fx/stapler_press.mp3
+  tags:
+  - stapler
+  - office
+  volume_range:
+  - 0.04
+  - 0.1
+storm_wind_rain:
+  default_volume: 0.1
+  file: ambient/storm_wind_rain.mp3
+  tags:
+  - storm
+  - wind
+  - rain
+  - crisis
+  volume_range:
+  - 0.06
+  - 0.15
+stream_small:
+  default_volume: 0.06
+  file: water/stream_small.mp3
+  tags:
+  - stream
+  - water
+  - quiet
+  volume_range:
+  - 0.03
+  - 0.09
+subway_train:
+  default_volume: 0.09
+  file: transport/subway_train.mp3
+  tags:
+  - subway
+  - metro
+  - urban
+  volume_range:
+  - 0.05
+  - 0.13
+thunder_distant:
+  default_volume: 0.09
+  file: ambient/thunder_distant.mp3
+  tags:
+  - thunder
+  - storm
+  - dread
+  volume_range:
+  - 0.05
+  - 0.14
+traffic_wet_road:
+  default_volume: 0.08
+  file: ambient/traffic_wet_road.mp3
+  tags:
+  - traffic
+  - rain
+  - urban
+  volume_range:
+  - 0.05
+  - 0.12
+train_pass_by:
+  default_volume: 0.09
+  file: transport/train_pass_by.mp3
+  tags:
+  - train
+  - rail
+  - travel
+  volume_range:
+  - 0.05
+  - 0.13
+train_whistle:
+  default_volume: 0.09
+  file: transport/train_whistle.mp3
+  tags:
+  - train
+  - whistle
+  volume_range:
+  - 0.06
+  - 0.13
+truck_pass_by:
+  default_volume: 0.09
+  file: transport/truck_pass_by.mp3
+  tags:
+  - truck
+  - logistics
+  volume_range:
+  - 0.05
+  - 0.13
+typing_keyboard:
+  default_volume: 0.07
+  file: ambient/typing_keyboard.mp3
+  tags:
+  - typing
+  - keyboard
+  - office
+  volume_range:
+  - 0.04
+  - 0.11
+water_pour:
+  default_volume: 0.07
+  file: water/water_pour.mp3
+  tags:
+  - water
+  - pour
+  - liquid
+  volume_range:
+  - 0.04
+  - 0.11
+waterfall:
+  default_volume: 0.09
+  file: water/waterfall.mp3
+  tags:
+  - waterfall
+  - nature
+  - dramatic
+  volume_range:
+  - 0.05
+  - 0.13
+whoosh_soft:
+  default_volume: 0.06
+  file: fx/whoosh_soft.mp3
+  tags:
+  - whoosh
+  - transition
+  volume_range:
+  - 0.03
+  - 0.1
+whoosh_transition:
+  default_volume: 0.07
+  file: fx/whoosh_transition.mp3
+  tags:
+  - whoosh
+  - transition
+  - reveal
+  volume_range:
+  - 0.04
+  - 0.11
+wind_breeze:
+  default_volume: 0.06
+  file: ambient/wind_breeze.mp3
+  tags:
+  - wind
+  - breeze
+  - calm
+  - nature
+  volume_range:
+  - 0.03
+  - 0.1
+wind_howl:
+  default_volume: 0.08
+  file: ambient/wind_howl.mp3
+  tags:
+  - wind
+  - howl
+  - dread
+  volume_range:
+  - 0.05
+  - 0.12
+wind_soft:
+  default_volume: 0.07
+  file: ambient/wind_soft.mp3
+  tags:
+  - wind
+  - weather
+  - lonely
+  volume_range:
+  - 0.04
+  - 0.12
+wind_strong:
+  default_volume: 0.09
+  file: ambient/wind_strong.mp3
+  tags:
+  - wind
+  - storm
+  - tension
+  volume_range:
+  - 0.05
+  - 0.13

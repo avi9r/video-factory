@@ -183,15 +183,31 @@ def generate_thumbnail(
     channel_config: dict,
     output_path: str,
     template: str | None = None,
+    script: dict | None = None,
+    background_image: str | None = None,
 ) -> str:
     template = template or channel_config.get("thumbnail", {}).get("template", "dark_impact")
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     _log(f"Generating thumbnail: {title[:40]}...")
 
-    bg_style = channel_config.get("thumbnail", {}).get("background_style", "cinematic")
     bg_path = out.parent / "thumbnail_bg.png"
-    generate_scene_image(bg_style, channel_config, str(bg_path))
+    if background_image and Path(background_image).exists():
+        _log(f"Reusing topic image for thumbnail: {Path(background_image).name}")
+        img = Image.open(background_image).convert("RGB")
+        img = img.resize((1920, 1080), Image.LANCZOS)
+        img.save(bg_path, "PNG")
+    else:
+        bg_prompt = channel_config.get("thumbnail", {}).get("background_style", "cinematic")
+        if script:
+            hero = str(script.get("hero_visual_prompt", "")).strip()
+            hook_visual = script.get("hook", {}).get("visual_prompt", "")
+            if hero:
+                bg_prompt = f"{title}: {hero}"
+            elif hook_visual and hook_visual.lower() not in ("cinematic scene",):
+                bg_prompt = f"{title}: {hook_visual}"
+        generate_scene_image(bg_prompt, channel_config, str(bg_path))
+
     img = Image.open(bg_path).convert("RGBA").resize((1280, 720), Image.LANCZOS)
 
     if template == "clean_impact":

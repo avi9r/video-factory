@@ -39,14 +39,20 @@
       <summary style="cursor:pointer;font-weight:600">Required script format</summary>
       <div class="guide" style="margin-top:0.75rem">
         <ol>
-          <li><strong>Outline</strong> — title, title_variations, description, tags</li>
-          <li><strong>Hook</strong> — text, visual_prompt, broll_prompt, duration_seconds</li>
-          <li><strong>Act 1</strong> — act_title + scenes (scene_id, narration, visual_prompt, broll_prompt)</li>
+          <li><strong>Outline</strong> — title, title_variations, description, tags, hero_visual_prompt (for one-image videos)</li>
+          <li><strong>Hook</strong> — text, visual_prompt, broll_prompt, emotion, narration_tone, sfx_cues</li>
+          <li><strong>Act 1</strong> — act_title + scenes (scene_id, narration, visual_prompt, emotion, narration_tone, sfx_cues)</li>
           <li><strong>Act 2</strong> — same structure</li>
           <li><strong>Act 3</strong> — same structure</li>
-          <li><strong>Outro</strong> — text, visual_prompt, duration_seconds</li>
+          <li><strong>Outro</strong> — text, visual_prompt, emotion, narration_tone, sfx_cues</li>
         </ol>
-        <p style="margin-top:0.5rem">scene_id naming: <code>hook</code>, <code>act1_scene1</code>, <code>act2_scene1</code>, …, <code>outro</code></p>
+        <p style="margin-top:0.5rem">scene_id naming: <code>hook</code>, <code>act1_scene1</code>, …, <code>outro</code></p>
+        <p style="margin-top:0.5rem">sfx_cues example: <code>[{"sound_id":"rain_light","start_offset_sec":0,"duration_sec":12,"volume":0.08}]</code></p>
+        <p style="margin-top:0.75rem"><strong>Cursor workflow</strong> — generate JSON in chat, save to
+          <code>content_json/</code>, then load here. See <code>content_json/GENERATE.md</code>.</p>
+        <p style="margin-top:0.5rem"><strong>Voice pacing</strong> — markers are auto-added on save
+          (<code>[pause]</code> <code>[slow]</code> <code>[breath]</code> <code>[emphasis]</code>).
+          Preview with <strong>Add Pacing Markers</strong> below.</p>
       </div>
     </details>
   </div>
@@ -63,6 +69,8 @@
     <textarea id="f_description" rows="3"></textarea>
     <label>Tags (comma-separated)</label>
     <input id="f_tags" type="text" placeholder="finance, psychology, money">
+    <label>Hero visual prompt (one-image layout)</label>
+    <input id="f_hero_vis" type="text" placeholder="Single background frame for entire video — specific subjects, no text">
     <label>Hook text</label>
     <textarea id="f_hook" rows="3"></textarea>
     <label>Hook visual prompt</label>
@@ -90,11 +98,17 @@
 
   <div id="jsonPanel" class="panel card">
     <button class="secondary" type="button" onclick="loadTemplate()">Load Template</button>
+    <label>Load from content_json (Cursor-generated)</label>
+    <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem">
+      <select id="contentJsonSelect" style="flex:1"><option value="">— select file —</option></select>
+      <button class="secondary" type="button" onclick="loadContentJson()">Load</button>
+    </div>
     <label>JSON script</label>
     <textarea id="jsonInput" placeholder="Paste full script JSON here..."></textarea>
   </div>
 
   <button onclick="validateScript()">Validate</button>
+  <button class="secondary" onclick="addPacingMarkers()">Add Pacing Markers</button>
   <button onclick="saveAndReview()">Save &amp; Review</button>
   <a href="/ui/index.html"><button class="secondary" type="button">Back</button></a>
   <p class="error" id="errMsg"></p>
@@ -139,6 +153,8 @@
           broll_prompt: el.querySelector('.sc-broll').value,
           duration_seconds: 30,
           emotion: 'neutral',
+          narration_tone: '',
+          sfx_cues: [],
         })),
       }));
       return {
@@ -146,17 +162,24 @@
         title_variations: [document.getElementById('f_title').value],
         description: document.getElementById('f_description').value,
         tags: document.getElementById('f_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+        hero_visual_prompt: document.getElementById('f_hero_vis').value,
         hook: {
           scene_id: 'hook', text: document.getElementById('f_hook').value,
           visual_prompt: document.getElementById('f_hook_vis').value,
           broll_prompt: document.getElementById('f_hook_vis').value,
           duration_seconds: 45,
+          emotion: 'curiosity',
+          narration_tone: '',
+          sfx_cues: [],
         },
         acts,
         outro: {
           scene_id: 'outro', text: document.getElementById('f_outro').value,
           visual_prompt: document.getElementById('f_outro_vis').value,
           duration_seconds: 30,
+          emotion: 'resolve',
+          narration_tone: '',
+          sfx_cues: [],
         },
       };
     }
@@ -173,27 +196,71 @@
       document.getElementById('jsonInput').value = JSON.stringify(data.template, null, 2);
     }
 
-    async function validateScript() {
+    async function refreshContentJsonList() {
+      const sel = document.getElementById('contentJsonSelect');
+      try {
+        const data = await fetch(`${API}/generate/content-json`).then(r=>r.json());
+        sel.innerHTML = '<option value="">— select file —</option>';
+        (data.scripts || []).forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.filename;
+          opt.textContent = `${s.filename} — ${s.title}`;
+          sel.appendChild(opt);
+        });
+      } catch (_) { /* ignore */ }
+    }
+
+    async function loadContentJson() {
+      const filename = document.getElementById('contentJsonSelect').value;
+      if (!filename) return;
+      document.getElementById('errMsg').textContent = '';
+      document.getElementById('okMsg').textContent = '';
+      try {
+        const res = await fetch(`${API}/generate/content-json/${encodeURIComponent(filename)}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Load failed');
+        showTab('json');
+        document.getElementById('jsonInput').value = JSON.stringify(data.script, null, 2);
+        if (!data.valid) {
+          document.getElementById('errMsg').textContent = (data.errors || []).join('; ');
+        } else {
+          document.getElementById('okMsg').textContent = `Loaded ${filename}`;
+        }
+      } catch(e) {
+        document.getElementById('errMsg').textContent = e.message;
+      }
+    }
+
+    async function validateScript(humanize = false) {
       document.getElementById('errMsg').textContent = '';
       document.getElementById('okMsg').textContent = '';
       try {
         const script = getScriptPayload();
         const res = await fetch(`${API}/generate/script/validate`, {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({script}),
+          body: JSON.stringify({script, niche_id: nicheId, humanize}),
         });
         const data = await res.json();
         if (!data.valid) {
           document.getElementById('errMsg').textContent = data.errors.join('; ');
           return;
         }
-        document.getElementById('okMsg').textContent = 'Script is valid.';
+        const msg = humanize
+          ? 'Pacing markers added — review narration in JSON or form.'
+          : 'Script is valid.';
+        document.getElementById('okMsg').textContent = msg;
         if (document.getElementById('jsonPanel').classList.contains('active')) {
           document.getElementById('jsonInput').value = JSON.stringify(data.script, null, 2);
         }
+        return data.script;
       } catch(e) {
         document.getElementById('errMsg').textContent = e.message;
       }
+    }
+
+    async function addPacingMarkers() {
+      showTab('json');
+      await validateScript(true);
     }
 
     async function saveAndReview() {
@@ -222,6 +289,7 @@
       }
       [1,2,3].forEach(n => addScene(n));
       await loadTemplate();
+      await refreshContentJsonList();
     }
     init();
   </script>

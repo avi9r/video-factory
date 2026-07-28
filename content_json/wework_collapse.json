@@ -1,0 +1,196 @@
+{
+  "title": "The Collapse of WeWork — From $47 Billion to Zero",
+  "title_variations": [
+    "How WeWork Lost $47 Billion in Nine Months",
+    "Adam Neumann, SoftBank, and the WeWork Mirage",
+    "The Startup That Was Really a Real Estate Bet"
+  ],
+  "description": "January 2019. WeWork was America's most valuable startup — valued at forty-seven billion dollars on paper, backed by SoftBank's Vision Fund, and preparing to go public as a technology company transforming how the world works. By October, the IPO was dead, the CEO was gone, and the company was scrambling to make payroll.\n\nThis documentary traces how Adam Neumann convinced Masayoshi Son to pour more than ten billion dollars into a long-term lease arbitrage business dressed in startup language — the pitch meetings, the governance red flags, the S-1 filing that unraveled everything, and the quarter-by-quarter math that turned a unicorn into a cautionary tale.\n\nSubscribe to Corporate Arc for weekly business documentaries on rise, fall, and the strategy that stopped working.",
+  "tags": [
+    "WeWork",
+    "Adam Neumann",
+    "Masayoshi Son",
+    "SoftBank",
+    "Vision Fund",
+    "startup collapse",
+    "IPO failure",
+    "business documentary",
+    "unicorn",
+    "real estate",
+    "coworking",
+    "corporate governance",
+    "venture capital",
+    "tech bubble",
+    "business strategy"
+  ],
+  "story_spine": "Adam Neumann sold WeWork as a technology platform elevating human consciousness; SoftBank funded the story until an S-1 exposed a leveraged real estate machine that could not survive without endless capital.",
+  "stakes": "When narrative outruns unit economics, the first honest financial disclosure can erase billions in perceived value overnight.",
+  "midpoint_reversal": "WeWork was not destroyed by the market crash alone — the S-1 revealed it had already leased billions in future obligations while calling itself a software-like growth story.",
+  "open_loops": [
+    "What did Masayoshi Son see in Adam Neumann during their eighteen-minute meeting?",
+    "How did a coworking company reach a forty-seven-billion-dollar valuation?",
+    "What in the IPO filing made investors realize payroll was at risk by October?"
+  ],
+  "emotional_arc": ["curiosity", "awe", "tension", "shock", "revelation", "resolve"],
+  "hero_visual_prompt": "A vast empty coworking floor with rows of abandoned desks and disconnected neon light tubes, floor-to-ceiling windows overlooking a grey Manhattan skyline, a single discarded kombucha bottle and a blurred valuation chart on a fallen monitor, cinematic corporate documentary lighting, no readable text or logos",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "January twenty-ninth, two thousand nineteen. SoftBank leads another funding round. WeWork's private valuation hits forty-seven billion dollars — more than Ford, more than Goldman Sachs on some trading days. Adam Neumann tells investors he is not running office space. He is building a physical network that will elevate the world's consciousness. The company files confidential paperwork to go public. Magazine covers call him a visionary. Nine months later, October two thousand nineteen, the IPO is withdrawn. Neumann is out as CEO. Thousands of employees are laid off. Cash is so tight the company debates whether it can make payroll without another SoftBank rescue. Forty-seven billion on paper. A liquidity crisis in reality. The distance between those two numbers is the entire story.",
+    "visual_prompt": "Split-tone Manhattan high-rise boardroom in January with celebratory champagne silhouettes, transitioning to same space in October with empty chairs and harsh overhead light, no readable documents",
+    "broll_prompt": "Stock ticker-style lights flashing green then red on an abstract display with no legible numbers, hands covering a face in reflection of glass tower",
+    "duration_seconds": 45,
+    "emotion": "shock",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "The Vision Pitch",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "WeWork begins as Green Desk in Brooklyn — shared desks, short leases, freelancers who do not want a home office. Adam Neumann and Miguel McKelvey expand the idea into WeWork: beautiful spaces, free beer, community managers, the language of startup culture applied to real estate. The underlying economics are simple and old. WeWork signs long-term leases with landlords — often ten or fifteen years — renovates the floors, and sublets desks and offices month-to-month at a markup. Profit depends on occupancy, pricing power, and not overpaying for space. It is not a software business. There is no marginal cost near zero. Every new location requires capital, construction, and fixed obligations. But Neumann does not pitch landlords. He pitches destiny.",
+          "visual_prompt": "Brooklyn industrial building conversion into bright coworking space with exposed brick and hanging plants, workers at laptops, warm startup aesthetic, no logos",
+          "broll_prompt": "Contractor installing glass partition while measuring tape stretches across an empty floor plate",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "measured observation",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "Neumann's genius is narrative. He speaks in mission statements: community, energy, we. He walks barefoot in meetings. He tells investors that WeWork is a state of consciousness, not a lease aggregator. Early venture backers see explosive revenue growth — locations multiplying in New York, San Francisco, London. Revenue doubles. The story fits the twenty-tens venture mood: physical world companies can be platforms if they grow fast enough. Benchmark and others fund the expansion. Then comes the meeting that changes the scale. Two thousand sixteen. Tokyo. Neumann meets Masayoshi Son, founder of SoftBank, for roughly eighteen minutes. Son decides WeWork is the operator of the future of work. SoftBank's Vision Fund — a hundred-billion-dollar vehicle backed by Saudi and Abu Dhabi capital — is built to write checks the traditional venture world will not.",
+          "visual_prompt": "Tokyo high-rise meeting room at night with city lights, two figures in silhouette across a low table, intense brief encounter, no identifiable faces required, premium documentary tone",
+          "broll_prompt": "Eighteen-minute timer on a phone beside untouched tea cups, city skyline reflected in glass",
+          "duration_seconds": 45,
+          "emotion": "awe",
+          "narration_tone": "building intrigue",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "SoftBank does not invest once. It returns with larger rounds — four point four billion in two thousand seventeen, then additional billions in two thousand eighteen and January two thousand nineteen. Total Vision Fund commitment to WeWork exceeds ten billion dollars. The valuation climbs from twenty billion to forty-seven billion in roughly two years. Son tells allies Neumann is a once-in-a-generation founder. The money funds global blitzscaling: WeLive apartments, WeGrow schools, acquisitions, lavish buildouts, and Neumann's personal real estate transactions with the company. Corporate governance bends around the founder — super-voting shares, related-party deals, trademarks licensed from Neumann personally. Wall Street has not yet seen the filings. Venture capital has not yet asked the question every landlord eventually faces: what happens when growth stops and the leases do not?",
+          "visual_prompt": "Global map with glowing location pins multiplying rapidly, stacks of signed lease documents with blurred text, money flowing metaphorically through transparent tubes into building models",
+          "broll_prompt": "Hands signing multiple contracts in rapid montage, keys to new properties tossed onto a growing pile",
+          "duration_seconds": 45,
+          "emotion": "awe",
+          "narration_tone": "confident authority",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "By early two thousand nineteen, WeWork rebrands as The We Company and files confidentially for an IPO. The narrative peaks. Forty-seven billion dollars. Neumann plans to ring the bell. But the S-1 preparation forces a discipline venture rounds avoided: audited numbers, lease schedules, related-party disclosures, executive compensation. Underwriters begin reading what SoftBank funded. WeWork lost nearly two billion dollars in two thousand eighteen. It holds forty-seven billion dollars in future lease obligations — a figure that dwarfs its revenue. Community-adjusted EBITDA — a metric WeWork invented to exclude real costs — becomes a media punchline. The tech unicorn is a real estate company with startup marketing and a burn rate that only SoftBank's appetite could feed.",
+          "visual_prompt": "Investment bankers in a conference room surrounded by towering paper stacks and multiple laptop screens, expressions shifting from excitement to concern, documents face-down or blurred",
+          "broll_prompt": "Calculator tape spilling across a desk beside architectural models of office floors",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "The S-1 Unravels Everything",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "August fourteenth, two thousand nineteen. WeWork's S-1 goes public. The document is extraordinary — not for its vision, but for its candor about risk. Neumann's personal conflicts. A five-point-nine-million-dollar trademark payment to himself. A jet. Marijuana on a corporate jet story already circulating in press. Pages of warnings that the company may never be profitable. The forty-seven-billion-dollar valuation meets arithmetic. Investors who priced WeWork like Salesforce discover a company obligated to pay landlords for decades regardless of whether freelancers keep showing up. The IPO roadshow stalls. Underwriters cut the proposed valuation — thirty billion, then twenty, then lower. The market is not rejecting coworking. It is rejecting the multiple.",
+          "visual_prompt": "IPO prospectus document slamming onto a table with pages fanning open, red markup pen circling blurred paragraphs, harsh office lighting, tense hands only",
+          "broll_prompt": "Roadshow presentation room with investors leaving early, empty chairs, untouched catering",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "urgent precision",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "September. The board moves against Neumann. Pressure from SoftBank, JPMorgan, and directors forces him to step down as CEO. The IPO is formally withdrawn. Voting control loosens. Neumann walks away with a massive exit package that itself becomes controversy — reportedly around one point seven billion in credit and stock support to leave. Employees who believed in the mission watch options tied to a forty-seven-billion-dollar dream reprice toward reality. WeWork still has hundreds of locations and millions of square feet leased. It cannot unwind the obligations at the speed it opened them. Growth was a strategy. Fixed costs are a trap.",
+          "visual_prompt": "Founder silhouette packing personal items from a corner office while staff visible through glass wall wait in uncertainty, overcast afternoon light, no logos",
+          "broll_prompt": "Employee badge deactivated at a turnstile, green light turning red",
+          "duration_seconds": 45,
+          "emotion": "shock",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "Here is the reversal SoftBank did not model in two thousand sixteen. Son bet that WeWork could become a winner-take-all platform before unit economics mattered — the Amazon playbook. But Amazon's losses funded infrastructure with scalable margins. WeWork's losses fund rent spreads with caps on pricing and occupancy. When capital markets close, the platform story collapses into a landlord-tenant spread sheet. October two thousand nineteen. WeWork announces thousands of layoffs. Reports surface of cash running low — the company needs SoftBank's rescue package to stabilize, restructure, and avoid a liquidity event that could halt operations. Payroll becomes a weekly question for a forty-seven-billion-dollar legend.",
+          "visual_prompt": "Emptying coworking floor with movers carrying desks out, cables dangling from ceiling, grey daylight through uncovered windows, documentary recession tone",
+          "broll_prompt": "Payroll direct-deposit notification on a phone screen shown only as blurred UI, anxious hands gripping phone",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "accelerating dread",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "SoftBank does not walk away. It cannot — more than ten billion is already inside. A rescue package takes shape: accelerated funding, debt support, control shifts to Marcelo Claure and turnaround managers. WeWork closes locations, subleases space at losses, renegotiates where possible. The Vision Fund itself begins to symbolize excess — oversized bets on Uber, Slack-era growth, and narrative founders. WeWork becomes the emblematic deal. Not because coworking failed as a product — many operators survive with disciplined leases — but because SoftBank funded infinite growth for a business with finite spread and a CEO who sold transcendence instead of margin.",
+          "visual_prompt": "SoftBank-style venture office with a single wilting unicorn figurine on a desk beside distressed bond paperwork, symbolic still life, cool blue lighting, no readable text",
+          "broll_prompt": "For-lease signs appearing in office windows one after another on a city block",
+          "duration_seconds": 40,
+          "emotion": "tension",
+          "narration_tone": "frustrated momentum",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "From Unicorn to Warning Label",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "The years that follow are damage control. WeWork limps through the pandemic — ironically, flexible office space becomes temporarily irrelevant when nobody goes to offices. SoftBank writes down billions. Neumann launches new ventures. The company attempts a public listing again through a SPAC merger in two thousand twenty-one at a fraction of the old valuation — single-digit billions, not forty-seven. Public markets apply scrutiny venture rounds skipped: recurring losses, lease liabilities, governance reforms. The stock drifts down. In November two thousand twenty-three, WeWork files for Chapter eleven bankruptcy protection, citing unsustainable lease costs and a failed growth model. Forty-seven billion to zero is not literally the stock chart — but it is spiritually accurate for everyone who believed the January two thousand nineteen headline.",
+          "visual_prompt": "Bankruptcy filing courthouse steps with WeWork-style empty office visible through a window across the street, November grey sky, documentary gravitas, no readable signs",
+          "broll_prompt": "Stock price line on a monitor falling steadily, then cut to darkened office floor lights switching off row by row",
+          "duration_seconds": 45,
+          "emotion": "empathy",
+          "narration_tone": "solemn weight",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "Three lessons sit inside the collapse. First, narrative is not a moat — community language cannot amortize a forty-seven-billion-dollar lease book. Second, private-market valuations are hypotheses until a public S-1 or a credit crisis tests them. SoftBank's ten-point-six-five-billion-dollar bet was not stupid because coworking is useless. It was dangerous because it treated a capital-intensive real estate arbitrage as if it scaled like software. Third, founder governance matters. Super-voting shares, related-party transactions, and mission statements that discourage skepticism do not cause fraud by themselves — but they delay the moment someone asks whether payroll is secure.",
+          "visual_prompt": "Three glass pillars cracked at the base labeled only by shape — microphone, building, crown — in a dark museum exhibit, dramatic rim lighting",
+          "broll_prompt": "Lease agreement pages highlighted in red beside a shrinking stack of cash tokens",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "Masayoshi Son once compared Neumann to a combination of Steve Jobs and the Alibaba founders he backed successfully. The analogy reveals the mechanism. Son's greatest wins — Yahoo Japan, Alibaba — were technology networks with explosive margins after scale. WeWork was a lease portfolio with a kombucha tap. The eighteen-minute meeting in Tokyo was not due diligence. It was conviction investing taken to its limit. When conviction meets a founder who believes his own sermon, checks get larger and questions get quieter — until the SEC filing forces everyone to read the same page at once.",
+          "visual_prompt": "Tokyo boardroom recreated as empty set years later, single chair at head of table, eighteen minutes on a wall clock, melancholy corporate still life",
+          "broll_prompt": "SoftBank Vision Fund logo area replaced with blank wall, investor portrait turned face-down on desk",
+          "duration_seconds": 40,
+          "emotion": "resolve",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene4",
+          "narration": "WeWork still operates in a slimmer form — locations open, companies rent desks, landlords still own the buildings. The product did not die. The valuation story did. January two thousand nineteen was the moment the market believed a real estate sublessor could be worth more than industrial giants. October two thousand nineteen was the moment arithmetic returned. Adam Neumann convinced Masayoshi Son to pour billions into a vision. The vision filled offices. The leases filled the balance sheet. And when the story could not carry the spreadsheet, forty-seven billion dollars of confidence evaporated faster than any community manager could refill the cold brew.",
+          "visual_prompt": "Partially occupied modern coworking space with a few workers at desks, vast empty sections visible, morning light showing both survival and shrinkage, no branding",
+          "broll_prompt": "Kombucha tap running, then sputtering to a stop, pull back to silent empty kitchen area",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "reflective closure",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Every empire has a moment when the strategy stops working. WeWork's moment was the day a forty-seven-billion-dollar startup had to prove it was a business — and discovered it was a bet on rent spreads dressed as a revolution. Subscribe to Corporate Arc for weekly documentaries on the deals, delusions, and boardroom decisions that build and destroy fortunes. The next unicorn will pitch a platform. Ask what the lease obligations say first.",
+    "visual_prompt": "Manhattan skyline at dusk with one illuminated office floor among dark towers, symbolic lone survivor, cinematic closing documentary frame, no text",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}

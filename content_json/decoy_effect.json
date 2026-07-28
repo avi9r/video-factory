@@ -1,0 +1,196 @@
+{
+  "title": "The Decoy Effect — Why Restaurants Put a $98 Steak on the Menu",
+  "title_variations": [
+    "The $98 Steak Nobody Orders — And Why It's on the Menu",
+    "Asymmetric Dominance: How a Worse Option Makes You Spend More",
+    "The Decoy Effect in Menus, Pricing Pages, and Polls"
+  ],
+  "description": "In 1981, Joel Huber documented the asymmetric dominance effect: add a third option that is clearly worse than one choice but not the other, and people shift toward the option that dominates the decoy. Restaurants exploit it with a ninety-eight-dollar steak few guests order. SaaS companies exploit it with a premium tier nobody needs. Pollsters and campaign strategists exploit it with third candidates who reshape what feels electable.\n\nThis documentary traces the decoy effect from Huber's original experiments through menu engineering, subscription pricing pages, and political choice architecture — the same mechanism operating wherever someone wants you to pick the second-most-expensive option and feel smart doing it.\n\nSubscribe to Wired Broke for weekly behavioral finance documentaries on the biases your brain hides from you.",
+  "tags": [
+    "decoy effect",
+    "asymmetric dominance",
+    "Joel Huber",
+    "behavioral finance",
+    "menu engineering",
+    "pricing psychology",
+    "subscription pricing",
+    "Dan Ariely",
+    "choice architecture",
+    "cognitive bias",
+    "money psychology",
+    "behavioral economics",
+    "political polling",
+    "consumer psychology",
+    "financial education"
+  ],
+  "story_spine": "A deliberately inferior third option — the ninety-eight-dollar steak, the useless subscription tier, the non-viable candidate — does not exist to be chosen; it exists to make one specific alternative feel like the rational pick.",
+  "stakes": "The option you think you chose freely was often pre-selected by a decoy you never seriously considered buying.",
+  "midpoint_reversal": "The decoy is not the expensive item you reject — it is the comparison tool that makes the middle tier feel like a bargain the moment you see all three prices together.",
+  "open_loops": [
+    "Why would a restaurant list a steak almost nobody orders?",
+    "What did Joel Huber prove when he added a third product to a simple two-choice test?",
+    "How does the same trick appear on a software pricing page and in a three-way political poll?"
+  ],
+  "emotional_arc": ["curiosity", "surprise", "tension", "revelation", "resolve"],
+  "hero_visual_prompt": "Upscale restaurant menu open on dark linen beside a sizzling steak plate, with three abstract price columns rising like steps where the tallest column is ghosted and transparent while the middle column glows warm gold, premium editorial finance aesthetic, shallow depth of field, no readable text or numbers",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "Friday night. A steakhouse in Chicago. You open the menu. Pasta twenty-four dollars. Ribeye sixty-two. Dry-aged tomahawk ninety-eight. You will not order the ninety-eight-dollar steak. Almost nobody does. That is not a failure of menu design. It is the point. The tomahawk exists so the sixty-two-dollar ribeye feels like the sensible choice — premium but not reckless. You order the ribeye. You tip well. You tell your friends you splurged wisely. Now scroll a software pricing page Monday morning. Basic nine dollars. Pro twenty-nine. Enterprise ninety-nine. You will not buy Enterprise. Almost nobody does. You pick Pro. Feels balanced. Now watch a three-way poll on the news. Two frontrunners and a third name splitting attention. Your preference shifts. Same mechanism. Three menus. Three domains. One invisible hand pushing you toward the option someone else already wanted you to choose.",
+    "visual_prompt": "Triptych — upscale restaurant table with menu, laptop showing three-tier pricing layout with blurred figures, television news desk with three candidate silhouettes — unified warm editorial lighting, no legible text",
+    "broll_prompt": "Finger tracing down a menu past the most expensive item to settle on the middle option, then same gesture on a laptop pricing page",
+    "duration_seconds": 45,
+    "emotion": "curiosity",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "Asymmetric Dominance",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "Nineteen eighty-one. Joel Huber publishes research on a violation of rational choice theory that marketers would spend decades exploiting. Consumers face two products — call them A and B — and split roughly evenly. Then Huber introduces a third option, C. Product C is not better than both. It is asymmetrically dominated: C is worse than A on every relevant dimension, but not worse than B on every dimension. In other words, A clearly beats C. B does not clearly beat C. Once C appears, the share choosing A jumps. People were not choosing C. They were using C to see why A looked superior. Huber calls this the asymmetric dominance effect. The decoy does not need to be bought. It needs to be seen.",
+          "visual_prompt": "Nineteen eighties consumer research lab with three product boxes on a table labeled only by size — small, medium, large — where the large box is greyed and unappealing, warm academic lighting, no brand text",
+          "broll_prompt": "Researcher placing a third product between two existing options on a display shelf, hands adjusting positions carefully",
+          "duration_seconds": 45,
+          "emotion": "surprise",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "The result violates a principle economists called regularity: adding an option should not increase the probability of choosing another option you already had available. Yet it does, reliably. Huber, with John Payne and Christopher Puto, extends the findings in nineteen eighty-two — showing the effect holds across product categories and that decoys work by changing the attribute trade-offs consumers think they are making. You believe you are comparing all options. Your brain is running a shortcut: eliminate the obviously bad one, feel good about what remains. The decoy is the obviously bad one — engineered to lose.",
+          "visual_prompt": "Conceptual diagram as physical objects — three cards on a desk where one card is crumpled and discarded while another is lifted toward the light, minimal editorial still life, no readable text",
+          "broll_prompt": "Hand sweeping a losing poker card off the table while keeping two others, metaphorical choice elimination",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "Dan Ariely popularizes the same structure in Predictably Irrational with The Economist subscription test. Web-only for fifty-nine dollars. Print-only for one hundred twenty-five. Print plus web for one hundred twenty-five. Print-only is absurd — same price as the bundle but strictly less product. It is a decoy. When Ariely shows all three options, most people choose the bundle. When he removes print-only, choices shift toward the cheap web-only plan. The decoy was not there to sell print. It was there to make the bundle feel like a steal. Ariely did not invent the effect. He translated Huber's lab into a subscription page millions of readers recognize.",
+          "visual_prompt": "Magazine subscription mailer layout on a desk with three columns where the middle column is visually emphasized and the rightmost decoy column is faded, editorial documentary style, no legible pricing",
+          "broll_prompt": "Three magazine subscription cards fanned out, middle card sliding forward into focus",
+          "duration_seconds": 40,
+          "emotion": "curiosity",
+          "narration_tone": "building intrigue",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "Here is the mechanism in four steps. Step one: present a target option — the ribeye, the Pro tier, the candidate your strategist wants elevated. Step two: present a competitor that splits the market. Step three: introduce a decoy dominated by the target but not by the competitor. Step four: watch the target's share rise without lowering its price. No discount required. No argument required. The decoy supplies the contrast. Menu consultants call it anchoring plus dominance. Pricing teams call it good-better-best architecture. Political operatives call it reshaping the viable choice set. The vocabulary changes. The geometry does not.",
+          "visual_prompt": "Four-step staircase model built from frosted acrylic blocks with a glowing middle step, dark studio background, premium product-design aesthetic, no labels",
+          "broll_prompt": "Domino chain where the first domino is removed and the remaining line tips toward one direction",
+          "duration_seconds": 40,
+          "emotion": "tension",
+          "narration_tone": "setup precision",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "Three Menus, One Geometry",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "Return to the Chicago steakhouse. Menu engineering is a profession. Consultants study eye-tracking on tri-fold menus and place high-margin items where your gaze rests after the decoy. The ninety-eight-dollar tomahawk is not profit center. It is a lighthouse. The twenty-four-dollar pasta is the budget anchor for guests who need permission to spend at all. The sixty-two-dollar ribeye sits in the compromise zone — expensive enough to feel special, cheap enough to feel responsible compared with the tomahawk. Industry surveys suggest a significant share of guests who order the second-most-expensive entree would not have ordered it if the top item were removed. The steak they never considered ordering changed the steak they ate.",
+          "visual_prompt": "Fine dining kitchen pass with three plated steaks at different heights on a shelf — tallest plate barely touched by pass light, middle plate in warm spotlight, documentary food styling, no menu text",
+          "broll_prompt": "Chef placing an oversized premium steak on a menu board position at the top, then stepping back to evaluate sight lines",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "narrative drive",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "Now the software pricing page. A project-management tool offers Basic at nine dollars a month — limited seats, no integrations. Pro at twenty-nine — full features, the tier product teams want you on. Enterprise at ninety-nine — white-glove support, SSO, audit logs almost no small team needs. Enterprise is the tomahawk. Basic is the pasta. Pro is the ribeye. Heat maps of SaaS checkout flows show the middle column receives the most clicks when a premium decoy tier sits above it. A/B tests across the industry confirm Huber's pattern: add a dominated premium tier and Pro uptake rises without changing Pro's price. You did not comparison-shop features. You comparison-shopped feelings.",
+          "visual_prompt": "Laptop on a modern desk showing a three-column SaaS pricing layout with the center column highlighted by a subtle glow, clean startup office aesthetic, all prices blurred",
+          "broll_prompt": "Cursor hovering between three pricing buttons before clicking the middle one, screen reflection on glasses",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "The decoy effect leaves commerce and enters politics — same geometry, higher stakes. A three-way poll introduces Candidate A, Candidate B, and Candidate C. Suppose C enters on the ideological fringe but pulls specific voters or makes A look more moderate by comparison. Voters believe they are evaluating platforms. Choice architecture researchers note that adding a dominated or partially dominated alternative can shift binary preferences between the remaining two — a cousin of Huber's effect in multidimensional political space. Campaigns debate third-party spoilers and straw candidates. Pollsters model whether a name on the ballot changes who feels electable. The ninety-eight-dollar steak is not on your plate. It is on your screen, reshaping which frontrunner feels like the sensible middle.",
+          "visual_prompt": "News broadcast set with three podiums in silhouette under studio lights, two prominent and one smaller at the edge, American civic documentary tone, no faces or name plates",
+          "broll_prompt": "Polling station voter booth interior, hand hovering between ballot lines, shallow focus, no readable ballot text",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "accelerating dread",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "Place the three stories side by side. The guest orders a sixty-two-dollar ribeye because a ninety-eight-dollar tomahawk exists. The subscriber chooses twenty-nine-dollar Pro because a ninety-nine-dollar Enterprise tier exists. The voter leans toward one frontrunner because a third name restructured what feels extreme. Different scales — dinner, monthly software, an election cycle — identical asymmetric dominance. In each case the decoy looks like freedom of choice. In each case the menu was designed before you arrived. Huber proved in nineteen eighty-one that rational choice theory breaks when a third option is engineered to lose on purpose. Every pricing page designer since has read that sentence.",
+          "visual_prompt": "Three parallel columns of light on a dark desk — menu card, laptop pricing screen, ballot envelope — middle item glowing in each column, unified editorial composition, no text",
+          "broll_prompt": "Split dissolve between restaurant receipt, subscription confirmation email on phone, and election results ticker with blurred numbers",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "frustrated momentum",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "Seeing the Decoy",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "Defense begins with a question Huber's experiments imply: which option is the decoy designed to beat? When you see three tiers, ask which tier is dominated — worse value on every axis compared with one option but not compared with another. Print-only at one hundred twenty-five versus print-plus-web at one hundred twenty-five — print-only is dead on arrival. That is the tell. On a restaurant menu, ask which item exists to make the second item feel reasonable. On a poll, ask which candidacy reshapes the center without aiming to win. Naming the decoy does not eliminate the effect, but it slows the automatic elimination shortcut your brain runs when three choices appear.",
+          "visual_prompt": "Magnifying glass over a three-column comparison chart where one column is visibly weaker on every axis, clean desk research setup, editorial lighting, no legible chart text",
+          "broll_prompt": "Hand drawing a circle around the weakest of three options on a blurred comparison sheet, then crossing it out",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "Second defense: evaluate pairs, not trios. Huber's shift disappears when you remove the decoy and compare only what remains. Strip the ninety-eight-dollar steak mentally — would you still want the sixty-two-dollar ribeye at that price? Hide the Enterprise column — does Pro still justify twenty-nine dollars against Basic? Collapse the poll to two names you would actually consider. Pairwise comparison forces attribute-by-attribute reasoning instead of relative rank among three curated slots. Behavioral economists call this de-biasing through consideration set reduction. You are not being cynical. You are removing the option that was never meant to compete.",
+          "visual_prompt": "Two cards left on a table after a third card has been physically removed and placed off-frame, clean negative space, decisive editorial still life",
+          "broll_prompt": "Three-option menu folded to hide the top line, revealing only two remaining choices",
+          "duration_seconds": 40,
+          "emotion": "tension",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "Third defense: watch for the compromise label you give yourself. Decoy effects work because the target option feels like the middle path — not cheap, not extravagant, not radical, not extreme. The brain craves a story of moderation. Menu engineers and growth marketers feed that story. I am not a person who orders the most expensive steak. I am not a company that needs Enterprise. I am not a voter for the fringe. Each sentence sounds like identity. Each sentence is contrast supplied by a decoy. Joel Huber's asymmetric dominance effect is not about tricking foolish people. It is about exploiting how humans seek sensible compromise the moment a worse alternative appears beside the choice someone already wanted you to make.",
+          "visual_prompt": "Person at a crossroads sign with three arrows where the middle arrow is brightly painted and the top arrow is faded and overgrown, metaphorical outdoor shot, golden hour",
+          "broll_prompt": "Mirror reflection of someone nodding in approval while holding a middle-priced shopping bag, shallow focus",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene4",
+          "narration": "The guest still enjoys the ribeye. The team still runs fine on Pro. The voter still believes they chose freely. The decoy effect does not mean every middle choice is wrong. It means the middle was framed. Ninety-eight dollars on the menu. Ninety-nine on the pricing page. A third name in the poll. None of them need to win. They only need to stand next to the option that was always the target. Huber named the mechanism in nineteen eighty-one. Ariely showed it on subscription forms. Restaurants, SaaS companies, and strategists built entire playbooks on asymmetric dominance. The next time you pick the second-most-expensive option and feel like you found the sweet spot — ask who put the most expensive one there, and whether they expected you to order it at all.",
+          "visual_prompt": "Return to Chicago steakhouse table — empty plate after a satisfying meal, menu closed with the top item section folded under, warm satisfied lighting with a hint of documentary skepticism, no text",
+          "broll_prompt": "Tomahawk steak on display tray returning to kitchen untouched while a standard ribeye plate leaves the pass for a dining room table",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "reflective closure",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Your brain does not compare options in a vacuum. It compares them in the set someone else designed. Joel Huber proved that adding a worse third choice can steer you toward a target you already had available. Restaurants, pricing pages, and polls use the same geometry. Subscribe to Wired Broke for weekly documentaries on the biases shaping every dollar you spend. Before you pick the middle option — ask what it was placed next to.",
+    "visual_prompt": "Closed restaurant menu on dark linen beside a single glowing middle-tier pricing card and a discarded top-tier card pushed to the side, soft green rim light, premium editorial closing frame, no readable text",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}

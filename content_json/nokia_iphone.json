@@ -1,0 +1,196 @@
+{
+  "title": "The Day Nokia Decided Not to Build the iPhone",
+  "title_variations": [
+    "Nokia Had the iPhone First — Then Shelved It",
+    "How Nokia Lost the Mobile Century in One Boardroom",
+    "The Touchscreen Nokia Killed in 2004"
+  ],
+  "description": "In 2004, Nokia engineers demonstrated a working touchscreen smartphone to senior management in Helsinki. It was shelved. Three years later, Apple launched the iPhone and redefined what a phone could be. Nokia still sold more handsets in 2007 — but had already lost the future.\n\nThis documentary traces Nokia's rise to global mobile dominance, the internal politics that buried a prototype the market was not yet asking for, and the boardroom logic that protected today's margins at the expense of tomorrow's platform. From Jorma Ollila's expansion era to the Symbian fragmentation, carrier compromises, and the moment executives chose comfort over cannibalization.\n\nSubscribe to Corporate Arc for weekly business documentaries — rise, fall, and the strategy that stopped working.",
+  "tags": [
+    "Nokia",
+    "iPhone",
+    "Apple",
+    "mobile phone history",
+    "business documentary",
+    "corporate failure",
+    "touchscreen smartphone",
+    "Symbian",
+    "Jorma Ollila",
+    "Stephen Elop",
+    "innovation",
+    "business strategy",
+    "tech history",
+    "smartphone wars",
+    "Finland"
+  ],
+  "story_spine": "Nokia dominated global handsets, built a touchscreen smartphone prototype in 2004, then shelved it to protect volume sales and carrier relationships — handing Apple the mobile century.",
+  "stakes": "When a market leader refuses to cannibalize its own success, a smaller competitor with nothing to lose rewrites the category.",
+  "midpoint_reversal": "Nokia did not lack engineers or prototypes — it lacked the organizational will to bet the company on a product that would destroy its most profitable business model.",
+  "open_loops": [
+    "What did Nokia engineers show management in 2004 that never reached a store shelf?",
+    "Why did the world's largest phone maker dismiss the iPhone as a niche threat?",
+    "Which boardroom incentives made shelving the future feel like the rational choice?"
+  ],
+  "emotional_arc": ["curiosity", "awe", "tension", "shock", "revelation", "resolve"],
+  "hero_visual_prompt": "A sleek early-2000s touchscreen smartphone prototype resting on a Finnish birch conference table in a glass-walled Helsinki boardroom, beside a row of identical candy-bar phones in muted silver, winter harbour visible through floor-to-ceiling windows, cold blue daylight with amber accent on the prototype only, cinematic corporate documentary style, no readable logos or text",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "Two thousand four. A glass conference room in Espoo, Finland. Engineers from Nokia's advanced-device team set a prototype on the table. Touchscreen. Full-width display. Icons arranged for one-handed use. A browser that loads real web pages — not the stripped-down mobile versions carriers preferred. It responds smoothly. It feels like the future. Senior vice presidents ask about unit cost, carrier approval timelines, and impact on the Series forty portfolio that still prints money in every major market. The meeting ends without a launch date. The prototype returns to a locked lab in Tampere. Three years later, Steve Jobs walks onto a stage in San Francisco and shows the world the same idea — polished, branded, and backed by a company with nothing to protect. Nokia had the century in its pocket. It chose not to build it.",
+    "visual_prompt": "Modern Finnish corporate boardroom with floor-to-ceiling windows overlooking a frozen harbour, a single illuminated touchscreen device on a long table surrounded by rows of conventional flip phones, tense executive silhouettes, no readable screens",
+    "broll_prompt": "Engineer's hands demonstrating swipe gestures on a prototype device, then placing it into a padded case and closing a lab drawer",
+    "duration_seconds": 45,
+    "emotion": "shock",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "The Empire in Your Pocket",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "To understand the decision, you have to understand the dominance it protected. By two thousand four, Nokia sells roughly one in every three mobile phones on earth. The company is Finland's national champion — a third of the Helsinki stock exchange, tens of thousands of employees from Oulu to Shanghai. CEO Jorma Ollila has spent a decade turning a conglomerate of rubber boots and cables into a focused machine built on one insight: mobile telephony would become personal, global, and replaced every eighteen months. Nokia wins on logistics, industrial design, and carrier relationships. Every operator on the planet needs Nokia more than Nokia needs any single operator. That leverage feels like permanence.",
+          "visual_prompt": "Aerial view of Nokia's sprawling Espoo campus beside a frozen Baltic shoreline, factory smokestacks and modern glass buildings in one frame, golden hour industrial scale, no signage",
+          "broll_prompt": "Assembly line of identical silver candy-bar phones moving in perfect rhythm under bright factory lights",
+          "duration_seconds": 45,
+          "emotion": "awe",
+          "narration_tone": "confident authority",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "The business model is volume. Nokia's cash engine is the mid-range Series forty platform — reliable, cheap to manufacture, endlessly customizable for carriers who want their own menus, ringtones, and walled-garden services. Smartphones exist inside Nokia, but they are a side branch. Symbian powers the high end: communicators, enterprise devices, expensive niche products for executives who want email on a train. The smartphone unit and the volume unit compete for the same factories, the same management attention, and the same executive bonuses tied to quarterly shipment numbers. A breakthrough device that makes the candy-bar look obsolete is not automatically welcome. It is a threat dressed as innovation.",
+          "visual_prompt": "Factory floor split visually — one side mass-producing uniform bar phones, other side a smaller line assembling bulkier smartphone prototypes, industrial documentary lighting, no brand marks",
+          "broll_prompt": "Close-up of interchangeable faceplates snapping onto identical phone chassis in rapid succession",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "Inside the labs, the future is not invisible. Nokia researchers experiment with touch interfaces, predictive text, mobile email, and location services years before the App Store exists. The company acquires talent and files patents by the thousands. Tampere and Oulu become engineering cities where students dream of joining the team that already defines what a phone looks like. But invention inside a lab is not strategy. Strategy is what leadership chooses to ship — and what it chooses to starve. By two thousand four, several teams can demonstrate touch-centric devices. The question is never can we build it. The question is what happens to everything else we sell if we do.",
+          "visual_prompt": "High-tech Finnish research lab with engineers testing gesture interfaces on bench prototypes, oscilloscopes and circuit boards, blue-white laboratory lighting, devices shown from angles hiding any logos",
+          "broll_prompt": "Patent binder pages flipping in fast motion, circuit diagrams and hardware prototypes on anti-static mats",
+          "duration_seconds": 40,
+          "emotion": "curiosity",
+          "narration_tone": "building intrigue",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "The carriers shape the constraint. In two thousand four, mobile operators still control the customer relationship. They subsidize handsets, dictate software menus, and take a share of messaging and download revenue. Nokia's power is enormous — but it is power shared with Vodafone, China Mobile, T-Mobile, and dozens of others who do not want a phone that bypasses their portals or encourages Wi-Fi browsing outside their billing systems. A full-touch web device threatens the economic order Nokia helped build. Engineers show management a prototype that delights users. Commercial leadership asks a different question: which operator will launch this first, and what do we sacrifice with everyone else?",
+          "visual_prompt": "Telecommunications switching room with rows of server racks and blinking lights, executive handshake silhouette in glass-walled meeting room beyond, cool corporate blues, no readable branding",
+          "broll_prompt": "Carrier retail store wall of identical phone boxes with blank faces, salesperson locking a display unit to a security cable",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "The Shelved Prototype",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "The two thousand four demonstration is not apocryphal — it is the kind of meeting that happens inside every dominant hardware company when the future arrives early. Engineers present a touchscreen smartphone with a usable browser, media playback, and a software stack more ambitious than anything on Nokia's public roadmap. Executives see the demo and acknowledge the quality. Then the objections arrive in sequence. Unit cost is too high for the mass market. Battery life is not yet acceptable for a company whose reputation is built on five-day standby. Symbian licensing politics would require negotiations with partners who move slowly. Most critically: a hero touchscreen would confuse the product line and cannibalize Series forty before a replacement platform is ready.",
+          "visual_prompt": "Boardroom presentation with a prototype on a stand at the center of a long table, executives in shadow facing a bright device, PowerPoint screen blurred unreadable on the wall",
+          "broll_prompt": "Finger swiping through a grid of abstract app icons on a prototype screen, camera tight on reflection in glass",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "urgent precision",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "The decision is not a single dramatic vote. It is a slow suffocation. The project is sent back for more testing. Carrier workshops are scheduled. A watered-down variant is proposed — touch added to a conventional form factor rather than a clean break. Budget shifts to the next holiday quarter's volume models. Anssi Vanjoki and other senior leaders publicly champion multimedia and design, but the organization's center of gravity remains shipments. When Olli-Pekka Kallasvuo succeeds Jorma Ollila as CEO in two thousand six, he inherits a company at peak revenue and peak vulnerability: the numbers have never been better, which makes risky bets harder to justify, not easier.",
+          "visual_prompt": "Corporate hallway with framed sales achievement plaques blurred unreadable, a prototype lab door at the end of the corridor slowly closing, dim institutional lighting",
+          "broll_prompt": "Budget spreadsheet pages sliding across a desk, a red pencil circling a line item labeled only by blurred numbers",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "frustrated momentum",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "January ninth, two thousand seven. Apple announces the iPhone. Nokia's public response is calm — almost dismissive. Executives note the lack of three-G at launch, the exclusive carrier deal, the premium price. Internal emails later revealed in industry reporting capture the mood: a beautiful device, limited threat. That assessment is exactly wrong — not because the first iPhone sold instantly to everyone, but because it redefined the category Nokia dominated. Within months, the question shifts from how many phones Nokia ships to what kind of phone anyone wants next. The touchscreen prototype in Tampere was not missing technology. It was missing the permission structure to destroy Nokia's own business before someone else did.",
+          "visual_prompt": "Split composition — left side a dark auditorium stage with a single spotlight on a presenter silhouette, right side a Nokia office at night with phones ringing on desks, January winter darkness, no logos",
+          "broll_prompt": "Crowd silhouettes raising devices to record, then cut to an empty Nokia product showroom with yesterday's bar phones on pedestals",
+          "duration_seconds": 45,
+          "emotion": "shock",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "Here is the reversal. Nokia did not fail because it could not see the smartphone. It failed because it tried to become Apple while protecting Symbian, carriers, and volume margins at the same time. After the iPhone, Nokia ships touch devices — the N97, the N8, the Lumia line after partnering with Microsoft — but each arrives as a compromise between old economics and new physics. Symbian is fragmented across internal teams and external licensees. Developers flee to iOS and Android because Nokia's platform is harder to monetize. By two thousand ten, Stephen Elop's burning platform memo admits the truth in public: Nokia is standing on a burning oil platform. The prototype was not shelved by stupidity. It was shelved by a rational incentive system that punished cannibalization until cannibalization became survival.",
+          "visual_prompt": "Burning oil rig metaphor rendered as a corporate scale model in a dark museum display, heat shimmer and orange light against cold blue background, symbolic documentary still life",
+          "broll_prompt": "Software developer office with programmers turning away from one workstation toward another platform, screens blurred and unreadable",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "accelerating dread",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "The Mobile Century, Lost",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "The market share tells the story in numbers. In two thousand seven, Nokia still controls roughly forty percent of global handset shipments. By two thousand thirteen, after the Microsoft acquisition of its devices division, the brand that defined mobile is no longer independent. Apple, Samsung, and Google's Android ecosystem capture the profits Nokia once treated as permanent. Finland watches a national icon become a case study. The engineers who built the two thousand four prototype do not need a historian to explain what happened. They lived inside a company that could prototype the future on Tuesday and ship incremental updates on Wednesday because incremental updates funded the quarter.",
+          "visual_prompt": "Declining sales graph rendered as a physical sculpture made of falling dominoes in a corporate atrium, empty employee badge turnstiles in background, melancholy Nordic light",
+          "broll_prompt": "Time-lapse of a busy factory floor gradually slowing to a stop, lights switching off section by section",
+          "duration_seconds": 45,
+          "emotion": "empathy",
+          "narration_tone": "solemn weight",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "Three forces killed the decision, not one. First, organizational politics — smartphone pioneers and volume kings measured by different scorecards, rarely forced to bet the company together. Second, comfort with dominance — when you already own a third of the planet's phones, urgency feels like a startup emotion. Third, the innovator's dilemma in its purest form: the touchscreen would have cratered Series forty margins before it built a new platform large enough to replace them. Apple had no Series forty. Apple had nothing to protect. That asymmetry is why a company with one percent of the phone market could terrify a company with forty percent.",
+          "visual_prompt": "Three empty executive chairs at a triangular table, each lit by a different colored spotlight — gold, grey, and cold white — symbolic boardroom politics, no names visible",
+          "broll_prompt": "Chess board with a single pawn advancing against a full row of established pieces",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "The lesson is not that every prototype should ship. Many demos deserve to die. The lesson is that when a prototype redefines the category you lead, the only rational response is to plan your own obsolescence on your own schedule. Kodak hid digital photography to protect film. Nokia shelved touch to protect candy bars and carrier deals. Blockbuster dismissed streaming to protect late fees. The pattern is identical: incumbents optimize the present because the present is measurable, and the future is a budget line that might never earn a bonus. The two thousand four meeting in Espoo was not a failure of engineering. It was a failure of courage at the exact moment courage had the highest return.",
+          "visual_prompt": "Row of corporate tombstones rendered as obsolete phone models half-buried in snow outside the Espoo campus, overcast Finnish sky, elegiac documentary tone, no inscriptions",
+          "broll_prompt": "Prototype device buried under stacked quarterly report binders, only one corner of the screen still glowing",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "reflective closure",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene4",
+          "narration": "Today Nokia exists as a networks and infrastructure company — patents, towers, enterprise connectivity — not the consumer brand that once put a phone in every pocket. The touchscreen prototype never became the iPhone. Apple became the iPhone because it had no legacy to defend and a CEO willing to bet the company on a single device. Nokia had the engineers, the labs, and the meeting in two thousand four. What it did not have was a boardroom willing to burn its own empire before the market burned it for them. That returns us to the hook: the future was on the table. The decision was to put it back in the drawer.",
+          "visual_prompt": "Modern telecom antenna array at sunset replacing a faded consumer phone billboard with blank panels, Finnish landscape, forward-looking industrial documentary frame, no text",
+          "broll_prompt": "Lab drawer sliding shut on a prototype, lights dimming, pull back to an empty corridor",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "quiet finality",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Every empire has a moment when the strategy stops working. For Nokia, it was not the day Apple announced the iPhone. It was the day in two thousand four when leadership looked at the future, understood what it meant, and chose the present instead. Subscribe to Corporate Arc for weekly business documentaries on the rise, fall, and decisions that decide everything. The next disruption is already in someone's lab. The only question is whether the boardroom lets it out.",
+    "visual_prompt": "Helsinki harbour at blue hour, lights reflecting on water, a single prototype phone silhouette on a windowsill in the foreground, cinematic closing documentary frame, no readable text",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}

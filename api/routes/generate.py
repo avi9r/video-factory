@@ -1,5 +1,6 @@
 """Video generation routes."""
 
+import copy
 import json
 from pathlib import Path
 
@@ -8,6 +9,7 @@ from pydantic import BaseModel
 
 from lib.script_schema import FORMAT_SECTIONS, SCRIPT_TEMPLATE, normalize_script, parse_script_json, validate_script
 from lib.config import OUTPUT_BASE
+from lib.content_json import list_script_files, load_script_file
 from lib.script import generate_video_script, refine_script_section
 from lib.thumbnail import generate_thumbnail
 from lib.image_style import VALID_IMAGE_LAYOUTS, VALID_VISUAL_STYLES, normalize_image_layout
@@ -46,6 +48,7 @@ class GenerateVideoRequest(BaseModel):
     image_mode: str = "ai"
     image_layout: str = "one_image"
     visual_style: str | None = None
+    sfx_mode: str = "local"
     script: dict | None = None
 
 
@@ -75,6 +78,8 @@ class ApproveScriptRequest(BaseModel):
 
 class ValidateScriptRequest(BaseModel):
     script: dict
+    niche_id: str | None = None
+    humanize: bool = False
 
 
 class ManualScriptRequest(BaseModel):
@@ -138,12 +143,44 @@ async def script_template():
     }
 
 
+@router.get("/content-json")
+async def list_content_json_scripts():
+    return {"scripts": list_script_files()}
+
+
+@router.get("/content-json/{filename}")
+async def get_content_json_script(filename: str):
+    try:
+        script = load_script_file(filename)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    ok, errors = validate_script(script)
+    return {
+        "filename": filename if filename.endswith(".json") else f"{filename}.json",
+        "valid": ok,
+        "errors": errors,
+        "script": script,
+    }
+
+
 @router.post("/script/validate")
 async def validate_script_route(req: ValidateScriptRequest):
     ok, errors = validate_script(req.script)
     if not ok:
         return {"valid": False, "errors": errors}
-    normalized = normalize_script(req.script, humanize=False)
+    channel = None
+    if req.humanize and req.niche_id:
+        try:
+            channel = load_channel(req.niche_id)
+        except FileNotFoundError:
+            pass
+    normalized = normalize_script(
+        req.script,
+        humanize=req.humanize,
+        channel_config=channel,
+    )
     return {"valid": True, "script": normalized}
 
 
@@ -165,6 +202,8 @@ async def start_video_generation(req: GenerateVideoRequest, background_tasks: Ba
         )
     if req.visual_style and req.visual_style not in VALID_VISUAL_STYLES:
         raise HTTPException(status_code=400, detail="visual_style must be realistic or cartoon")
+    if req.sfx_mode not in ("local", "off"):
+        raise HTTPException(status_code=400, detail="sfx_mode must be local or off")
 
     job_id, reused = prepare_video_job(
         topic=req.topic,
@@ -177,6 +216,7 @@ async def start_video_generation(req: GenerateVideoRequest, background_tasks: Ba
         image_mode=req.image_mode,
         image_layout=req.image_layout,
         visual_style=req.visual_style,
+        sfx_mode=req.sfx_mode,
     )
 
     if req.script_mode == "manual":
@@ -200,6 +240,7 @@ async def start_video_generation(req: GenerateVideoRequest, background_tasks: Ba
                 req.image_mode,
                 req.image_layout,
                 req.visual_style,
+                req.sfx_mode,
             )
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
@@ -322,32 +363,37 @@ async def regenerate_scene(req: RegenerateSceneRequest):
         script = json.load(f)
     channel = load_channel(req.niche_id)
 
+    def _bookend(section: str) -> dict:
+        if section not in script or not isinstance(script.get(section), dict):
+            script[section] = copy.deepcopy(SCRIPT_TEMPLATE[section])
+        return script[section]
+
     narration = None
+    text_field = "text"
+    target = None
+
     if req.scene_id == "hook":
-        narration = script.get("hook", {}).get("text", "")
+        target = _bookend("hook")
+        narration = target.get("text", "")
     elif req.scene_id == "outro":
-        narration = script.get("outro", {}).get("text", "")
+        target = _bookend("outro")
+        narration = target.get("text", "")
     else:
+        text_field = "narration"
         for act in script.get("acts", []):
             for scene in act.get("scenes", []):
                 if scene.get("scene_id") == req.scene_id:
+                    target = scene
                     narration = scene.get("narration", "")
                     break
+            if target is not None:
+                break
 
-    if narration is None:
+    if target is None:
         raise HTTPException(status_code=404, detail=f"Scene not found: {req.scene_id}")
 
     new_narration = refine_script_section(narration, req.instruction, channel)
-
-    if req.scene_id == "hook":
-        script["hook"]["text"] = new_narration
-    elif req.scene_id == "outro":
-        script["outro"]["text"] = new_narration
-    else:
-        for act in script.get("acts", []):
-            for scene in act.get("scenes", []):
-                if scene.get("scene_id") == req.scene_id:
-                    scene["narration"] = new_narration
+    target[text_field] = new_narration
 
     save_json(script_path, script)
     return {"scene_id": req.scene_id, "new_narration": new_narration}
@@ -356,8 +402,14 @@ async def regenerate_scene(req: RegenerateSceneRequest):
 @router.post("/script-review/regenerate-full")
 async def regenerate_full_script(req: RegenerateFullRequest):
     channel = load_channel(req.niche_id)
+    status = get_job_status(req.job_id)
+    sfx_mode = status.get("steps", {}).get("script", {}).get("data", {}).get("sfx_mode", "local")
+    image_layout = status.get("steps", {}).get("script", {}).get("data", {}).get("image_layout", "one_image")
     script = generate_video_script(
-        req.topic, channel, req.duration_minutes, extra_instruction=req.instruction
+        req.topic, channel, req.duration_minutes,
+        extra_instruction=req.instruction,
+        sfx_mode=sfx_mode,
+        image_layout=image_layout,
     )
     job_dir = OUTPUT_BASE / req.niche_id / req.job_id
     save_json(job_dir / "script.json", script)

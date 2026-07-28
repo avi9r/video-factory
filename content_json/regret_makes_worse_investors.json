@@ -1,0 +1,192 @@
+{
+  "title": "Why Regret Makes Us Worse Investors Than Fear of Loss",
+  "title_variations": [
+    "The Regret Trap — Why Investors Refuse to Sell",
+    "Why Admitting a Bad Investment Feels Worse Than Losing Money",
+    "The Losing Stock You Keep to Avoid One Painful Sentence"
+  ],
+  "description": "A falling stock creates two different pains. One is financial: the money already lost. The other is psychological: selling would force you to admit the original decision was wrong. This documentary examines why regret can overpower logic, turning a manageable mistake into a much larger loss.\n\nDrawing on Daniel Kahneman and Amos Tversky's research on decision regret, alongside the formal regret theories developed by David Bell and by Graham Loomes and Robert Sugden in 1982, we follow a composite retail investor who watches one position collapse while repeatedly choosing hope over evidence. The crucial force is anticipatory regret — the fear that selling today will look foolish if the stock rebounds tomorrow.\n\nThis is educational content, not investment advice. Subscribe to Wired Broke for weekly documentaries about the psychology behind money decisions.",
+  "tags": [
+    "regret aversion",
+    "behavioral finance",
+    "Daniel Kahneman",
+    "Amos Tversky",
+    "regret theory",
+    "anticipatory regret",
+    "investing psychology",
+    "loss aversion",
+    "sunk cost fallacy",
+    "holding losing stocks",
+    "decision making",
+    "money psychology",
+    "behavioral economics",
+    "portfolio mistakes",
+    "financial education"
+  ],
+  "story_spine": "A retail investor keeps a deteriorating stock not because the evidence supports it, but because selling would create immediate regret while holding preserves the possibility of emotional redemption.",
+  "stakes": "When avoiding regret becomes the objective, investors stop evaluating future returns and allow yesterday's mistake to control tomorrow's capital.",
+  "midpoint_reversal": "The investor believes holding avoids regret, but holding is itself an active decision that creates a second, often larger, regret when the evidence continues to deteriorate.",
+  "open_loops": [
+    "Why can admitting a mistake feel more painful than losing additional money?",
+    "How does the possibility of a rebound make an irrational hold feel responsible?",
+    "What question separates the original purchase from the decision that must be made today?"
+  ],
+  "emotional_arc": [
+    "curiosity",
+    "tension",
+    "dread",
+    "revelation",
+    "resolve"
+  ],
+  "hero_visual_prompt": "A solitary investor seated at a dark desk between two symbolic objects — a sealed red envelope representing a realized mistake and an hourglass steadily draining black sand beside a shrinking stack of coins, cold blue window light with restrained warm desk-lamp contrast, premium behavioral-finance editorial photography, shallow depth of field, no readable text, numbers, logos, or screens",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "Tuesday morning, eight forty-seven. A stock in Marcus Reed's retirement account is down forty-two percent. The company has missed revenue estimates twice. Debt has risen. Its chief financial officer resigned three days ago. Marcus knows the facts. He even opens the sell window. Then one thought stops him: what if it rebounds the day after he sells? That imagined future hurts more than the red number already on his screen. Selling would not merely close a position. It would create a verdict — Marcus was wrong. So he cancels the order and calls the decision patience. Six months later, the position is down seventy-one percent. Fear of loss did not keep him trapped. Fear of regret did.",
+    "visual_prompt": "Pre-dawn home office with a worried middle-aged investor frozen above a computer mouse, red monitor glow reflected on his face, untouched coffee and pale morning light at the window, screen content abstract and unreadable",
+    "broll_prompt": "Close-up of a hand moving toward a mouse button, hesitating, then slowly pulling away as an hourglass drains nearby, no visible interface text",
+    "duration_seconds": 45,
+    "emotion": "tension",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "The Pain of Being Wrong",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "Marcus is a composite character, built from patterns repeatedly documented in behavioral-finance research. He is not reckless. He is an engineer who reads earnings reports, contributes automatically, and avoids speculative fads. Eighteen months earlier, he bought shares in a profitable medical-device manufacturer after studying its new product line. The thesis looked reasonable. Then a competitor won regulatory approval, hospital orders slowed, and management cut guidance. At first the decline was ten percent — ordinary volatility. At twenty percent, Marcus reread the bullish reports that supported his purchase. At thirty percent, he stopped reading analysts who disagreed. The investment was no longer just an asset. It had become evidence about his judgment.",
+          "visual_prompt": "Orderly home study with engineering notebooks, financial reports shown only as blurred pages, and a precise row of pens beside a closed laptop, calm exterior hiding mounting tension, no readable text",
+          "broll_prompt": "Hands sorting research papers into two piles, quietly pushing the critical pile aside while keeping the favorable pages",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "measured observation",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "Loss aversion explains part of the discomfort. Kahneman and Tversky's prospect theory showed that losses generally weigh more heavily than comparable gains. But regret adds another layer. A loss can happen to you. Regret says the loss happened because of you — because you chose this stock, ignored another one, or waited one week too long. That comparison creates a counterfactual world: the portfolio you would have had if only you had acted differently. The actual account sits on one side. The imagined account sits on the other. Every decision is judged against both. Marcus is not merely protecting money. He is protecting himself from meeting the version of Marcus who sold at exactly the wrong moment.",
+          "visual_prompt": "Two empty chairs facing each other across a dark desk, one illuminated by cool blue light and the other by warm light, a single coin between them, symbolic counterfactual comparison, no text",
+          "broll_prompt": "Mirror reflection of an investor at a desk, with the real figure looking down and the reflection appearing to face the unseen screen",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "analytical clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "In the early nineteen-eighties, regret became a formal part of decision theory. David Bell developed one model. Graham Loomes and Robert Sugden independently developed another. Around the same period, Kahneman and Tversky examined how regret changes choices, especially when outcomes can be compared with paths not taken. The central idea is simple: people anticipate how they will feel after learning what would have happened under another choice. That anticipated emotion enters the decision before the outcome exists. Marcus pictures selling at forty dollars and watching the stock rebound to sixty. He can already feel the humiliation. He does not picture holding at forty and watching it fall to twelve with equal vividness. One future has a face. The other remains fog.",
+          "visual_prompt": "Early nineteen-eighties academic office with three separate desks, decision trees represented by unlabeled branching wooden tokens, researchers studying outcomes under warm library lighting, no readable papers",
+          "broll_prompt": "Forked path made from domino tiles, one branch rising toward light while the other disappears into shadow",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "scholarly calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "The asymmetry grows because action feels more blameworthy than inaction. If Marcus sells and the stock rebounds, he caused the missed recovery with a visible click. If he holds and it falls, he can blame the market, management, interest rates, or bad timing. Psychologists have found that people often anticipate stronger regret after harmful actions than after equally harmful failures to act, especially in the short run. The distinction is psychologically convenient but financially false. Holding is not the absence of a decision. Each morning Marcus keeps the position, he chooses to allocate fresh capital to it rather than to every available alternative. Inaction hides the signature, but the transaction is renewed every day.",
+          "visual_prompt": "A hand resting motionless beside two balanced scales while one side slowly sinks under accumulating dark stones, symbolic cost of inaction, minimalist finance aesthetic",
+          "broll_prompt": "Calendar pages turning beside an untouched computer mouse as a stack of black tokens grows one token per day",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "How Anticipatory Regret Locks the Door",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "At a thirty-five-percent loss, Marcus creates a rule: sell when the position returns to his purchase price. The rule sounds disciplined. It is actually anchored to a number the market does not know. His entry price has no influence on the company's cash flow, competitive position, or valuation. It matters only because breaking even would erase the need to admit error. This is where regret recruits the sunk-cost fallacy. Past money becomes a target future money must rescue. Marcus stops asking what the business is worth now. He asks how long until the screen forgives him. The position must no longer outperform alternatives. It only needs to return him to emotional neutrality.",
+          "visual_prompt": "A red thread tied from a shrinking stack of coins to an old purchase receipt turned face-down, the thread pulled taut across a dark desk, symbolic anchoring, no readable figures",
+          "broll_prompt": "Close-up of a thumb tracing an old price mark on an abstract unlabeled paper while current research remains unopened",
+          "duration_seconds": 45,
+          "emotion": "dread",
+          "narration_tone": "measured tension",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "Then comes the rebound. After falling forty-eight percent, the stock rises fourteen percent in three sessions on takeover speculation. Marcus feels vindicated. The relief is physical — shoulders loosen, sleep improves, the original thesis suddenly feels intelligent again. But no buyer appears. The company issues new debt and delays its product launch. The stock resumes falling. That brief rally becomes the most dangerous event in the story because it trains Marcus to expect rescue. Variable rewards are powerful precisely because they arrive unpredictably. Every small recovery now proves that selling could produce immediate regret. Anticipatory regret does not require an actual rebound. It survives on the memory of one.",
+          "visual_prompt": "A nearly extinguished green indicator light suddenly glowing beside a much larger failing machine in a dim laboratory, temporary hope amid deterioration, no labels",
+          "broll_prompt": "A compressed spring bouncing once before dropping lower, filmed against a clean dark background",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "building dread",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "At fifty-eight percent down, Marcus finally writes two columns. Reasons to hold: the brand remains known, the product may recover, an acquisition is possible. Reasons to sell: shrinking revenue, rising leverage, executive turnover, weakening margins. The second column is longer and more measurable. Yet he keeps the stock. Why? Because logic is evaluating expected outcomes while regret is evaluating identity. Selling says the research, patience, and confidence invested over eighteen months were misplaced. Holding preserves a path — however narrow — in which all of it becomes justified. The stock has turned into an option on self-forgiveness. Its market value keeps falling while its emotional value rises.",
+          "visual_prompt": "Two columns represented by physical objects on a table — a few polished hopeful tokens versus many heavy evidence stones — while a hand still reaches for the smaller pile, no writing",
+          "broll_prompt": "Investor staring at two uneven scales, then closing the notebook without changing the position",
+          "duration_seconds": 45,
+          "emotion": "dread",
+          "narration_tone": "intimate precision",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "Here is the reversal. Marcus believes selling creates regret and holding postpones it. But holding creates a new decision at every price. At forty-two dollars he declines to sell. At thirty-one, he declines again. At twenty-four, again. Each choice can later become its own counterfactual: if only I had sold when the evidence first changed. By the time the company announces a restructuring, the stock is down seventy-one percent. The original loss was painful. The accumulated regret is worse because Marcus can now see every exit he rejected. Avoiding one admission did not eliminate regret. It compounded regret alongside the financial loss.",
+          "visual_prompt": "Descending staircase with several illuminated exit doors passed along the way, solitary figure standing at the dark bottom step, cinematic architectural metaphor, no signs or text",
+          "broll_prompt": "Series of open doorways closing one after another as a person continues down a narrowing corridor",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "Separate the Decision From the Verdict",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "The escape begins by separating outcome quality from decision quality. A good decision can produce a bad outcome because markets contain uncertainty. A bad decision can produce a good outcome because luck exists. Selling after a thesis breaks is not proved wrong by a later rebound. It can still be the correct process given the information available at the time. Kahneman's broader work repeatedly warns against outcome bias — judging a decision only after seeing what happened. Marcus needs a record made before the next price move: what evidence would invalidate the thesis, what position size is acceptable, and what action follows. The rule must exist before regret knows which story to tell.",
+          "visual_prompt": "A sealed decision journal beside a pair of dice and a balanced compass, symbolizing process versus luck, clean professional lighting, no readable text",
+          "broll_prompt": "Hand placing a dated but unreadable note into an envelope before rolling dice across the desk",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "A second tool is the fresh-capital test. Ignore the purchase price. Imagine the position has been converted to cash overnight. With no tax or transaction friction, would you buy the same asset today, in the same amount, using the evidence now available? If the answer is no, holding requires a new justification. The test is not a mechanical command to sell; real portfolios include taxes, diversification, constraints, and individual goals. Its purpose is diagnostic. It removes the emotional debt attached to the original trade. Marcus cannot change the first decision. He can prevent it from automatically making the second.",
+          "visual_prompt": "Cash-equivalent gold tokens placed at a fork between an old worn asset box and several neutral allocation boxes, top-down minimalist composition, no labels",
+          "broll_prompt": "Hands clearing an old position token from a board, pausing, then evaluating all empty spaces equally",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "calm instruction",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "The final tool is a regret budget. Before acting, name both possible regrets. Regret A: sell, then watch the stock rebound. Regret B: hold, then watch the business deteriorate and the loss deepen. Estimate which regret threatens the plan, not which one threatens pride. Then choose a process you could defend without knowing tomorrow's price. For some investors that means predefined review dates, maximum position sizes, written thesis-break conditions, or advice from a qualified professional. The objective is not to predict perfectly. It is to make uncertainty survivable without allowing one imagined future to dominate every other one.",
+          "visual_prompt": "Two empty glass jars of equal size beside a balanced scale, one containing a green token and the other several dark tokens, thoughtful behavioral-finance still life, no labels",
+          "broll_prompt": "Hand placing possible outcomes on both sides of a scale, then stepping back before the result is known",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "warm authority",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Fear of loss asks, how much money could disappear? Regret asks a more personal question: what will this decision say about me? That is why a losing stock can survive long after its logic has failed. Holding delays the verdict, but it does not stop time, evidence, or opportunity cost. Subscribe to Wired Broke for weekly documentaries on the psychology behind money decisions. The goal is not to avoid every mistake. It is to stop one mistake from making the next decision for you.",
+    "visual_prompt": "Investor leaving a dark desk and opening curtains to calm morning light, closed laptop and balanced hourglass remaining behind, clean hopeful documentary ending, no readable text",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}

@@ -10,8 +10,10 @@ load_dotenv(PROJECT_ROOT / "config.env")
 
 OUTPUT_BASE = Path(os.getenv("OUTPUT_BASE", PROJECT_ROOT / "output"))
 MUSIC_BASE = Path(os.getenv("MUSIC_BASE", PROJECT_ROOT / "music"))
+SFX_BASE = Path(os.getenv("SFX_BASE", PROJECT_ROOT / "sfx"))
 LUT_BASE = Path(os.getenv("LUT_BASE", PROJECT_ROOT / "luts"))
 CHANNELS_BASE = Path(os.getenv("CHANNELS_BASE", PROJECT_ROOT / "channels"))
+CONTENT_JSON_BASE = Path(os.getenv("CONTENT_JSON_BASE", PROJECT_ROOT / "content_json"))
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 HF_API_KEY = os.getenv("HF_API_KEY", "")

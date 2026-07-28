@@ -5,7 +5,14 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-from lib.audio import generate_all_voiceovers, get_audio_duration
+from lib.captions import (
+    captions_enabled,
+    collect_job_caption_cues,
+    build_job_caption_files,
+    estimate_timings_proportional,
+    load_scene_timings,
+    merge_block_timings,
+)
 from lib.config import OUTPUT_BASE
 from lib.cost_tracker import get_cost_estimate, record_image_cost, record_script_cost
 from lib.image import HERO_IMAGE_NAME, generate_scene_images_batch, _hero_visual_prompt
@@ -15,6 +22,7 @@ from lib.recorder import normalize_audio, reduce_noise
 from lib.stitch import (
     add_act_transition,
     add_intro_outro,
+    concatenate_audio_wavs,
     concatenate_scenes,
     create_scene_video,
     final_render,
@@ -55,15 +63,170 @@ def save_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _image_paths_dict(scenes: list[dict], images_dir: Path) -> dict:
+def _image_paths_dict(
+    scenes: list[dict],
+    images_dir: Path,
+    *,
+    image_layout: str = "one_image",
+) -> dict:
+    layout = normalize_image_layout(image_layout)
+    hero_path = images_dir / HERO_IMAGE_NAME
     paths = {}
     for scene in scenes:
         sid = scene.get("scene_id", "scene")
-        paths[sid] = {
-            "main": str(images_dir / f"{sid}_main.png"),
-            "broll": str(images_dir / f"{sid}_broll.png"),
-        }
+        if layout == "one_image" and hero_path.exists():
+            main = str(hero_path)
+        else:
+            main = str(images_dir / f"{sid}_main.png")
+        entry: dict = {"main": main}
+        if layout == "multiple":
+            entry["broll"] = str(images_dir / f"{sid}_broll.png")
+        else:
+            entry["broll"] = main
+        paths[sid] = entry
     return paths
+
+
+def _resolve_hero_image(image_paths: dict, images_dir: Path) -> str:
+    hero = images_dir / HERO_IMAGE_NAME
+    if hero.exists():
+        return str(hero)
+    for imgs in image_paths.values():
+        main = imgs.get("main", "")
+        if main and Path(main).exists():
+            return main
+    return ""
+
+
+def _topic_background_image(job_dir: Path) -> str | None:
+    """Best available topic-related still for title cards and thumbnails."""
+    candidates = [
+        job_dir / "images" / HERO_IMAGE_NAME,
+        job_dir / "thumbnail_bg.png",
+        job_dir / "images" / "hook_main.png",
+    ]
+    for path in candidates:
+        if path.exists():
+            return str(path)
+    images_dir = job_dir / "images"
+    if images_dir.is_dir():
+        mains = sorted(images_dir.glob("*_main.png"))
+        if mains:
+            return str(mains[0])
+    return None
+
+
+def _assemble_one_image_video(
+    script: dict,
+    image_paths: dict,
+    audio_paths: dict,
+    channel_config: dict,
+    job_dir: Path,
+    niche_id: str,
+    *,
+    images_dir: Path,
+    transition_type: str,
+    fps: int,
+    max_segment: float,
+    topic_background: str | None = None,
+) -> list[str]:
+    """Block-level assembly: one hero image + concatenated audio per hook/act/outro."""
+    blocks_dir = job_dir / "blocks"
+    audio_tmp = job_dir / "audio_blocks"
+    blocks_dir.mkdir(exist_ok=True)
+    audio_tmp.mkdir(exist_ok=True)
+
+    hero = _resolve_hero_image(image_paths, images_dir)
+    if not hero:
+        raise ValueError("Hero image not found for one_image assembly")
+
+    def _block_video(
+        wav_paths: list[str],
+        scene_ids: list[str],
+        block_name: str,
+    ) -> str | None:
+        wav_paths = [p for p in wav_paths if p and Path(p).exists()]
+        if not wav_paths:
+            return None
+        block_wav = str(audio_tmp / f"{block_name}.wav")
+        concatenate_audio_wavs(wav_paths, block_wav)
+        block_vid = str(blocks_dir / f"{block_name}_block.mp4")
+        caption_cues = None
+        if captions_enabled(channel_config):
+            caption_cues = merge_block_timings(scene_ids, job_dir / "audio")
+            if not caption_cues:
+                texts = []
+                for sid in scene_ids:
+                    for sc in flatten_scenes(script):
+                        if sc.get("scene_id") == sid:
+                            texts.append(sc.get("narration") or sc.get("text", ""))
+                            break
+                full_text = " ".join(t for t in texts if t)
+                caption_cues = estimate_timings_proportional(
+                    full_text, get_audio_duration(block_wav)
+                )
+        create_scene_video(
+            hero,
+            hero,
+            block_wav,
+            block_vid,
+            transition=transition_type,
+            use_broll=False,
+            fps=fps,
+            max_segment_seconds=max_segment,
+            channel_config=channel_config,
+            caption_cues=caption_cues,
+        )
+        return block_vid
+
+    act_blocks: list[str] = []
+
+    hook_id = script.get("hook", {}).get("scene_id", "hook")
+    hook_audio = audio_paths.get(hook_id)
+    if hook_audio:
+        hook_vid = _block_video([hook_audio], [hook_id], "hook")
+        if hook_vid:
+            hook_mixed = str(blocks_dir / "hook_mixed.mp4")
+            act_blocks.append(
+                _mix_block_music(hook_vid, hook_mixed, niche_id, "hook", channel_config)
+            )
+
+    for act in script.get("acts", []):
+        act_num = act.get("act_number", 1)
+        act_scene_ids = [
+            s["scene_id"]
+            for s in act.get("scenes", [])
+            if s.get("scene_id") in audio_paths
+        ]
+        act_wavs = [audio_paths[sid] for sid in act_scene_ids]
+        act_vid = _block_video(act_wavs, act_scene_ids, f"act{act_num}")
+        if not act_vid:
+            continue
+        act_mixed = str(blocks_dir / f"act{act_num}_mixed.mp4")
+        act_final = _mix_block_music(act_vid, act_mixed, niche_id, f"act{act_num}", channel_config)
+        transition_path = str(blocks_dir / f"act{act_num}_transition.mp4")
+        add_act_transition(
+            act_final,
+            act.get("act_title", f"Act {act_num}"),
+            channel_config,
+            transition_path,
+            fps=fps,
+            act_number=act_num,
+            background_image=topic_background,
+        )
+        act_blocks.append(transition_path)
+
+    outro_id = script.get("outro", {}).get("scene_id", "outro")
+    outro_audio = audio_paths.get(outro_id)
+    if outro_audio:
+        outro_vid = _block_video([outro_audio], [outro_id], "outro")
+        if outro_vid:
+            outro_mixed = str(blocks_dir / "outro_mixed.mp4")
+            act_blocks.append(
+                _mix_block_music(outro_vid, outro_mixed, niche_id, "outro", channel_config)
+            )
+
+    return act_blocks
 
 
 def _audio_paths_dict(scenes: list[dict], audio_path_list: list[str]) -> dict:
@@ -168,6 +331,7 @@ def prepare_video_job(
     image_mode: str = "ai",
     image_layout: str = "one_image",
     visual_style: str | None = None,
+    sfx_mode: str = "local",
 ) -> tuple[str, bool]:
     load_channel(niche_id)
     existing = find_job_by_topic(niche_id, topic)
@@ -198,6 +362,7 @@ def prepare_video_job(
             "image_mode": image_mode,
             "image_layout": normalize_image_layout(image_layout),
             "visual_style": visual_style,
+            "sfx_mode": sfx_mode if sfx_mode in ("local", "off") else "local",
         },
         niche_id=niche_id,
     )
@@ -216,6 +381,7 @@ def ingest_manual_script(
     image_mode: str = "ai",
     image_layout: str = "one_image",
     visual_style: str | None = None,
+    sfx_mode: str = "local",
 ) -> None:
     """Save a user-provided script and mark ready for review (no LLM call)."""
     from lib.script_schema import normalize_script, validate_script
@@ -225,7 +391,8 @@ def ingest_manual_script(
     if not ok:
         raise ValueError("; ".join(errors))
 
-    normalized = normalize_script(script, humanize=False)
+    channel = load_channel(niche_id)
+    normalized = normalize_script(script, humanize=True, channel_config=channel)
     save_json(job_dir / "script.json", normalized)
     save_text(job_dir / "description.txt", normalized.get("description", ""))
     save_text(job_dir / "tags.txt", "\n".join(normalized.get("tags", [])))
@@ -247,6 +414,7 @@ def ingest_manual_script(
             "image_mode": image_mode,
             "image_layout": normalize_image_layout(image_layout),
             "visual_style": visual_style,
+            "sfx_mode": sfx_mode if sfx_mode in ("local", "off") else "local",
         },
         niche_id=niche_id,
     )
@@ -266,7 +434,13 @@ def run_script_generation(
     job_dir = OUTPUT_BASE / niche_id / job_id
     _log(f"Starting job {job_id} for {niche_id}: {topic}")
     try:
-        script = generate_video_script(topic, channel, duration_minutes)
+        status_data = get_job_status(job_id).get("steps", {}).get("script", {}).get("data", {})
+        sfx_mode = status_data.get("sfx_mode", "local")
+        script = generate_video_script(
+            topic, channel, duration_minutes,
+            sfx_mode=sfx_mode,
+            image_layout=status_data.get("image_layout", "one_image"),
+        )
         save_json(job_dir / "script.json", script)
         save_text(job_dir / "description.txt", script.get("description", ""))
         save_text(job_dir / "tags.txt", "\n".join(script.get("tags", [])))
@@ -290,6 +464,7 @@ def run_script_generation(
                 "image_mode": status_data.get("image_mode", "ai"),
                 "image_layout": status_data.get("image_layout", "one_image"),
                 "visual_style": status_data.get("visual_style"),
+                "sfx_mode": status_data.get("sfx_mode", "local"),
             },
             niche_id=niche_id,
         )
@@ -346,7 +521,10 @@ def _load_script(job_dir: Path) -> dict:
         return json.load(f)
 
 
-def _images_exist(job_dir: Path, script: dict) -> bool:
+def _images_exist(job_dir: Path, script: dict, image_layout: str = "one_image") -> bool:
+    layout = normalize_image_layout(image_layout)
+    if layout == "one_image":
+        return (job_dir / "images" / HERO_IMAGE_NAME).exists()
     for scene in flatten_scenes(script):
         sid = scene.get("scene_id", "scene")
         if not (job_dir / "images" / f"{sid}_main.png").exists():
@@ -366,7 +544,12 @@ def _load_image_paths(status: dict, job_dir: Path, script: dict) -> dict:
     image_paths = status.get("steps", {}).get("images", {}).get("data", {}).get("paths")
     if image_paths:
         return image_paths
-    return _image_paths_dict(flatten_scenes(script), job_dir / "images")
+    script_data = status.get("steps", {}).get("script", {}).get("data", {})
+    image_layout = normalize_image_layout(
+        status.get("steps", {}).get("images", {}).get("data", {}).get("image_layout")
+        or script_data.get("image_layout", "one_image")
+    )
+    return _image_paths_dict(flatten_scenes(script), job_dir / "images", image_layout=image_layout)
 
 
 def _load_audio_paths(job_dir: Path, script: dict) -> dict[str, str]:
@@ -388,6 +571,7 @@ def get_resume_info(job_id: str) -> dict:
     status = get_job_status(job_id)
     niche_id = status.get("niche_id")
     steps = status.get("steps", {})
+    script_data = steps.get("script", {}).get("data", {})
     base = {
         "job_id": job_id,
         "niche_id": niche_id,
@@ -442,8 +626,14 @@ def get_resume_info(job_id: str) -> dict:
 
     completed = ["script"]
     script = _load_script(job_dir)
+    image_layout = normalize_image_layout(
+        steps.get("images", {}).get("data", {}).get("image_layout")
+        or script_data.get("image_layout", "one_image")
+    )
 
-    if steps.get("images", {}).get("status") != "complete" or not _images_exist(job_dir, script):
+    if steps.get("images", {}).get("status") != "complete" or not _images_exist(
+        job_dir, script, image_layout
+    ):
         return {
             **base,
             "resume_step": "images",
@@ -576,7 +766,7 @@ async def run_resume_job_async(job_id: str, niche_id: str | None = None) -> dict
         return _run_assembly_only(job_id, niche_id, script, job_dir)
 
     try:
-        return await continue_after_approval(
+        return continue_after_approval(
             job_id, niche_id, script, audio_mode, voice, speed, from_step=resume_step
         )
     except Exception as e:
@@ -595,6 +785,35 @@ def _visual_style_from_status(status: dict) -> str | None:
     images_data = status.get("steps", {}).get("images", {}).get("data", {})
     script_data = status.get("steps", {}).get("script", {}).get("data", {})
     return images_data.get("visual_style") or script_data.get("visual_style")
+
+
+def _sfx_mode_from_status(status: dict) -> str:
+    script_data = status.get("steps", {}).get("script", {}).get("data", {})
+    return script_data.get("sfx_mode", "local")
+
+
+def _apply_scene_sfx(
+    scenes: list[dict],
+    audio_paths: dict[str, str],
+    sfx_mode: str,
+    channel_config: dict | None = None,
+) -> None:
+    if sfx_mode != "local":
+        return
+    from lib.sfx import mix_sfx_into_voice, sfx_mix_config_from_channel
+
+    mix_config = sfx_mix_config_from_channel(channel_config)
+
+    for scene in scenes:
+        sid = scene.get("scene_id")
+        cues = scene.get("sfx_cues") or []
+        wav = audio_paths.get(sid)
+        if not wav or not cues:
+            continue
+        try:
+            mix_sfx_into_voice(wav, cues, wav, mix_config=mix_config)
+        except Exception as e:
+            _log(f"SFX mix skipped for {sid}: {e}")
 
 
 def _run_assembly_only(job_id: str, niche_id: str, script: dict, job_dir: Path) -> dict:
@@ -638,7 +857,7 @@ def _run_assembly_only(job_id: str, niche_id: str, script: dict, job_dir: Path) 
         raise
 
 
-async def continue_after_approval(
+def continue_after_approval(
     job_id: str,
     niche_id: str,
     approved_script: dict,
@@ -684,6 +903,7 @@ async def continue_after_approval(
         image_layout = normalize_image_layout(image_layout)
     if visual_style is None:
         visual_style = _visual_style_from_status(status)
+    sfx_mode = _sfx_mode_from_status(status)
     resolved_channel = resolve_image_config(channel, visual_style)
     image_paths = _load_image_paths(status, job_dir, approved_script)
     thumbnail_path = status.get("steps", {}).get("thumbnail", {}).get("data", {}).get("thumbnail_path")
@@ -716,8 +936,11 @@ async def continue_after_approval(
                 str(job_dir / "images"),
                 image_layout=image_layout,
                 visual_style=visual_style,
+                script=approved_script,
             )
-            image_paths = _image_paths_dict(all_scenes, job_dir / "images")
+            image_paths = _image_paths_dict(
+                all_scenes, job_dir / "images", image_layout=image_layout
+            )
             cost_data = record_image_cost(
                 job_dir,
                 image_sources.get("flux_count", 0),
@@ -742,10 +965,13 @@ async def continue_after_approval(
         if _should_run_step("thumbnail", from_step):
             current_step = "thumbnail"
             update_job(job_id, "thumbnail", "running", niche_id=niche_id)
+            hero_bg = _topic_background_image(job_dir)
             thumbnail_path = generate_thumbnail(
                 approved_script.get("title", "Video"),
                 resolved_channel,
                 str(job_dir / "thumbnail.png"),
+                script=approved_script,
+                background_image=hero_bg,
             )
             update_job(
                 job_id, "thumbnail", "complete", {"thumbnail_path": thumbnail_path}, niche_id=niche_id
@@ -781,6 +1007,7 @@ async def continue_after_approval(
                 all_scenes, channel, str(job_dir / "audio"), voice=voice, speed=speed
             )
             audio_paths = _audio_paths_dict(all_scenes, audio_path_list)
+            _apply_scene_sfx(all_scenes, audio_paths, sfx_mode, channel)
 
             if audio_mode == "hybrid":
                 update_job(
@@ -858,88 +1085,118 @@ def assemble_video(
     image_layout: str = "one_image",
 ) -> str:
     _log("Assembling final video")
+    layout = normalize_image_layout(image_layout)
     all_scenes = flatten_scenes(script)
     scenes_dir = job_dir / "scenes"
     scenes_dir.mkdir(exist_ok=True)
     blocks_dir = job_dir / "blocks"
     blocks_dir.mkdir(exist_ok=True)
+    images_dir = job_dir / "images"
 
     transition_type = channel_config.get("video", {}).get("transition_type", "crossfade")
     fps = channel_config.get("video", {}).get("fps", 30)
     broll_freq = channel_config.get("video", {}).get("broll_frequency", 3)
     max_segment = channel_config.get("video", {}).get("max_visual_segment_seconds", 7.0)
+    topic_background = _topic_background_image(job_dir)
 
-    use_broll = layout_uses_broll(image_layout)
-    scene_video_map: dict[str, str] = {}
-    for i, scene in enumerate(all_scenes):
-        scene_id = scene.get("scene_id", f"scene_{i}")
-        imgs = image_paths.get(scene_id, {})
-        main = imgs.get("main", "")
-        broll = imgs.get("broll", main)
-        audio = audio_paths.get(scene_id, "")
-        if not main or not audio:
-            _log(f"Skipping scene {scene_id} - missing assets")
-            continue
-        out = scenes_dir / f"{scene_id}.mp4"
-        create_scene_video(
-            main, broll, audio, str(out),
-            broll_at_second=broll_freq,
-            transition=transition_type,
-            use_broll=use_broll,
-            fps=fps,
-            max_segment_seconds=max_segment,
-        )
-        scene_video_map[scene_id] = str(out)
-
-    act_blocks: list[str] = []
-
-    hook_id = script.get("hook", {}).get("scene_id", "hook")
-    if hook_id in scene_video_map:
-        hook_block = str(blocks_dir / "hook_block.mp4")
-        concatenate_scenes([scene_video_map[hook_id]], hook_block, transition=transition_type, fps=fps)
-        hook_mixed = str(blocks_dir / "hook_mixed.mp4")
-        hook_final = _mix_block_music(
-            hook_block, hook_mixed, niche_id, "hook", channel_config
-        )
-        act_blocks.append(hook_final)
-
-    for act in script.get("acts", []):
-        act_scene_videos = [
-            scene_video_map[s["scene_id"]]
-            for s in act.get("scenes", [])
-            if s.get("scene_id") in scene_video_map
-        ]
-        if not act_scene_videos:
-            continue
-
-        act_num = act.get("act_number", 1)
-        act_block = str(blocks_dir / f"act{act_num}_block.mp4")
-        concatenate_scenes(act_scene_videos, act_block, transition=transition_type, fps=fps)
-
-        act_mixed = str(blocks_dir / f"act{act_num}_mixed.mp4")
-        act_final = _mix_block_music(
-            act_block, act_mixed, niche_id, f"act{act_num}", channel_config
-        )
-
-        transition_path = str(blocks_dir / f"act{act_num}_transition.mp4")
-        add_act_transition(
-            act_final,
-            act.get("act_title", f"Act {act_num}"),
+    if layout == "one_image":
+        act_blocks = _assemble_one_image_video(
+            script,
+            image_paths,
+            audio_paths,
             channel_config,
-            transition_path,
+            job_dir,
+            niche_id,
+            images_dir=images_dir,
+            transition_type=transition_type,
             fps=fps,
+            max_segment=max_segment,
+            topic_background=topic_background,
         )
-        act_blocks.append(transition_path)
+    else:
+        use_broll = layout_uses_broll(layout)
+        scene_video_map: dict[str, str] = {}
+        for i, scene in enumerate(all_scenes):
+            scene_id = scene.get("scene_id", f"scene_{i}")
+            imgs = image_paths.get(scene_id, {})
+            main = imgs.get("main", "")
+            broll = imgs.get("broll", main)
+            audio = audio_paths.get(scene_id, "")
+            if not main or not audio:
+                _log(f"Skipping scene {scene_id} - missing assets")
+                continue
+            caption_cues = None
+            if captions_enabled(channel_config):
+                caption_cues = load_scene_timings(job_dir / "audio", scene_id)
+                if not caption_cues:
+                    narration = scene.get("narration") or scene.get("text", "")
+                    caption_cues = estimate_timings_proportional(
+                        narration, get_audio_duration(audio)
+                    )
+            out = scenes_dir / f"{scene_id}.mp4"
+            create_scene_video(
+                main, broll, audio, str(out),
+                broll_at_second=broll_freq,
+                transition=transition_type,
+                use_broll=use_broll,
+                fps=fps,
+                max_segment_seconds=max_segment,
+                channel_config=channel_config,
+                caption_cues=caption_cues,
+            )
+            scene_video_map[scene_id] = str(out)
 
-    outro_id = script.get("outro", {}).get("scene_id", "outro")
-    if outro_id in scene_video_map:
-        outro_block = str(blocks_dir / "outro_block.mp4")
-        concatenate_scenes([scene_video_map[outro_id]], outro_block, transition=transition_type, fps=fps)
-        outro_mixed = str(blocks_dir / "outro_mixed.mp4")
-        outro_final = _mix_block_music(
-            outro_block, outro_mixed, niche_id, "outro", channel_config
-        )
-        act_blocks.append(outro_final)
+        act_blocks: list[str] = []
+
+        hook_id = script.get("hook", {}).get("scene_id", "hook")
+        if hook_id in scene_video_map:
+            hook_block = str(blocks_dir / "hook_block.mp4")
+            concatenate_scenes([scene_video_map[hook_id]], hook_block, transition=transition_type, fps=fps)
+            hook_mixed = str(blocks_dir / "hook_mixed.mp4")
+            hook_final = _mix_block_music(
+                hook_block, hook_mixed, niche_id, "hook", channel_config
+            )
+            act_blocks.append(hook_final)
+
+        for act in script.get("acts", []):
+            act_scene_videos = [
+                scene_video_map[s["scene_id"]]
+                for s in act.get("scenes", [])
+                if s.get("scene_id") in scene_video_map
+            ]
+            if not act_scene_videos:
+                continue
+
+            act_num = act.get("act_number", 1)
+            act_block = str(blocks_dir / f"act{act_num}_block.mp4")
+            concatenate_scenes(act_scene_videos, act_block, transition=transition_type, fps=fps)
+
+            act_mixed = str(blocks_dir / f"act{act_num}_mixed.mp4")
+            act_final = _mix_block_music(
+                act_block, act_mixed, niche_id, f"act{act_num}", channel_config
+            )
+
+            transition_path = str(blocks_dir / f"act{act_num}_transition.mp4")
+            add_act_transition(
+                act_final,
+                act.get("act_title", f"Act {act_num}"),
+                channel_config,
+                transition_path,
+                fps=fps,
+                act_number=act_num,
+                background_image=topic_background,
+            )
+            act_blocks.append(transition_path)
+
+        outro_id = script.get("outro", {}).get("scene_id", "outro")
+        if outro_id in scene_video_map:
+            outro_block = str(blocks_dir / "outro_block.mp4")
+            concatenate_scenes([scene_video_map[outro_id]], outro_block, transition=transition_type, fps=fps)
+            outro_mixed = str(blocks_dir / "outro_mixed.mp4")
+            outro_final = _mix_block_music(
+                outro_block, outro_mixed, niche_id, "outro", channel_config
+            )
+            act_blocks.append(outro_final)
 
     if not act_blocks:
         raise ValueError("No scene blocks to assemble")
@@ -948,7 +1205,10 @@ def assemble_video(
     concatenate_scenes(act_blocks, str(concat_path), transition="cut", fps=fps)
 
     with_intro = job_dir / "with_intro_outro.mp4"
-    add_intro_outro(str(concat_path), channel_config, str(with_intro), fps=fps)
+    add_intro_outro(
+        str(concat_path), channel_config, str(with_intro), fps=fps,
+        background_image=topic_background,
+    )
 
     lut_name = channel_config.get("style_lock", {}).get("color_grade", "")
     graded_path = job_dir / "graded.mp4"
@@ -957,6 +1217,14 @@ def assemble_video(
     final_path = job_dir / "final_video.mp4"
     res = channel_config.get("video", {}).get("resolution", "1920x1080")
     final_render(str(graded_path), str(final_path), resolution=res, fps=fps)
+
+    if captions_enabled(channel_config):
+        scene_ids = [s.get("scene_id", "") for s in all_scenes if s.get("scene_id")]
+        job_cues = collect_job_caption_cues(scene_ids, job_dir / "audio")
+        caption_files = build_job_caption_files(job_cues, job_dir, channel_config)
+        if caption_files:
+            _log(f"Caption files: {caption_files.get('srt', '')}")
+
     _log(f"Final video: {final_path}")
     return str(final_path)
 
@@ -1024,7 +1292,7 @@ async def regenerate_stage(
         save_json(job_dir / "script_approved.json", script)
     update_job(job_id, "script", "approved", niche_id=niche_id)
 
-    return await continue_after_approval(
+    return continue_after_approval(
         job_id, niche_id, script, audio_mode, voice, speed, from_step=stage
     )
 
@@ -1083,7 +1351,7 @@ def get_assets_status(job_id: str) -> dict:
     if image_layout == "one_image":
         hero_path = images_dir / HERO_IMAGE_NAME
         has_hero = hero_path.exists()
-        prompt = _hero_visual_prompt(scenes)
+        prompt = _hero_visual_prompt(scenes, script)
         slot = {
             "scene_id": "hero",
             "scene_label": "Entire video",
@@ -1103,7 +1371,7 @@ def get_assets_status(job_id: str) -> dict:
             "label": "Entire video",
             "narration_preview": "One image is used for every scene with Ken Burns motion.",
             "main": has_hero,
-            "broll": has_hero,
+            "broll": False,
             "main_url": slot["url"],
             "broll_url": None,
             "visual_prompt": prompt,
@@ -1214,7 +1482,7 @@ def save_uploaded_scene_image(
     file_bytes: bytes,
 ) -> dict:
     """Save an uploaded scene image (main or broll)."""
-    from lib.assets import copy_as_broll, propagate_hero_to_scenes, save_uploaded_image
+    from lib.assets import propagate_hero_to_scenes, save_uploaded_image
 
     job_dir = find_job_dir(job_id)
     if job_dir is None:
@@ -1237,7 +1505,7 @@ def save_uploaded_scene_image(
         hero_path = images_dir / HERO_IMAGE_NAME
         save_uploaded_image(file_bytes, hero_path)
         script = _load_script(job_dir)
-        propagate_hero_to_scenes(hero_path, flatten_scenes(script), images_dir)
+        propagate_hero_to_scenes(hero_path, flatten_scenes(script), images_dir, include_broll=False)
         return get_assets_status(job_id)
 
     main_path = images_dir / f"{scene_id}_main.png"
@@ -1245,15 +1513,15 @@ def save_uploaded_scene_image(
 
     if asset_type == "main":
         save_uploaded_image(file_bytes, main_path)
-        if image_layout == "per_scene":
-            copy_as_broll(main_path, broll_path)
-    else:
+    elif image_layout == "multiple":
         save_uploaded_image(file_bytes, broll_path)
+    else:
+        raise ValueError("B-roll upload only supported for multiple layout")
 
     return get_assets_status(job_id)
 
 
-async def continue_after_image_upload(
+def continue_after_image_upload(
     job_id: str,
     niche_id: str,
     audio_mode: str | None = None,
@@ -1273,7 +1541,9 @@ async def continue_after_image_upload(
     visual_style = assets.get("visual_style") or script_data.get("visual_style")
     job_dir = OUTPUT_BASE / niche_id / job_id
     all_scenes = flatten_scenes(script)
-    image_paths = _image_paths_dict(all_scenes, job_dir / "images")
+    image_paths = _image_paths_dict(
+        all_scenes, job_dir / "images", image_layout=image_layout
+    )
 
     update_job(
         job_id,
@@ -1295,7 +1565,7 @@ async def continue_after_image_upload(
     if speed is None:
         speed = script_data.get("speed", 0.85)
 
-    return await continue_after_approval(
+    return continue_after_approval(
         job_id,
         niche_id,
         script,
@@ -1459,6 +1729,8 @@ async def complete_human_recording(
     channel = load_channel(niche_id)
     status = get_job_status(job_id)
     image_layout = _image_layout_from_status(status)
+    sfx_mode = _sfx_mode_from_status(status)
+    _apply_scene_sfx(flatten_scenes(script), processed, sfx_mode, channel)
     update_job(job_id, "assembly", "running", niche_id=niche_id)
     final_path = assemble_video(
         script, image_paths, processed, channel, job_dir, niche_id,

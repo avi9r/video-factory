@@ -13,12 +13,8 @@ def _log(msg: str) -> None:
 
 
 def _build_prompt(prompt: str, channel_config: dict) -> str:
-    style = channel_config.get("style_lock", {})
-    return (
-        f"{style.get('lighting', '')}. {style.get('mood', '')}. "
-        f"{style.get('composition', '')}. {prompt}. "
-        f"{style.get('always_include', '')}. Never: {style.get('forbidden', '')}."
-    )
+    from lib.image import _build_prompt as build_image_prompt
+    return build_image_prompt(prompt, channel_config)
 
 
 def generate_scene_clip(

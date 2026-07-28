@@ -38,9 +38,16 @@ def copy_as_broll(main_path: Path, broll_path: Path) -> str:
     return str(broll_path)
 
 
-def propagate_hero_to_scenes(hero_path: Path, scenes: list[dict], out_dir: Path) -> None:
-    """Copy one hero image to every scene main/broll slot."""
+def propagate_hero_to_scenes(
+    hero_path: Path,
+    scenes: list[dict],
+    out_dir: Path,
+    *,
+    include_broll: bool = False,
+) -> None:
+    """Copy one hero image to every scene main slot; b-roll only when requested."""
     for scene in scenes:
         scene_id = scene.get("scene_id", "scene")
         copy_as_broll(hero_path, out_dir / f"{scene_id}_main.png")
-        copy_as_broll(hero_path, out_dir / f"{scene_id}_broll.png")
+        if include_broll:
+            copy_as_broll(hero_path, out_dir / f"{scene_id}_broll.png")

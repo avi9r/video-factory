@@ -319,6 +319,7 @@
                   <option value="per_scene">One image per scene</option>
                   <option value="multiple">Per scene + B-roll</option>
                 </select>
+                <p class="field-hint" id="imageLayoutHint" style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem"></p>
               </div>
               <div>
                 <label>Audio</label>
@@ -326,6 +327,13 @@
                   <option value="ai">AI Voiceover</option>
                   <option value="human">Human</option>
                   <option value="hybrid">Hybrid</option>
+                </select>
+              </div>
+              <div>
+                <label>Sound effects</label>
+                <select id="sfxMode">
+                  <option value="local" selected>Local library</option>
+                  <option value="off">Off</option>
                 </select>
               </div>
             </div>
@@ -883,6 +891,7 @@
             image_mode: document.getElementById('imageMode').value,
             image_layout: document.getElementById('imageLayout').value,
             visual_style: document.getElementById('visualStyle').value,
+            sfx_mode: document.getElementById('sfxMode').value,
           }),
         });
         const data = await res.json();
@@ -967,23 +976,28 @@
       const im = localStorage.getItem('ytf_image_mode');
       let il = localStorage.getItem('ytf_image_layout');
       const vs = localStorage.getItem('ytf_visual_style');
+      const sfx = localStorage.getItem('ytf_sfx_mode');
       if (il === 'single') il = 'per_scene';
       if (sm) document.getElementById('scriptMode').value = sm;
       if (im) document.getElementById('imageMode').value = im;
       if (il) document.getElementById('imageLayout').value = il;
       if (vs) document.getElementById('visualStyle').value = vs;
       else applyChannelStyleDefault();
+      if (sfx) document.getElementById('sfxMode').value = sfx;
       onScriptModeChange();
+      updateImageLayoutHint();
       const keys = {
         scriptMode: 'ytf_script_mode',
         imageMode: 'ytf_image_mode',
         imageLayout: 'ytf_image_layout',
         visualStyle: 'ytf_visual_style',
+        sfxMode: 'ytf_sfx_mode',
       };
       Object.entries(keys).forEach(([id, key]) => {
         document.getElementById(id).addEventListener('change', () => {
           localStorage.setItem(key, document.getElementById(id).value);
           onScriptModeChange();
+          if (id === 'imageLayout') updateImageLayoutHint();
         });
       });
     }
@@ -992,6 +1006,18 @@
       const manual = document.getElementById('scriptMode').value === 'manual';
       document.getElementById('manualScriptBtn').style.display = manual ? 'inline-block' : 'none';
       document.getElementById('generateBtn').textContent = manual ? 'Create Job & Open Editor' : 'Generate Video';
+    }
+
+    const LAYOUT_HINTS = {
+      one_image: 'Single background for full narration; act title cards + music included.',
+      per_scene: 'A unique AI image for each scene.',
+      multiple: 'Main image plus alternating B-roll cutaways per scene.',
+    };
+
+    function updateImageLayoutHint() {
+      const el = document.getElementById('imageLayoutHint');
+      const layout = document.getElementById('imageLayout').value;
+      if (el) el.textContent = LAYOUT_HINTS[layout] || '';
     }
 
     function openManualScript() { startGeneration(true); }

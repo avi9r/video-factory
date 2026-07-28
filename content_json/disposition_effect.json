@@ -1,0 +1,196 @@
+{
+  "title": "The Disposition Effect — Why Investors Sell Winners and Keep Losers",
+  "title_variations": [
+    "Why You Sell Your Best Stocks Too Early",
+    "The Disposition Effect: Winners Out, Losers Stay",
+    "Same Portfolio, Opposite Decisions — The 2008 Lesson"
+  ],
+  "description": "In 1985, Hersh Shefrin and Meir Statman named a pattern that quietly drains portfolios: investors sell winning stocks too early and hold losing stocks too long. This documentary traces the disposition effect from their original research through a side-by-side story set in 2008 — one retail investor making emotional trades, one rules-based fund holding the same stocks with mechanical discipline.\n\nSame tickers. Same market crash. Dramatically different outcomes. No stock picks. No personalized advice. Just the psychology behind why smart people harvest gains and nurse losses — and one mental model to interrupt the pattern before the next downturn.\n\nSubscribe to Wired Broke for weekly behavioral finance documentaries.",
+  "tags": [
+    "disposition effect",
+    "behavioral finance",
+    "Hersh Shefrin",
+    "Meir Statman",
+    "investing psychology",
+    "2008 financial crisis",
+    "sell winners",
+    "hold losers",
+    "mental accounting",
+    "prospect theory",
+    "money psychology",
+    "behavioral economics",
+    "portfolio management",
+    "financial education",
+    "cognitive bias"
+  ],
+  "story_spine": "Two 2008 portfolios with identical holdings diverge because one mind obeys the disposition effect — selling winners, clinging to losers — while a rules-based process does the opposite.",
+  "stakes": "The disposition effect turns temporary drawdowns into permanent capital damage by locking in small wins and magnifying large losses.",
+  "midpoint_reversal": "The retail investor and the rules-based fund owned the same stocks — the gap in outcomes came entirely from when each chose to sell, not from stock selection.",
+  "open_loops": [
+    "Why does a green position feel like a finish line and a red one feel like a debt you still owe?",
+    "What did Shefrin and Statman see in brokerage records that mainstream finance had ignored?",
+    "Can a simple pre-commitment rule beat emotion when the market turns violent?"
+  ],
+  "emotional_arc": ["curiosity", "tension", "dread", "revelation", "resolve"],
+  "hero_visual_prompt": "Split-screen conceptual still life on a dark walnut desk — left side a small neat stack of gold coins beside an empty sell ticket stub, right side a wilted potted plant beside a crumpled hold order, soft green rim light on the coins and cold blue shadow on the plant, shallow depth of field, premium editorial finance aesthetic, no readable text or logos",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "October two thousand eight. A home office desk. Two computer monitors glow in a dark room. On the left screen, a brokerage account shows three positions in the green — modest gains, all earned in the same brutal year. On the right screen, an identical list of tickers, the same purchase dates, the same starting capital. One account belongs to a retail investor making every decision by hand. The other follows a rules-based fund that never asks how a position feels. By March two thousand nine, one portfolio is down thirty-eight percent. The other is down nineteen. Same stocks. Opposite sell decisions. The difference is not luck. It is a bias Hersh Shefrin and Meir Statman documented in nineteen eighty-five — and most investors still practice it every time a winner turns green.",
+    "visual_prompt": "Dark home office at night, dual monitors casting green and red glow on a cluttered desk with coffee mug and scattered sticky notes with blank backs, tense documentary atmosphere, no readable screen text",
+    "broll_prompt": "Close-up of hands hovering over a mouse beside a keyboard, monitor light reflecting on eyeglasses, shallow focus, no legible charts",
+    "duration_seconds": 45,
+    "emotion": "curiosity",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "The Bias Has a Name",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "Nineteen eighty-five. Hersh Shefrin and Meir Statman publish a paper with an uncomfortable title: investors are disposed to sell winners too early and ride losers too long. They were not guessing. They studied real brokerage records — thousands of trades — and found a pattern that repeated across accounts, income levels, and market cycles. Winning positions left portfolios fast. Losing positions stayed for months, sometimes years. The behavior violated basic rationality. If you would not buy a stock today at its current price, holding it is the same decision. Yet millions of holders kept the losers anyway. What force made selling a winner feel like victory and selling a loser feel like surrender?",
+          "visual_prompt": "Nineteen eighties university office with academic papers stacked on a wooden desk, two researchers reviewing printouts beside a rotary phone, warm tungsten lighting, no readable document text",
+          "broll_prompt": "Hands marking columns on a blurred spreadsheet printout with a red pencil, vintage office aesthetic",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "Shefrin and Statman connected the pattern to prospect theory — the same framework Kahneman and Tversky built in nineteen seventy-nine. Gains and losses are not symmetric in the mind. Realizing a gain locks in pleasure. Realizing a loss locks in pain. Selling a winner converts paper profit into a story you can tell at dinner. Holding a loser postpones the story you never want to tell. The brain treats an open loss like an unpaid bill: maybe tomorrow the bill disappears. So investors harvest green positions for emotional relief and keep red positions for emotional hope. The disposition effect is not stupidity. It is a refund mechanism for regret.",
+          "visual_prompt": "Conceptual split image — left half a hand placing a gold coin into a small velvet pouch, right half the same hand gripping a withered leaf, clean minimal background, symbolic still life, no text",
+          "broll_prompt": "Slow motion of a coin dropping into a pouch versus a crumpled receipt left on a table",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "By the mid-two-thousands, the evidence had piled up. Terrance Odean analyzed tens of thousands of accounts at a major discount broker and confirmed the same asymmetry: the stocks investors sold subsequently outperformed the stocks they kept. They were systematically dumping future winners and retaining future losers. The tax code even punishes this — selling winners triggers capital gains while holding losers defers the reckoning. Rational finance said cut losers, let winners run. Human finance did the reverse. And then two thousand eight arrived with a stress test no seminar could simulate.",
+          "visual_prompt": "Early 2000s brokerage trading floor transitioning to empty cubicles with abandoned headsets, grey fluorescent lighting, documentary recession tone, no readable screens",
+          "broll_prompt": "Row of empty office chairs facing dark monitors, single desk lamp still on",
+          "duration_seconds": 40,
+          "emotion": "tension",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "Meet two portfolios we will follow through the crisis — constructed for clarity, grounded in patterns documented in real data. Portfolio A: a retail investor, forty-one years old, software engineer, first serious taxable account opened in two thousand five. Portfolio B: a rules-based index-plus-tilt fund rebalanced on a fixed calendar with predetermined sell rules — no discretion, no headlines, no midnight chart-checking. On January first, two thousand eight, both hold the same eight positions in the same weights: a large bank, a regional lender, an automaker, a consumer staple, a tech hardware name, an energy major, a pharmaceutical, and a retailer. Same starting value: one hundred thousand dollars. Same exposure. Different brains.",
+          "visual_prompt": "Two identical manila folders on a desk labeled only by color tabs green and blue, eight stock certificate props with blank faces fanned between them, clean editorial lighting",
+          "broll_prompt": "Overhead shot of two matching portfolio printouts side by side with blurred columns, hands aligning them edge to edge",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "setup precision",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "Two Thousand Eight — Same Stocks, Different Exits",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "March two thousand eight. Bear Stearns collapses into a forced sale. Both portfolios feel the shock. The regional lender drops twenty-two percent in a week. The rules-based fund does nothing — rebalance day is not until June. The retail investor logs in at eleven forty-seven at night. The screen is red. The position is still above its purchase price from two thousand six — a small gain on paper, shrinking fast. Finger hovers over sell. The gain is not large, but it is green. The mind whispers: take the win before it vanishes. He sells. Locks in a four percent profit. Relief floods the room. Three months later, that lender participates in a government-backed recovery rally and finishes the year up eleven percent from his exit price. He sold a winner because it was turning.",
+          "visual_prompt": "Late-night home office, face lit by monitor glow, hand frozen on mouse, red ambient light seeping across desk, tense psychological documentary frame, no readable charts",
+          "broll_prompt": "Close-up of a sell button area on a blurred trading interface, finger tapping once, exhale visible in dim light",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "urgent whisper",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "September two thousand eight. Lehman Brothers files for bankruptcy. The automaker in both portfolios falls below purchase price — down thirty-four percent from its two thousand seven peak. The rules-based fund still holds. Rebalance rules allow trimming only when position weight drifts above a band; the automaker has actually fallen as a share of the total. The retail investor faces the opposite trigger. The loss is now real on screen. Selling would confirm failure. He tells himself the company invented the assembly line once; it can reinvent again. He adds two thousand dollars — averaging down. The disposition effect works in pairs: sell what feels safe, feed what feels wounded. By year-end the automaker is down another forty-one percent from his new cost basis. The fund's untouched stake recovers partially in two thousand nine. His doubled-down stake does not.",
+          "visual_prompt": "Automotive factory exterior at dusk with long shadows, chain-link fence, single lit window in admin building, melancholy industrial documentary tone, no signage",
+          "broll_prompt": "Assembly line slowed to a stop, workers walking away in silhouette, grey sky",
+          "duration_seconds": 45,
+          "emotion": "dread",
+          "narration_tone": "accelerating dread",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "Here is the reversal that makes the story a case study rather than a tragedy. In October two thousand eight, the pharmaceutical position in both portfolios rises eight percent on a defensive sector rotation — one of the few green names left. The rules-based fund trims it back to target weight on the scheduled rebalance. Mechanical profit-taking. The retail investor keeps it. It feels like proof that something in the account still works. He tells friends he is finally holding a winner the right way. By February two thousand nine the pharmaceutical gives back six points as the broad market capitulates. The fund captured the rebalancing gain. The investor rode it back down. Same stock. Same starting weight. Opposite handling of the same green number.",
+          "visual_prompt": "Pharmaceutical laboratory corridor with clean white lighting, glass vials on a cart blurred in foreground, calm sterile aesthetic contrasting market chaos, no labels",
+          "broll_prompt": "Green upward arrow shape made of light reflecting on glass, then fading as lights dim",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "March ninth, two thousand nine. The S and P five hundred closes at its crisis low — down fifty-seven percent from its October two thousand seven peak. The retail investor's account shows thirty-eight thousand dollars in permanent damage against the original one hundred thousand — not because he picked worse stocks, but because he sold the lender too early, doubled down on the automaker, and never trimmed the pharmaceutical. The rules-based fund finishes the same period at eighty-one thousand — painful, but survivable. Researchers call this the disposition effect premium paid to the market: a toll charged for emotional trading. Shefrin and Statman predicted it decades before this account existed. The crash did not invent the behavior. It magnified it.",
+          "visual_prompt": "Empty urban financial district street at dawn, newspaper boxes and blank billboards, cold blue morning light, post-crisis stillness, no readable headlines",
+          "broll_prompt": "Wide shot of a closed stock exchange style building facade with flags at half-mast, slow push-in",
+          "duration_seconds": 45,
+          "emotion": "shock",
+          "narration_tone": "solemn weight",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "Breaking the Reflex",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "Why does the mind sell winners and hug losers? Shefrin and Statman pointed to three engines. Reference dependence: you judge a position against its purchase price, not its future prospects. Regret aversion: selling a loser makes the mistake official. Pride seeking: selling a winner lets you feel competent in a world that feels uncontrollable. Mental accounting turns each ticker into its own emotional ledger — a green line is a closed chapter, a red line is a debt you refuse to write off. None of these motives appear on a brokerage statement. All of them appear in behavior.",
+          "visual_prompt": "Wooden desk with eight small ledger books in different colors, some closed with green ribbons, one open with a red bookmark, symbolic mental accounting still life, warm side light",
+          "broll_prompt": "Hand closing a small green ledger with satisfaction, then gripping a red-marked book without opening it",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "The rules-based fund survived the same crisis not because it was smarter about stock picking, but because it outsourced the hardest decisions to a process written in advance. Rebalance dates. Position bands. No selling because a line turned green on a Tuesday night. No averaging down because a story felt unfinished. Behavioral finance does not ask you to become emotionless. It asks you to pre-commit while calm so panic cannot rewrite the plan. That is the practical lesson of two thousand eight: process beats impulse when the tickers are identical.",
+          "visual_prompt": "Calendar on a wall with circled dates in neutral ink, robotic arm metaphor placing blocks into balanced scales, clean modern office, no readable calendar text",
+          "broll_prompt": "Mechanical metronome ticking steadily beside a chaotic blinking screen blurred in background",
+          "duration_seconds": 40,
+          "emotion": "resolve",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "One mental model captures the exit. Before any sell, ask the replacement question: if you did not own this position, would you buy it today at this price with this weight? If the answer is no, holding is the decision — not selling. The question bypasses purchase price, bypasses pride, bypasses the story you have told yourself since two thousand six. It forces the present-tense judgment that disposition effect avoids. Write the question on a card. Tape it beside the monitor. Use it on green days and red days alike.",
+          "visual_prompt": "Single index card propped against a monitor stand with blank lined side facing camera, pen beside it, morning light, minimalist desk, no readable writing",
+          "broll_prompt": "Hand placing a blank card next to keyboard, then pulling back to show entire desk in calm daylight",
+          "duration_seconds": 40,
+          "emotion": "resolve",
+          "narration_tone": "warm instruction",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene4",
+          "narration": "The disposition effect did not end in two thousand nine. Every volatility spike revives it — meme-stock manias, pandemic sell-offs, rate-shock drawdowns. Investors still bank small wins and carry large losses like emotional luggage. Shefrin and Statman gave the pattern a name in nineteen eighty-five. Two thousand eight showed the invoice. The market does not charge everyone equally. It charges those who treat green as a finish line and red as a waiting room. The question is not whether the bias lives in the account. It lives in every account. The question is whether a rule arrives before the next red screen does.",
+          "visual_prompt": "Modern home office at sunrise, monitor off, blank index card visible on desk, quiet resolved atmosphere, golden morning light through blinds",
+          "broll_prompt": "Slow pan from wilted desk plant to fresh green seedling in a small pot on the windowsill, symbolic renewal",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "reflective closure",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Your brain is wired to sabotage your wealth — and the disposition effect is one of its quietest tools. Sell the winner, keep the loser, confuse relief with strategy. Shefrin and Statman saw it in the data. Two thousand eight engraved it in real portfolios. Subscribe to Wired Broke for weekly documentaries on the psychology behind every money decision. The next crash will not announce itself. The rule you write today might.",
+    "visual_prompt": "Clean dark green gradient background with subtle bokeh light points, single gold coin and single wilted leaf side by side on reflective surface, cinematic closing frame, no text",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "title": "How Kodak Invented the Digital Camera — Then Buried It",
+  "title_variations": [
+    "Kodak's Fatal Mistake: They Invented Digital Photography",
+    "The Company That Killed Its Own Future: Kodak's Bankruptcy",
+    "Why Kodak Went Bankrupt After Inventing the Digital Camera"
+  ],
+  "description": "In January 2012, Eastman Kodak — a 131-year-old American icon — filed for bankruptcy. Yet fourteen years earlier, a Kodak engineer had built the world's first digital camera. This is the story of how a company that dominated global photography invented the technology that would destroy it, then chose to protect film profits instead of leading the digital revolution.\n\nFrom George Eastman's 1888 Brownie camera to Steven Sasson's 1975 prototype, from billion-dollar film margins to Chapter 11, we trace the decisions, blind spots, and executive fear that turned innovation into self-sabotage.\n\nSubscribe to Corporate Arc for weekly business documentaries — rise, fall, and the strategy that stopped working.",
+  "tags": [
+    "Kodak",
+    "Kodak bankruptcy",
+    "digital camera history",
+    "business documentary",
+    "corporate failure",
+    "innovation",
+    "Eastman Kodak",
+    "Steven Sasson",
+    "film photography",
+    "business strategy"
+  ],
+  "story_spine": "Kodak built a film empire on razor-blade economics, invented digital photography in-house, then suppressed it to protect film profits until digital competitors made the choice for them.",
+  "stakes": "Any dominant company sitting on disruptive technology faces the same trap: protect today's cash cow or cannibalize yourself before someone else does.",
+  "midpoint_reversal": "Kodak didn't ignore digital photography out of ignorance — internal research in 1981 predicted film's collapse by 2010, and management chose margins over migration anyway.",
+  "open_loops": [
+    "If Kodak invented the digital camera in 1975, who actually killed the company?",
+    "What did executives see in 1981 that they refused to act on for two decades?"
+  ],
+  "emotional_arc": ["curiosity", "awe", "tension", "shock", "revelation", "resolve"],
+  "hero_visual_prompt": "A weathered 1970s laboratory workbench in Rochester, New York, holding a bulky prototype digital camera with exposed circuit boards and a cassette tape recorder, beside a stack of glossy Kodak film canisters and a fading yellow Kodak film box, dramatic amber side-lighting against deep navy shadows, shallow depth of field, no readable text or logos",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "January nineteenth, twenty twelve. Rochester, New York. A company that once employed one hundred forty-five thousand people files for Chapter eleven bankruptcy protection. Eastman Kodak — the name that meant photography for over a century — is out of money. Film sales have collapsed. Digital cameras, smartphones, and the internet finished what decades of internal hesitation started. The cruel irony is not that Kodak missed digital photography. It is that a Kodak engineer built the world's first digital camera in nineteen seventy-five — and the company told him to keep it quiet. How does an empire that invents the future choose to bury it?",
+    "visual_prompt": "Empty Kodak corporate headquarters lobby in Rochester at dawn, polished marble floors reflecting cold winter light through tall glass windows, a single abandoned film display stand with blank panels, deep navy shadows and amber accent lighting, no readable signage",
+    "broll_prompt": "Slow push-in on a bankruptcy courthouse steps in upstate New York on a grey winter morning, bare trees and brick federal building facade, documentary cold tone, no text visible",
+    "duration_seconds": 45,
+    "emotion": "shock",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "The Film Empire",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "The story begins in eighteen eighty-eight. George Eastman patents the Kodak camera with a radical promise: you press the button, we do the rest. Before Eastman, photography required heavy glass plates and chemistry sets. His roll film made picture-taking a consumer product. By nineteen hundred, Kodak is selling cameras as loss leaders and film as the real business — the razor-and-blade model decades before the phrase existed. Every birthday, wedding, and vacation feeds a recurring revenue stream wrapped in yellow packaging that becomes one of the most recognized consumer brands on earth.",
+          "visual_prompt": "Victorian-era photography studio with wooden tripod camera and glass chemical trays, warm gaslight glow transitioning to early twentieth-century family posing beside a simple box camera, sepia tones with amber highlights, no text",
+          "broll_prompt": "Close-up of hands loading roll film into a vintage metal camera body, brass mechanisms clicking, shallow depth of field, period-accurate workshop setting",
+          "duration_seconds": 45,
+          "emotion": "awe",
+          "narration_tone": "measured wonder",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "For most of the twentieth century, Kodak behaves like a monopoly that earned the title. At its peak in the nineteen seventies and eighties, Kodak controls roughly ninety percent of photographic film sales in the United States and eighty-five percent of camera sales. The company builds an industrial campus in Rochester that functions like a city within a city — research labs, film coating plants, and chemical engineering divisions all feeding one ecosystem. Competitors exist, but Fuji is distant. The real engine is margin: film is a consumable with extraordinary repeat purchase. Kodak's chemistry division prints money.",
+          "visual_prompt": "Aerial view of a sprawling industrial film manufacturing complex with smokestacks and long factory buildings along a river, golden hour light, mid-century American industrial scale, no signage",
+          "broll_prompt": "Interior film coating line with enormous rolls of photosensitive material moving through darkened machinery, workers in white coats under red safelight, cinematic industrial documentary style",
+          "duration_seconds": 45,
+          "emotion": "awe",
+          "narration_tone": "confident authority",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "That dominance funds one of the great corporate research cultures of the era. Kodak scientists hold thousands of patents in chemistry, optics, and imaging. The company is not a one-trick consumer brand — it is a deep technology organization that supplies film to Hollywood, medical imaging, and aerospace. Executives grow up inside a business where the economic logic is simple: sell cameras cheap, sell film forever. When you own ninety percent of a market with seventy percent gross margins, the rational executive question is not what could replace us. It is how do we protect what we have.",
+          "visual_prompt": "Mid-century corporate research laboratory with scientists examining optical lenses and chemical beakers, large windows overlooking factory grounds, warm tungsten lighting, premium documentary aesthetic",
+          "broll_prompt": "Rows of patent binders and technical blueprints spread across a conference table, hands pointing at optical diagrams, shallow focus, no readable document text",
+          "duration_seconds": 45,
+          "emotion": "curiosity",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "By nineteen seventy-three, Kodak employs more than one hundred twenty thousand people worldwide. Rochester's economy rises and falls with Kodak payroll. The company sponsors Little League fields, funds university chairs, and shapes the identity of an entire region. Success breeds a particular kind of confidence — the belief that the core business is not just profitable but permanent. Photography, after all, is human memory. And memory, Kodak assumes, will always need film. That assumption is about to meet an engineer in a basement lab who has other ideas.",
+          "visual_prompt": "Nineteen seventies American suburban neighborhood with factory smokestacks visible on the horizon, children riding bicycles past well-kept homes, nostalgic warm afternoon light, Rochester industrial town atmosphere",
+          "broll_prompt": "Wide shot of workers streaming out of a factory gate at shift change, winter coats and lunch boxes, golden streetlights turning on at dusk, documentary realism",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "The Invention They Feared",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "December nineteen seventy-five. Steven Sasson, a twenty-four-year-old electrical engineer at Kodak, is assigned a side project: explore whether a charged coupled device — a new type of electronic sensor — could capture an image without film. His prototype weighs eight pounds. It records black-and-white images at roughly point zero one megapixels onto a cassette tape. Each photo takes twenty-three seconds to capture and another twenty-three seconds to display on a television screen. By any consumer standard, it is useless. By historical standard, it is the world's first digital camera — built inside Kodak's own research division.",
+          "visual_prompt": "Young engineer in nineteen seventies attire assembling a bulky prototype camera from circuit boards and wires on a cluttered electronics workbench, cathode-ray tube monitor glowing nearby, warm lab lighting, no readable labels",
+          "broll_prompt": "Extreme close-up of soldered circuit board and hand-wired connections inside an early electronic device, amber desk lamp, shallow depth of field, vintage technology aesthetic",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "building intrigue",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "Sasson demonstrates the device to executives. Their reaction is polite curiosity followed by a strategic question that defines the next thirty years: why would anyone want to look at photos on a television? More honestly, the unspoken fear is cannibalization. Film is Kodak's profit center. A world without film is a world without Kodak's economics. Management tells Sasson not to publicize the invention. The prototype goes into a drawer. Kodak files patents around digital imaging — protecting the technology while keeping it off the market. The company owns the future and decides the future can wait.",
+          "visual_prompt": "Nineteen seventies corporate boardroom with executives in suits seated around a long table, a small prototype device placed at the center under a desk lamp, tense body language, dramatic shadow across faces, no documents with readable text",
+          "broll_prompt": "A prototype electronic camera being placed into a metal filing cabinet and the drawer sliding shut, single overhead light, symbolic suppression imagery",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "urgent whisper",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "Here is the reversal that makes Kodak's story a strategy case study, not a simple accident. In nineteen eighty-one — a full decade before digital cameras reach consumers — Kodak commissions an internal market research study. The findings are explicit: digital photography could replace traditional film-based photography by approximately twenty ten. Kodak's own analysts draw a timeline showing erosion of film revenue. Leadership sees the forecast. They also see that film still generates billions in cash. The rational short-term move wins: invest just enough in digital to hedge, but never at a level that accelerates film's decline. Protect the margin. Manage the transition slowly. Slowly turns out to be not slowly enough.",
+          "visual_prompt": "Corporate strategy meeting room with a large wall chart showing declining curve lines and timeline markers, executives pointing at projection screen, nineteen eighties office decor, blurred unreadable chart text",
+          "broll_prompt": "Split visual concept: towering stacks of film canisters on one side shrinking while small electronic camera prototypes multiply on the other, dramatic side lighting, symbolic composition",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "While Kodak hesitates, the ecosystem shifts. Sony ships the Mavica in nineteen eighty-one. Canon, Nikon, and Fuji push digital sensors forward through the nineteen nineties. Kodak does enter the digital camera market — the DC forty in nineteen ninety-five is among the early consumer models — but the company treats digital as a side business attached to a film empire, not a replacement for it. Marketing still pushes film. Organizational incentives still reward film division performance. In two thousand one, Kodak buys Ofoto, an online photo-sharing startup, a move that anticipates Instagram by years — then fails to integrate it into a coherent digital strategy. The pieces of survival are on the table. The company cannot bring itself to rearrange the meal.",
+          "visual_prompt": "Nineteen nineties electronics store display with early digital cameras beside traditional film cameras, fluorescent retail lighting, competing products on shelves with blank price tags, no brand logos readable",
+          "broll_prompt": "Early 2000s desktop computer showing a grid of thumbnail photos on a monitor, hands using a mouse, warm home office setting, screen content abstract and unreadable",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "frustrated momentum",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "The Collapse and the Lesson",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "The two thousands deliver the killing blow from multiple directions at once. Camera phones arrive — first mediocre, then good enough, then better than most point-and-shoot cameras. Social platforms make sharing instant; printing photos becomes optional. Film sales fall off a cliff. Kodak's revenue drops from sixteen billion dollars in nineteen ninety-six to under six billion by twenty eleven. The company sheds tens of thousands of jobs. Rochester hollows out. Stores that once sold Kodak film replace shelves with memory cards and phone accessories. Every trend Kodak's own researchers predicted arrives on schedule. The company is not surprised by the future. It is outrun by it.",
+          "visual_prompt": "Abandoned retail photo counter with empty film display racks and dust collecting on unused equipment, harsh fluorescent lighting, melancholy documentary tone, no readable branding",
+          "broll_prompt": "Crowd at a public event holding up early smartphones to capture photos, arms raised, modern urban setting, contrast between analog past and digital present",
+          "duration_seconds": 45,
+          "emotion": "shock",
+          "narration_tone": "accelerating dread",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "January nineteenth, twenty twelve. Kodak files for Chapter eleven bankruptcy with roughly six point seven five billion dollars in debt. The one-hundred-thirty-one-year-old icon sells patents, spins off divisions, and emerges in twenty thirteen as a smaller commercial printing and imaging company — a shadow of the consumer giant that taught the world to take pictures. Steven Sasson, the engineer who built the first digital camera, receives the National Medal of Technology in twenty twelve. The inventor is honored. The institution that invented disruption in-house could not disrupt itself.",
+          "visual_prompt": "Federal courthouse exterior on a grey winter day, bare trees and stone steps, somber documentary atmosphere, lawyers in dark coats entering building, no readable signage",
+          "broll_prompt": "Elderly engineer in a medal ceremony setting holding a small early prototype camera, dignified portrait lighting, shallow depth of field, ceremonial but understated",
+          "duration_seconds": 45,
+          "emotion": "empathy",
+          "narration_tone": "solemn weight",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "The lesson is not that Kodak was stupid. Kodak was rational — rationally protecting a cash machine. That is what makes the story dangerous for every dominant company today. When you invent a technology that threatens your core revenue, you face the innovator's dilemma in its purest form. Cannibalize your profitable product now, or wait until a competitor cannibalizes you later. Kodak chose wait. Apple chose differently with the iPhone and its own iPod revenue. Netflix chose differently when it killed DVD-by-mail to chase streaming. Kodak had the patent, the scientist, the forecast, and the brand. What it lacked was the willingness to burn its own empire before someone else did.",
+          "visual_prompt": "Symbolic visual of a film strip curling into ash at one end while a glowing digital sensor chip emerges from the embers, dark background with amber and navy tones, conceptual still life, no text",
+          "broll_prompt": "Time-lapse concept of a thriving factory complex gradually darkening section by section while a small modern tech office lights up in the foreground, metaphorical business transition",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene4",
+          "narration": "Today Kodak survives as a licensing and commercial printing business — a footnote wearing a legendary name. Film still exists in niche markets, shot by enthusiasts who love its texture. But the mass market moved on. The yellow boxes that once sat in every supermarket aisle are mostly memory. And that returns us to the question from the opening: how does a company that invents the digital camera go bankrupt in the digital age? Because invention is not strategy. Ownership of the future means nothing if your organization is structurally committed to the past. Kodak did not lose to a mystery. It lost to a choice it kept making every quarter for thirty years.",
+          "visual_prompt": "A single vintage film canister standing alone on a reflective black surface beside a modern smartphone lying face-down, dramatic rim lighting, minimalist composition suggesting obsolescence and transition",
+          "broll_prompt": "Slow pan across an empty supermarket aisle where photo products once stocked shelves, fluorescent lights humming, late-night stillness, documentary loneliness",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "reflective closure",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Kodak's bankruptcy is not a story about missing technology. It is a story about fearing your own invention. The digital camera was born inside Rochester. The decision to bury it was born in the boardroom. If you want more business documentaries on the rise, fall, and strategy behind iconic companies, subscribe to Corporate Arc. Every empire has a moment when the strategy stops working. Kodak's moment lasted three decades. Hit subscribe so you do not miss the next one.",
+    "visual_prompt": "Wide shot of the Kodak industrial riverfront at sunset, factory silhouettes against orange and navy sky, quiet water reflecting fading light, elegiac documentary closing frame, no readable signage",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}

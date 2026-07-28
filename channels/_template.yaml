@@ -1,0 +1,122 @@
+# Copy this file to channels/{niche_id}.yaml — niche_id must match the filename stem.
+# Add music tracks to music/{niche_id}/ (hook.mp3, act1.mp3, act2.mp3, act3.mp3, outro.mp3).
+# Restart the API — the channel appears in the UI automatically. No code changes required.
+
+name: Your Channel Name
+niche_id: your_niche
+channel_handle: "@YourHandle"
+channel_tagline: "One-line channel promise."
+
+color_scheme:
+  background: "#0B1020"
+  primary: "#F59E0B"
+  secondary: "#D97706"
+  text: "#FFFFFF"
+  accent: "#FBBF24"
+
+voice:
+  default: british_male_george
+  speed: 0.87
+
+music:
+  hook: documentary_open
+  act1: corporate_rise
+  act2: tension_turning
+  act3: legacy_resolve
+  outro: calm_documentary
+  volume: 0.11
+
+style_lock:
+  color_grade: cinematic_dark
+  lighting: cinematic dramatic lighting, deep shadows, golden accents
+  mood: epic, investigative, narrative-driven, premium documentary
+  composition: rule of thirds, editorial, corporate aesthetics
+  forbidden: text, words, letters, watermarks, logos, signs, writing
+  always_include: cinematic depth of field, premium quality, 8k, no readable branding
+
+script:
+  auto_humanize: true
+  script_polish: true
+  system_prompt: |
+    You are a documentary scriptwriter for a faceless US YouTube channel.
+    Tone: investigative, cinematic, fact-dense — like a premium essay film.
+    One story per video. Anchor in dates, names, and decisions. No stock tips. No "I".
+  writing_rules:
+    - "Open on a specific crisis moment, paradox, or dollar figure — not a generic question"
+    - "Every scene advances ONE story thread with cause and effect"
+    - "End scenes on tension or an unanswered question until Act 3"
+    - "Avoid AI clichés: game-changer, mind-blowing, let's dive in, buckle up"
+  storytelling_rules:
+    - "Act 2 must contain one counterintuitive reversal"
+    - "Close every open loop from the hook in Act 3"
+    - "Use sensory details: what someone saw, paid, signed, or lost"
+  humanization_rules:
+    - "Add [pause] before major plot turns"
+    - "Insert [breath] every 4-5 sentences"
+  emotion_palette: [curiosity, tension, shock, empathy, revelation, resolve]
+  intro_text: "Your channel intro line."
+  outro_text: "Subscribe for weekly documentaries."
+  disclaimer: ""
+
+thumbnail:
+  template: dark_impact
+  font: Montserrat-Bold
+  title_color: "#FFFFFF"
+  accent_color: "#F59E0B"
+  background_style: cinematic corporate, navy and amber tones
+  channel_name_display: Your Channel Name
+
+video:
+  resolution: "1920x1080"
+  fps: 30
+  format: mp4
+  scene_duration_min: 4
+  scene_duration_max: 8
+  broll_frequency: 3
+  max_visual_segment_seconds: 7
+  transition_type: crossfade
+  act_transition: black_fade
+
+image:
+  visual_style: realistic
+  width: 1920
+  height: 1080
+  prompt_prefix: |
+    Ultra realistic cinematic 1080p horizontal scene. Premium documentary aesthetic.
+    Dramatic lighting. Minimal composition. Rule of thirds.
+    No text, no words, no letters, no logos, no signs anywhere in the image.
+    Premium editorial quality. 8k detail.
+  style_presets:
+    realistic:
+      prompt_prefix: |
+        Ultra realistic cinematic 1080p horizontal scene. Premium documentary aesthetic.
+        No text, logos, or readable signage anywhere in the image.
+      thumbnail_background_style: cinematic corporate, dramatic lighting
+      style_lock_overrides:
+        lighting: cinematic dramatic lighting
+        mood: investigative, narrative-driven
+        composition: rule of thirds, editorial framing
+
+sfx:
+  enabled: true
+  max_cues_per_scene: 2
+  default_volume: 0.06
+  ambient_volume_scale: 0.55
+  one_shot_volume_scale: 0.80
+  max_bus_volume: 0.10
+  ducking:
+    enabled: true
+    ratio: 6
+    attack_ms: 60
+    release_ms: 450
+
+captions:
+  enabled: true
+  font_name: Arial
+  font_size: 44
+  primary_color: "#FFFFFF"
+  outline_color: "#000000"
+  outline: 3
+  margin_v: 72
+  max_chars_per_line: 42
+  shadow: 1

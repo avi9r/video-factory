@@ -63,6 +63,27 @@
     .slow { background: #1e3a5f; padding: 0 4px; border-radius: 3px; }
     .emphasis { background: #7f1d1d; padding: 0 4px; border-radius: 3px; }
     .breath { background: #374151; padding: 0 4px; border-radius: 3px; }
+    .emotion-badge {
+      display: inline-block;
+      background: #312e81;
+      color: #c4b5fd;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+      text-transform: lowercase;
+    }
+    .tone-hint { color: var(--muted); font-size: 0.75rem; margin-bottom: 0.5rem; font-style: italic; }
+    .sfx-cues {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      padding: 0.4rem 0.6rem;
+      background: var(--bg);
+      border-radius: 6px;
+      border: 1px dashed #333;
+    }
+    .sfx-cues span { color: #a78bfa; }
     .scene-actions {
       display: flex;
       gap: 0.5rem;
@@ -133,6 +154,15 @@
       <option value="human">Human Voiceover</option>
       <option value="hybrid">Hybrid</option>
     </select>
+    <select id="imageLayoutSelect" title="Image layout">
+      <option value="one_image">One image</option>
+      <option value="per_scene">Per scene</option>
+      <option value="multiple">Per scene + B-roll</option>
+    </select>
+    <select id="visualStyleSelect" title="Visual style">
+      <option value="realistic">Realistic</option>
+      <option value="cartoon">Cartoon</option>
+    </select>
     <select id="voice"></select>
     <label style="color:var(--muted);font-size:0.875rem">Speed: <span id="speedVal">0.85</span></label>
     <input type="range" id="speed" min="0.5" max="1.2" step="0.05" value="0.85" style="width:120px">
@@ -171,21 +201,41 @@
       return d.innerHTML;
     }
 
-    function renderScene(id, label, text, visualPrompt, brollPrompt) {
-      const safeText = escapeHtml(text || '');
-      const safeVis = escapeHtml(visualPrompt || '');
-      const safeBroll = escapeHtml(brollPrompt || '');
-      const brollField = imageLayout === 'multiple' ? `
-        <div class="prompt-row"><label>B-roll prompt</label>
-        <input type="text" id="broll_${id}" value="${safeBroll}"></div>` : '';
+    function formatSfxCues(cues) {
+      if (!cues || !cues.length) return '';
+      const items = cues.map(c =>
+        `${escapeHtml(c.sound_id || '?')} @ ${c.start_offset_sec ?? 0}s (${c.duration_sec ?? '?'}s, vol ${c.volume ?? '?'})`
+      ).join(', ');
+      return `<div class="sfx-cues">SFX: <span>${items}</span></div>`;
+    }
+
+    function renderScene(id, label, scene) {
+      const text = scene.text || scene.narration || '';
+      const visualPrompt = scene.visual_prompt || '';
+      const brollPrompt = scene.broll_prompt || '';
+      const emotion = scene.emotion || '';
+      const narrationTone = scene.narration_tone || '';
+      const safeText = escapeHtml(text);
+      const emotionBadge = emotion
+        ? `<span class="emotion-badge">${escapeHtml(emotion)}</span>` : '';
+      const toneLine = narrationTone
+        ? `<div class="tone-hint">Tone: ${escapeHtml(narrationTone)}</div>` : '';
+      const sfxLine = formatSfxCues(scene.sfx_cues);
+      const showVisuals = imageLayout !== 'one_image';
+      const visualFields = showVisuals ? `
+          <div class="prompt-row"><label>Visual prompt</label>
+          <input type="text" id="vis_${id}" value="${escapeHtml(visualPrompt)}"></div>
+          ${imageLayout === 'multiple' ? `
+          <div class="prompt-row"><label>B-roll prompt</label>
+          <input type="text" id="broll_${id}" value="${escapeHtml(brollPrompt)}"></div>` : ''}` : '';
       return `
         <div class="scene-card" data-scene-id="${id}">
-          <div class="scene-label">${escapeHtml(label)}</div>
+          <div class="scene-label">${escapeHtml(label)}${emotionBadge}</div>
+          ${toneLine}
+          ${sfxLine}
           <textarea id="ta_${id}">${safeText}</textarea>
-          <div class="marker-preview">${highlightMarkers(text || '')}</div>
-          <div class="prompt-row"><label>Visual prompt</label>
-          <input type="text" id="vis_${id}" value="${safeVis}"></div>
-          ${brollField}
+          <div class="marker-preview">${highlightMarkers(text)}</div>
+          ${visualFields}
           <div class="scene-actions">
             <input type="text" id="instr_${id}" placeholder="e.g. make more emotional">
             <button onclick="regenerateScene('${id}')" id="btn_${id}">Regenerate Scene</button>
@@ -215,12 +265,14 @@
       imageLayout = scriptData_step.image_layout || localStorage.getItem('ytf_image_layout') || 'one_image';
       if (imageLayout === 'single') imageLayout = 'per_scene';
       visualStyle = scriptData_step.visual_style || localStorage.getItem('ytf_visual_style') || null;
+      const sfxMode = scriptData_step.sfx_mode || localStorage.getItem('ytf_sfx_mode') || 'local';
 
       document.getElementById('modeBadges').innerHTML = `
         <span class="badge">Script: ${scriptMode === 'manual' ? 'Manual' : 'AI'}</span>
         <span class="badge">Images: ${imageMode === 'upload' ? 'Upload' : 'AI'}</span>
         <span class="badge">Layout: ${layoutLabel(imageLayout)}</span>
-        ${visualStyle ? `<span class="badge">Style: ${visualStyle}</span>` : ''}`;
+        ${visualStyle ? `<span class="badge">Style: ${visualStyle}</span>` : ''}
+        <span class="badge">SFX: ${sfxMode === 'off' ? 'Off' : 'Local'}</span>`;
 
       let html = `
         <div class="meta-card">
@@ -228,17 +280,31 @@
           <label>Description</label><textarea id="meta_desc" rows="3">${escapeHtml(scriptData.description || '')}</textarea>
           <label>Tags (comma-separated)</label><input type="text" id="meta_tags" value="${escapeHtml((scriptData.tags || []).join(', '))}">
         </div>`;
-      html += renderScene('hook', 'Hook', scriptData.hook?.text || '', scriptData.hook?.visual_prompt, scriptData.hook?.broll_prompt);
+      if (imageLayout === 'one_image') {
+        const heroPrompt = scriptData.hero_visual_prompt || '';
+        html += `
+        <div class="meta-card" id="heroVisualCard">
+          <label>Hero visual prompt</label>
+          <p style="font-size:0.8rem;color:var(--muted);margin:0 0 0.5rem">One background image is used for the entire video.</p>
+          <input type="text" id="hero_visual_prompt" value="${escapeHtml(heroPrompt)}" style="width:100%;padding:0.5rem;background:var(--bg);border:1px solid #333;border-radius:6px;color:var(--text)">
+        </div>`;
+      }
+      html += renderScene('hook', 'Hook', scriptData.hook || {});
       scriptData.acts?.forEach(act => {
         html += `<div class="act-header">Act ${act.act_number}: ${act.act_title}</div>`;
         act.scenes?.forEach(scene => {
-          html += renderScene(scene.scene_id, scene.scene_id, scene.narration || '', scene.visual_prompt, scene.broll_prompt);
+          html += renderScene(scene.scene_id, scene.scene_id, scene);
         });
       });
-      html += renderScene('outro', 'Outro', scriptData.outro?.text || '', scriptData.outro?.visual_prompt, scriptData.outro?.broll_prompt);
+      html += renderScene('outro', 'Outro', scriptData.outro || {});
 
       document.getElementById('content').innerHTML = html;
       document.getElementById('approveBar').style.display = 'flex';
+
+      const layoutSel = document.getElementById('imageLayoutSelect');
+      if (layoutSel) layoutSel.value = imageLayout;
+      const styleSel = document.getElementById('visualStyleSelect');
+      if (styleSel && visualStyle) styleSel.value = visualStyle;
 
       document.querySelectorAll('textarea').forEach(ta => {
         ta.addEventListener('input', () => {
@@ -312,14 +378,21 @@
 
     function collectScript() {
       const edited = JSON.parse(JSON.stringify(scriptData));
-      edited.title = document.getElementById('meta_title').value;
-      edited.description = document.getElementById('meta_desc').value;
-      edited.tags = document.getElementById('meta_tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-      edited.hook.text = document.getElementById('ta_hook').value;
-      edited.hook.visual_prompt = document.getElementById('vis_hook').value;
+      edited.title = document.getElementById('meta_title')?.value || edited.title || '';
+      edited.description = document.getElementById('meta_desc')?.value || edited.description || '';
+      edited.tags = (document.getElementById('meta_tags')?.value || '')
+        .split(',').map(t=>t.trim()).filter(Boolean);
+      const heroEl = document.getElementById('hero_visual_prompt');
+      if (heroEl) edited.hero_visual_prompt = heroEl.value;
+      edited.hook = edited.hook || {};
+      edited.hook.text = document.getElementById('ta_hook')?.value || edited.hook.text || '';
+      const visHook = document.getElementById('vis_hook');
+      if (visHook) edited.hook.visual_prompt = visHook.value;
       if (document.getElementById('broll_hook')) edited.hook.broll_prompt = document.getElementById('broll_hook').value;
-      edited.outro.text = document.getElementById('ta_outro').value;
-      edited.outro.visual_prompt = document.getElementById('vis_outro').value;
+      edited.outro = edited.outro || {};
+      edited.outro.text = document.getElementById('ta_outro')?.value || edited.outro.text || '';
+      const visOutro = document.getElementById('vis_outro');
+      if (visOutro) edited.outro.visual_prompt = visOutro.value;
       edited.acts?.forEach(act => {
         act.scenes?.forEach(scene => {
           const ta = document.getElementById(`ta_${scene.scene_id}`);
@@ -337,8 +410,16 @@
       const btn = document.getElementById('approveBtn');
       btn.disabled = true;
       btn.textContent = 'Generating...';
+      imageLayout = document.getElementById('imageLayoutSelect')?.value || imageLayout;
+      visualStyle = document.getElementById('visualStyleSelect')?.value || visualStyle;
+      if (!jobId || !nicheId) {
+        alert('Missing job or channel — reload the review page from the job list.');
+        btn.disabled = false;
+        btn.textContent = '✓ Approve & Generate Video';
+        return;
+      }
       try {
-        await fetch(`${API}/generate/script-review/approve`, {
+        const res = await fetch(`${API}/generate/script-review/approve`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -353,9 +434,17 @@
             visual_style: visualStyle,
           }),
         });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const detail = data.detail;
+          const msg = Array.isArray(detail)
+            ? detail.map(d => d.msg || JSON.stringify(d)).join('; ')
+            : (detail || `HTTP ${res.status}`);
+          throw new Error(msg);
+        }
         location.href = `/ui/index.html?job_id=${jobId}`;
       } catch (e) {
-        alert('Approval failed');
+        alert(`Approval failed: ${e.message || e}`);
         btn.disabled = false;
         btn.textContent = '✓ Approve & Generate Video';
       }

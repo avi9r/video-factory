@@ -1,0 +1,196 @@
+{
+  "title": "Anchoring Bias — Why the First Number You Hear Controls Every Decision After It",
+  "title_variations": [
+    "The First Number Wins: How Anchoring Hijacks Every Negotiation",
+    "Tversky, Kahneman, and the Price You Cannot Unhear",
+    "Why List Price, Sticker Price, and Salary Offers Are the Same Trap"
+  ],
+  "description": "In 1974, Amos Tversky and Daniel Kahneman demonstrated that a random number — spun on a wheel of fortune — could shift estimates of African nations in the United Nations by twenty percentage points. They called the pattern arbitrary coherence: the first number you encounter becomes a mental anchor, and every judgment afterward adjusts insufficiently away from it.\n\nThis documentary traces anchoring through three transactions you will face repeatedly — a car dealership negotiation, a salary offer, and a real estate listing — to show that the same psychological mechanism operates at every price point. Dan Ariely's later experiments confirm what negotiators already exploit: whoever sets the anchor first controls the range of what feels reasonable.\n\nSubscribe to Wired Broke for weekly behavioral finance documentaries on the biases your brain hides from you.",
+  "tags": [
+    "anchoring bias",
+    "anchoring effect",
+    "Daniel Kahneman",
+    "Amos Tversky",
+    "Dan Ariely",
+    "behavioral finance",
+    "negotiation psychology",
+    "predictably irrational",
+    "cognitive bias",
+    "salary negotiation",
+    "car buying",
+    "real estate pricing",
+    "money psychology",
+    "behavioral economics",
+    "financial education"
+  ],
+  "story_spine": "The first number in any transaction — sticker price, list price, opening salary — silently sets the range of what feels fair; Tversky and Kahneman proved the mechanism is automatic, and Ariely showed professionals fall for it too.",
+  "stakes": "Whoever speaks first in a negotiation does not just state a price — they install the coordinates your brain will use for every counteroffer that follows.",
+  "midpoint_reversal": "The anchor does not need to be relevant or honest — Kahneman's wheel of fortune was random, yet it still bent expert estimates; your car dealer's sticker works the same way.",
+  "open_loops": [
+    "Why does a spinning wheel change how many countries you think are in the United Nations?",
+    "What do a thirty-two-thousand-dollar sedan and a four-hundred-thousand-dollar house have in common psychologically?",
+    "Can you negotiate rationally after the first number is already in your head?"
+  ],
+  "emotional_arc": ["curiosity", "surprise", "tension", "revelation", "resolve"],
+  "hero_visual_prompt": "Three symbolic price tags on a dark walnut surface — one on a car key fob, one on a folded offer letter envelope, one on a miniature house model — all connected by a thin glowing thread to a single spinning wheel fragment in shadow, premium editorial finance aesthetic, shallow depth of field, no readable numbers or text",
+  "image_layout": "one_image",
+  "hook": {
+    "scene_id": "hook",
+    "text": "Saturday morning. A car lot in Phoenix. The salesman quotes thirty-four thousand nine hundred dollars — MSRP on the window sticker you have been staring at since you pulled in. You counter at thirty-one. You feel clever. You have no idea the sticker was the entire game. Tuesday afternoon. A hiring manager slides an offer across a table: eighty-two thousand dollars base salary. You ask for ninety. You feel bold. The eighty-two thousand was never a forecast of your worth. It was a coordinate. Thursday evening. A couple walks through a colonial listed at four hundred twenty-five thousand. They offer four hundred. They feel disciplined. The listing agent knew the anchor would pull every bid upward from a number chosen to frame the room. Three transactions. Three price points. One mechanism. The first number you hear does not inform your decision. It controls it.",
+    "visual_prompt": "Triptych composition — car showroom, corporate interview room, suburban house entryway — unified by warm side lighting and a single blurred numeral glow on each scene that is not legible, documentary editorial style",
+    "broll_prompt": "Three hands receiving different objects — car keys, contract folder, house keys — each pause mid-reach as if hesitating, shallow focus",
+    "duration_seconds": 45,
+    "emotion": "curiosity",
+    "narration_tone": "cold precision",
+    "sfx_cues": []
+  },
+  "acts": [
+    {
+      "act_number": 1,
+      "act_title": "Arbitrary Coherence",
+      "scenes": [
+        {
+          "scene_id": "act1_scene1",
+          "narration": "Nineteen seventy-four. Amos Tversky and Daniel Kahneman run an experiment that should not work — and does every time. Subjects arrive at a classroom. They spin a wheel of fortune rigged to stop only on ten or sixty-five. Then they answer two questions: is the percentage of African nations in the United Nations higher or lower than that number? And what is your best estimate? The wheel is irrelevant. Everyone knows it. Yet subjects who spin sixty-five produce median estimates around forty-five percent. Subjects who spin ten produce estimates around twenty-five percent. A difference of twenty percentage points from a random number. Tversky and Kahneman call it anchoring and adjustment: you start from the anchor, then adjust — but you stop adjusting too soon. The first number creates coherence where none existed.",
+          "visual_prompt": "Nineteen seventies university psychology lab with a large carnival-style wheel of fortune on a table, clipboard questionnaires, warm tungsten academic lighting, wheel segments without readable numbers",
+          "broll_prompt": "Wheel slowing to a stop, hand writing an estimate on a blank survey form, close-up shallow focus",
+          "duration_seconds": 45,
+          "emotion": "surprise",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene2",
+          "narration": "They label the phenomenon arbitrary coherence. Arbitrary because the anchor can be random, irrelevant, or absurd. Coherence because once it lands, your mind builds a plausible story around it. You do not experience yourself as copying a wheel. You experience yourself as reasoning. That gap — between feeling rational and behaving anchored — is the entire behavioral finance revolution in one experiment. Kahneman would spend decades showing that experts anchor too. Judges anchor on sentences suggested by prosecutors. Real estate agents anchor on list prices. Accountants anchor on prior-year figures. The bias is not a retail investor problem. It is a human cognition problem.",
+          "visual_prompt": "Conceptual still life of a compass needle locked toward a single point while other directional markers blur around it, dark minimal background, symbolic editorial photography, no text",
+          "broll_prompt": "Judge's gavel beside a blurred sentencing document, cut to real estate agent placing a small house model on a desk",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene3",
+          "narration": "Dan Ariely extends the work in the two thousands with experiments that feel uncomfortably personal. MIT students bid on items — wine, chocolate, books — but first write the last two digits of their Social Security numbers. High digits produce higher bids. Low digits produce lower bids. The anchor is not even a price. It is noise dressed as a number. Ariely publishes the results in Predictably Irrational and argues markets are less rational than economics textbooks assume because anchors live inside every catalog page, every suggested tip on a payment screen, every was price beside a sale tag. The first number does not have to be true. It only has to be first.",
+          "visual_prompt": "University auction room with students holding numbered paddles, items on a display table — wine bottle, book stack — clean academic lighting, bid cards without legible amounts",
+          "broll_prompt": "Student glancing at an ID card then raising auction paddle hesitantly, shallow depth of field",
+          "duration_seconds": 40,
+          "emotion": "curiosity",
+          "narration_tone": "building intrigue",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act1_scene4",
+          "narration": "Here is the mechanism in plain language. Stage one: an anchor arrives — sticker, list price, opening offer, suggested donation. Stage two: your brain treats it as a starting point, not a fact. Stage three: you adjust toward what you believe is correct — but adjustment is lazy, incomplete, and confident. You walk away feeling you thought independently. In reality you moved from their number, not from zero. Car dealers know this. Recruiters know this. Listing agents know this. The science names what negotiators have practiced for centuries: whoever sets the anchor first owns the frame.",
+          "visual_prompt": "Three-stage diagram rendered as physical objects on a desk — a pushpin marking a starting point, a measuring tape pulled partway, a checkmark stamp — editorial still life, no readable markings",
+          "broll_prompt": "Hand pulling a measuring tape that stops short of a distant object, metaphorical framing",
+          "duration_seconds": 40,
+          "emotion": "tension",
+          "narration_tone": "setup precision",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 2,
+      "act_title": "Three Transactions, One Trap",
+      "scenes": [
+        {
+          "scene_id": "act2_scene1",
+          "narration": "The car dealership. A buyer named Marcus spends two weeks researching a midsize SUV — safety ratings, fuel economy, resale value. He arrives prepared. The window sticker reads thirty-four thousand nine hundred. Marcus has a target: thirty thousand flat. The salesman opens at sticker, then drops to thirty-three five — a concession that feels like a gift. Marcus counters thirty-one. They settle at thirty-two two. Marcus drives home believing he beat the dealer by twenty-seven hundred dollars. But the negotiation never started at zero. It started at thirty-four nine. Every counteroffer orbited the sticker. Industry data shows buyers who see a high MSRP anchor negotiate in a narrower band above true invoice cost. Marcus did not buy a car. He adjusted from a number the manufacturer printed to create exactly this feeling of victory.",
+          "visual_prompt": "Bright car dealership showroom with SUV under spotlights, window sticker on glass with blurred numerals, buyer and salesman shaking hands with asymmetric body language, no readable prices",
+          "broll_prompt": "Finger tapping on a window sticker, then signing a purchase document with pen, shallow focus",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "narrative drive",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene2",
+          "narration": "The salary offer. Priya interviews for a senior product role at a tech company. Twelve years of experience. Market research in her notebook suggests a fair range between ninety-five and one hundred ten thousand for her city and level. The hiring manager opens at eighty-two thousand plus a ten percent bonus target. Priya feels a flash of insult — then relief when they move to eighty-eight. She counters at ninety-four. They close at ninety-one. Priya accepts, grateful for the climb. But the anchor was eighty-two, not her research. Studies on salary negotiation show first offers predict final outcomes more strongly than candidate qualifications. The company saved nineteen thousand dollars against her ceiling while Priya felt she won. The number on the table was never an estimate of value. It was a floor disguised as an offer.",
+          "visual_prompt": "Modern glass conference room with two figures across a table, offer folder between them, city skyline through windows, professional cool lighting, documents face-down or blurred",
+          "broll_prompt": "Handshake over a table, then solo shot of candidate at home closing a laptop with a small satisfied exhale",
+          "duration_seconds": 45,
+          "emotion": "revelation",
+          "narration_tone": "sharp clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene3",
+          "narration": "The real estate listing. David and Elena tour a suburban colonial. Comparable sales in the neighborhood — the comps agents are supposed to use — cluster around three hundred eighty to four hundred thousand. The listing price is four hundred twenty-five. The agent says the sellers are motivated but priced for the market. David and Elena offer four hundred, five percent below ask. The sellers counter at four eighteen. They settle at four oh eight. They feel they stole the house. Ariely and other researchers find that even professional agents appraise homes closer to arbitrary list prices than to objective comp data when anchors are manipulated in experiments. The four twenty-five listing was not prophecy. It was a lighthouse placed above the reef — every ship adjusts course toward the light.",
+          "visual_prompt": "Suburban colonial home exterior with for-sale sign post where sign face is turned away from camera, couple walking up driveway with agent, golden afternoon light, no readable signage",
+          "broll_prompt": "Miniature house models on a table arranged in a row with one elevated on a small platform, metaphorical staging",
+          "duration_seconds": 45,
+          "emotion": "tension",
+          "narration_tone": "accelerating dread",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act2_scene4",
+          "narration": "Place the three stories side by side. Marcus saved twenty-seven hundred from a sticker. Priya gained nine thousand from an opening offer. David and Elena saved seventeen thousand from a list price. Different scales — thirty-two thousand, ninety-one thousand, four hundred eight thousand — identical psychology. In each case the buyer believed they negotiated hard. In each case the seller chose the first number. Tversky and Kahneman showed the anchor can be random. The car lot, the HR department, and the listing agent show it can be strategic. Arbitrary coherence becomes engineered coherence. And your confidence after the deal is part of the trap — the feeling of victory prevents you from asking what you would have paid if you had never heard their number first.",
+          "visual_prompt": "Three parallel columns of light on a dark desk — car key, offer letter envelope, house keys — each under the same angled spotlight, unified composition, premium editorial, no text",
+          "broll_prompt": "Split-screen dissolve between three signing moments — car paperwork, employment contract, real estate closing folder",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "frustrated momentum",
+          "sfx_cues": []
+        }
+      ]
+    },
+    {
+      "act_number": 3,
+      "act_title": "Breaking the Anchor",
+      "scenes": [
+        {
+          "scene_id": "act3_scene1",
+          "narration": "Kahneman's research suggests defense is harder than awareness. Once an anchor is in memory, suppressing it takes cognitive effort most negotiations do not allow. But three practices measurably help. First, generate your anchor before you hear theirs — write your number on paper before the salesman speaks, before the offer letter arrives, before the open house. Second, reject the frame explicitly. Ariely recommends asking whether the opening figure is based on comps, invoice, or budget — forcing the other side to justify breaks the spell of arbitrary coherence. Third, use bracketing with independent data: invoice cost from a third-party site, salary bands from verified surveys, sold-home comps from county records. You are not trying to forget their number. You are building a second number that competes for authority.",
+          "visual_prompt": "Clean home desk with handwritten note showing a blank line for target price, laptop open to blurred data table, calculator, disciplined pre-negotiation ritual lighting",
+          "broll_prompt": "Hand writing a number on paper before opening an envelope, deliberate slow motion",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "measured clarity",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene2",
+          "narration": "Watch for the concessions trap — the second anchor. The dealer drops from thirty-four nine to thirty-three five. HR moves from eighty-two to eighty-eight. The seller counters from four twenty-five to four eighteen. Each concession feels like progress. Behavioral economists call this the contrast effect stacking onto anchoring: a bad deal beside a worse deal looks generous. Marcus, Priya, and David and Elena all received concessions. None received independent pricing. The dealer's second number is still an anchor. The revised offer is still a frame. The counteroffer is designed to make you stop adjusting exactly where they want.",
+          "visual_prompt": "Chess board mid-game with a single piece moved forward, opponent's hand retreating slightly — metaphor for negotiated concession, dramatic side lighting, no readable notation",
+          "broll_prompt": "Price tag being crossed out and replaced with another tag, both tags blurred, retail metaphor",
+          "duration_seconds": 40,
+          "emotion": "tension",
+          "narration_tone": "analytical calm",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene3",
+          "narration": "The deeper lesson from Tversky and Kahneman is not that you are gullible. It is that adjustment is insufficient by design. The mind treats anchoring as a shortcut — a way to estimate under uncertainty. That shortcut was useful on savannas where guessing fast mattered more than guessing precisely. In modern markets, the shortcut is harvested. Every suggested tip percentage, every was price, every premium tier on a pricing page is an anchor tested for conversion. Dan Ariely's auction experiments and Kahneman's wheel of fortune differ in setting but not in structure: a number arrives, your brain complies, your confidence follows. The first number is never neutral. It is always a claim on your judgment.",
+          "visual_prompt": "Payment terminal screen showing a suggested tip option row with blurred percentages, customer's finger hovering, everyday anchoring in the wild, cool retail lighting, no legible UI",
+          "broll_prompt": "Shopping website with three pricing tiers where middle tier is highlighted, screen glow on face, no readable prices",
+          "duration_seconds": 40,
+          "emotion": "revelation",
+          "narration_tone": "quiet foreboding",
+          "sfx_cues": []
+        },
+        {
+          "scene_id": "act3_scene4",
+          "narration": "Marcus still loves his SUV. Priya still enjoys the job. David and Elena still raise their kids in the colonial. Anchoring does not mean every deal is a loss. It means the outcome was shaped by a number you did not choose. Thirty-four nine hundred. Eighty-two thousand. Four twenty-five. Three anchors, three lives, one mechanism operating at every price point in every transaction you will ever have. Tversky and Kahneman named it in nineteen seventy-four. Ariely proved you cannot willpower your way past it. The defense is procedural: decide your number first, bring independent comps, and recognize that the opening figure is not information — it is strategy. Whoever speaks first does not just open the negotiation. They anchor your mind.",
+          "visual_prompt": "Return to triptych — same car lot, conference room, and house — now with buyer figures standing taller, holding their own written notes, warmer confident lighting, documentary closure, no text",
+          "broll_prompt": "Spinning wheel slowing to stop, cut to three different hands each placing their own written note on a table before any handshake",
+          "duration_seconds": 45,
+          "emotion": "resolve",
+          "narration_tone": "reflective closure",
+          "sfx_cues": []
+        }
+      ]
+    }
+  ],
+  "outro": {
+    "scene_id": "outro",
+    "text": "Your brain does not begin at zero. It begins at the first number someone else puts in the room. Tversky and Kahneman proved it with a wheel of fortune. Car dealers, hiring managers, and listing agents practice it every day. Subscribe to Wired Broke for weekly documentaries on the biases that shape every dollar you spend, earn, and negotiate. Before your next big number — write yours down first.",
+    "visual_prompt": "Single spinning wheel fragment beside a blank notecard and pen on a dark walnut desk, soft green rim light, premium editorial closing frame, no readable text",
+    "duration_seconds": 30,
+    "emotion": "resolve",
+    "narration_tone": "warm closure",
+    "sfx_cues": []
+  }
+}
