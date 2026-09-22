@@ -23,7 +23,7 @@ AI-powered pipeline for generating complete faceless YouTube videos. Ships with 
 ## Setup
 
 ```bash
-cd /Volumes/Fun/youtube-factory
+cd /Volumes/more_work/youtube-factory
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

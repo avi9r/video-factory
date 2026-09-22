@@ -184,12 +184,36 @@ def validate_script(script: dict) -> tuple[bool, list[str]]:
         vp = hook.get("visual_prompt", "")
         if _is_generic_visual(vp):
             errors.append("Hook visual_prompt is too generic — name concrete subjects from the topic")
+        hook_text = str(hook.get("text", ""))
+        from lib.script import find_cliches, hook_has_specificity_anchor
+
+        if hook_text and not hook_has_specificity_anchor(hook_text):
+            errors.append(
+                "Hook should open with a YEAR, dollar amount, or proper name in the first 8 words"
+            )
+        cliches = find_cliches(hook_text)
+        if cliches:
+            errors.append(f"Hook contains AI clichés: {', '.join(cliches[:3])}")
 
     for act in acts:
         for scene in act.get("scenes", []):
             sid = scene.get("scene_id", "?")
             if image_layout != "one_image" and _is_generic_visual(scene.get("visual_prompt", "")):
                 errors.append(f"Scene {sid} visual_prompt is too generic")
+            from lib.script import find_cliches
+
+            narr = str(scene.get("narration") or scene.get("text") or "")
+            cliches = find_cliches(narr)
+            if cliches:
+                errors.append(f"Scene {sid} contains AI clichés: {', '.join(cliches[:2])}")
+
+    # Soft structural checks (warnings as errors only when clearly broken)
+    open_loops = script.get("open_loops") or []
+    if open_loops and isinstance(outro, dict):
+        closes = outro.get("closes_loop_ids")
+        if closes is not None and isinstance(closes, list) and len(closes) == 0 and len(open_loops) > 0:
+            # Prefer Act 3 scene closes; only warn via soft note — don't hard-fail manual scripts
+            pass
 
     return len(errors) == 0, errors
 

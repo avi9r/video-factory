@@ -1,0 +1,89 @@
+# Copy to channels/shorts/{niche_id}.yaml — niche_id must match filename stem.
+# Add music to music/shorts/{niche_id}/bed.mp3 (optional; skipped if missing).
+# Restart API — profile appears under Short mode. No code changes required.
+
+name: Your Shorts Channel
+niche_id: your_shorts
+format: short
+aspect_ratio: "9:16"
+resolution: "1080x1920"
+channel_handle: "@YourShorts"
+channel_tagline: "One idea. One punch. One CTA."
+
+color_scheme:
+  background: "#0B1020"
+  primary: "#F59E0B"
+  secondary: "#D97706"
+  text: "#FFFFFF"
+  accent: "#FBBF24"
+
+voice:
+  # Prefer slower speeds (0.74–0.82) — Kokoro sounds less robotic when not rushed
+  default: british_male_george
+  speed: 0.78
+  pause_sec: 0.48
+  breath_sec: 0.26
+  unit_gap_sec: 0.16
+
+music:
+  bed: bed
+  volume: 0.12
+
+style_lock:
+  color_grade: cinematic_dark
+  lighting: high contrast vertical frame, subject centered
+  mood: urgent, addictive, scroll-stopping
+  composition: vertical 9:16, face or object fills frame, rule of thirds
+  forbidden: text, words, letters, watermarks, logos, signs, writing
+  always_include: cinematic depth of field, premium quality, no readable branding
+
+script:
+  auto_humanize: true
+  script_polish: true
+  cta_text: "Follow for more"
+  hook_patterns: [date_dollar, paradox, single_fact]
+  system_prompt: |
+    You write viral YouTube Shorts / Reels narration for a faceless channel.
+    One idea only. Punchy spoken lines. Zero fluff. No "hey guys".
+    Open with a concrete fact, dollar amount, date, or paradox in the first 2 seconds.
+    End with a sharp CTA that fits the channel.
+  writing_rules:
+    - "First sentence must include a YEAR, $, percent, or proper name"
+    - "Never use: Let's dive in, buckle up, game-changer, mind-blowing, here's the thing"
+    - "Short sentences. Spoken rhythm. One revelation per beat"
+    - "No listicles — one story thread only"
+  humanization_rules:
+    - "Add [pause] before the reveal"
+    - "Insert [breath] every 3-4 sentences"
+  emotion_palette: [curiosity, tension, shock, revelation, resolve]
+
+image:
+  reuse_default: true
+  width: 1080
+  height: 1920
+  prompt_prefix: |
+    Ultra realistic vertical 9:16 cinematic frame. Subject fills the frame.
+    Dramatic lighting. No text, logos, or readable signage.
+
+video:
+  resolution: "1080x1920"
+  fps: 30
+  format: mp4
+  max_visual_segment_seconds: 4
+
+captions:
+  enabled: true
+  font_name: Arial
+  font_size: 64
+  primary_color: "#FFFFFF"
+  outline_color: "#000000"
+  outline: 4
+  margin_v: 220
+  max_chars_per_line: 28
+  shadow: 2
+  position: lower_third
+
+hashtags:
+  - "#Shorts"
+  - "#Reels"
+  - "#viral"

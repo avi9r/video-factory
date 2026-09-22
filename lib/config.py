@@ -13,7 +13,11 @@ MUSIC_BASE = Path(os.getenv("MUSIC_BASE", PROJECT_ROOT / "music"))
 SFX_BASE = Path(os.getenv("SFX_BASE", PROJECT_ROOT / "sfx"))
 LUT_BASE = Path(os.getenv("LUT_BASE", PROJECT_ROOT / "luts"))
 CHANNELS_BASE = Path(os.getenv("CHANNELS_BASE", PROJECT_ROOT / "channels"))
+SHORTS_CHANNELS_BASE = Path(
+    os.getenv("SHORTS_CHANNELS_BASE", PROJECT_ROOT / "channels" / "shorts")
+)
 CONTENT_JSON_BASE = Path(os.getenv("CONTENT_JSON_BASE", PROJECT_ROOT / "content_json"))
+SHORT_DURATIONS = (30, 60, 90, 120)
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 HF_API_KEY = os.getenv("HF_API_KEY", "")

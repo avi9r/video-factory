@@ -1,0 +1,113 @@
+name: Business Insight
+niche_id: business_insight
+format: short
+aspect_ratio: "9:16"
+resolution: "1080x1920"
+channel_handle: "@BusinessInsight"
+channel_tagline: "Company charts. Yearly moves. The news that moved them."
+
+color_scheme:
+  background: "#070B14"
+  primary: "#38BDF8"
+  secondary: "#0EA5E9"
+  text: "#F8FAFC"
+  accent: "#FBBF24"
+
+voice:
+  # British documentary voice + slower speed reads less "AI"
+  default: british_male_george
+  speed: 0.76
+  pause_sec: 0.52
+  breath_sec: 0.28
+  unit_gap_sec: 0.18
+
+music:
+  bed: bed
+  volume: 0.09
+
+# Auto stock research — prompt = company name (or ticker). Chart replaces required upload.
+research:
+  type: stock_chart
+  years: 10
+  auto_chart: true
+  image_optional: true
+  chart_as_primary_visual: true
+
+style_lock:
+  color_grade: cinematic_dark
+  lighting: clean financial terminal aesthetic, dark navy background
+  mood: analytical, urgent, authoritative
+  composition: vertical 9:16 chart-forward, data clarity
+  forbidden: fake logos as brand marks when avoidable
+  always_include: premium financial documentary look
+
+script:
+  auto_humanize: true
+  script_polish: true
+  cta_text: "Follow for the next company chart breakdown"
+  hook_patterns: [date_dollar, paradox, single_fact]
+  system_prompt: |
+    You write addictive Business Insight Shorts — spoken like a premium finance documentary,
+    NOT like a robot reading a report.
+
+    STORY SHAPE (mandatory):
+    1) Cold open on ONE shocking chart fact (year + % move) in the first breath.
+    2) Name the human cause (product flop, CEO decision, crisis, regulation, hype cycle).
+    3) Escalate to a second swing that flips the viewer's assumption.
+    4) Land one sharp takeaway + soft CTA.
+
+    SPOKEN STYLE (mandatory — this will be read aloud by TTS):
+    - Write for the EAR: short sentences. Fragments ok. Contractions speech ("it's", "didn't", "wasn't").
+    - Max ~18 words per sentence. Mix 5-word punches with 12-word explainers.
+    - Never stack clauses with semicolons. Prefer periods and [pause].
+    - Say years and percents in words in narration when natural, or keep digits — TTS will speakify.
+    - Sound like a calm analyst telling a friend a wild stock story over coffee.
+    - NO corporate filler: "robust", "landscape", "leverage synergies", "in today's market".
+    - NO buy/sell advice. No "I". No "hey guys". No listicle tone.
+
+    If a research pack is present, those prices/years are ground truth — do not invent numbers.
+  writing_rules:
+    - "Hook must open on a concrete YEAR + percent move from the research pack in the first sentence"
+    - "Every body beat = one chart swing + the real-world event that caused it"
+    - "End each beat on tension or a question — except the final takeaway"
+    - "Use at least two [pause] markers and one [breath] in the full short"
+    - "Prefer vivid verbs: cratered, ripped higher, got crushed, quietly compounded"
+    - "Avoid AI clichés: game-changer, mind-blowing, let's dive in, buckle up, here's the thing, in today's world"
+  humanization_rules:
+    - "Add [pause] before major year reveals"
+    - "Add [pause] before percent shocks"
+    - "Insert [breath] every 3 sentences"
+    - "Keep [slow] before the final takeaway line"
+  emotion_palette: [curiosity, tension, shock, revelation, resolve]
+
+image:
+  reuse_default: true
+  width: 1080
+  height: 1920
+  prompt_prefix: |
+    Vertical 9:16 dark financial chart scene. Clean data visualization aesthetic.
+    No watermarks. Premium terminal look.
+
+video:
+  resolution: "1080x1920"
+  fps: 30
+  format: mp4
+  max_visual_segment_seconds: 4
+
+captions:
+  enabled: true
+  font_name: Arial
+  font_size: 62
+  primary_color: "#F8FAFC"
+  outline_color: "#020617"
+  outline: 4
+  margin_v: 220
+  max_chars_per_line: 28
+  shadow: 2
+  position: lower_third
+
+hashtags:
+  - "#Shorts"
+  - "#Stocks"
+  - "#Business"
+  - "#Investing"

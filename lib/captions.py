@@ -129,6 +129,8 @@ def caption_style(channel_config: dict) -> dict:
         "margin_v": int(cfg.get("margin_v", 72)),
         "max_chars_per_line": int(cfg.get("max_chars_per_line", 42)),
         "shadow": int(cfg.get("shadow", 1)),
+        "play_res_x": int(cfg.get("play_res_x", 1920)),
+        "play_res_y": int(cfg.get("play_res_y", 1080)),
     }
 
 
@@ -188,15 +190,18 @@ def write_ass_file(cues: list[CaptionCue], output_path: Path, style: dict) -> st
     outline_w = style.get("outline", 3)
     shadow = style.get("shadow", 1)
     max_chars = style.get("max_chars_per_line", 42)
+    play_x = int(style.get("play_res_x", 1920))
+    play_y = int(style.get("play_res_y", 1080))
+    margin_lr = 48 if play_y > play_x else 80
 
     header = f"""[Script Info]
 ScriptType: v4.00+
-PlayResX: 1920
-PlayResY: 1080
+PlayResX: {play_x}
+PlayResY: {play_y}
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,{font},{size},{primary},&H000000FF,{outline},&H64000000,-1,0,0,0,100,100,0,0,1,{outline_w},{shadow},2,80,80,{margin_v},1
+Style: Default,{font},{size},{primary},&H000000FF,{outline},&H64000000,-1,0,0,0,100,100,0,0,1,{outline_w},{shadow},2,{margin_lr},{margin_lr},{margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

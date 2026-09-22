@@ -33,7 +33,46 @@ def find_job_dir(job_id: str) -> Path | None:
         candidate = niche_dir / job_id
         if (candidate / "status.json").exists():
             return candidate
+        # Shorts nest: output/shorts/{niche}/{job_id}
+        if niche_dir.name == "shorts":
+            for short_niche in niche_dir.iterdir():
+                if not short_niche.is_dir():
+                    continue
+                candidate = short_niche / job_id
+                if (candidate / "status.json").exists():
+                    return candidate
     return None
+
+
+def short_job_dir(niche_id: str, job_id: str) -> Path:
+    return OUTPUT_BASE / "shorts" / niche_id / job_id
+
+
+def create_short_job(job_id: str, niche_id: str, topic: str, audio_mode: str = "ai") -> dict:
+    job_dir = short_job_dir(niche_id, job_id)
+    job_dir.mkdir(parents=True, exist_ok=True)
+    job = {
+        "job_id": job_id,
+        "niche_id": niche_id,
+        "topic": topic,
+        "topic_key": normalize_topic(topic),
+        "audio_mode": audio_mode,
+        "job_kind": "short",
+        "created_at": _now(),
+        "updated_at": _now(),
+        "overall_status": "created",
+        "steps": {
+            "script": {"status": "pending"},
+            "visuals": {"status": "pending"},
+            "audio": {"status": "pending"},
+            "assembly": {"status": "pending"},
+            "complete": {"status": "pending"},
+        },
+    }
+    path = job_dir / "status.json"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(job, f, indent=2)
+    return job
 
 
 def _status_path(niche_id: str, job_id: str) -> Path:
@@ -143,7 +182,12 @@ def update_job(
 ) -> None:
     job_dir = find_job_dir(job_id)
     if job_dir is None and niche_id:
-        job_dir = _job_dir(niche_id, job_id)
+        # Prefer short path if it exists (shorts live under output/shorts/)
+        short_dir = short_job_dir(niche_id, job_id)
+        if (short_dir / "status.json").exists():
+            job_dir = short_dir
+        else:
+            job_dir = _job_dir(niche_id, job_id)
     if job_dir is None or not (job_dir / "status.json").exists():
         raise FileNotFoundError(f"Job not found: {job_id}")
 
@@ -181,10 +225,10 @@ def list_jobs(niche_id: str | None = None, dedupe_topics: bool = False) -> list[
     jobs = []
     if not OUTPUT_BASE.exists():
         return jobs
-    search_dirs = [OUTPUT_BASE / niche_id] if niche_id else OUTPUT_BASE.iterdir()
-    for niche_dir in search_dirs:
+
+    def _collect_from_niche_dir(niche_dir: Path) -> None:
         if not niche_dir.is_dir():
-            continue
+            return
         for job_dir in niche_dir.iterdir():
             status_file = job_dir / "status.json"
             if status_file.exists():
@@ -193,6 +237,20 @@ def list_jobs(niche_id: str | None = None, dedupe_topics: bool = False) -> list[
                 if "topic_key" not in job and job.get("topic"):
                     job["topic_key"] = normalize_topic(job["topic"])
                 jobs.append(job)
+
+    if niche_id:
+        _collect_from_niche_dir(OUTPUT_BASE / niche_id)
+        _collect_from_niche_dir(OUTPUT_BASE / "shorts" / niche_id)
+    else:
+        for niche_dir in OUTPUT_BASE.iterdir():
+            if not niche_dir.is_dir():
+                continue
+            if niche_dir.name == "shorts":
+                for short_niche in niche_dir.iterdir():
+                    _collect_from_niche_dir(short_niche)
+            else:
+                _collect_from_niche_dir(niche_dir)
+
     jobs.sort(key=lambda j: j.get("updated_at", ""), reverse=True)
 
     if not dedupe_topics:

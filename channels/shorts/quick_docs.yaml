@@ -1,0 +1,98 @@
+name: Quick Docs
+niche_id: quick_docs
+format: short
+aspect_ratio: "9:16"
+resolution: "1080x1920"
+channel_handle: "@QuickDocs"
+channel_tagline: "60-second documentaries that hit."
+
+color_scheme:
+  background: "#0B1020"
+  primary: "#10B981"
+  secondary: "#059669"
+  text: "#FFFFFF"
+  accent: "#34D399"
+
+voice:
+  # Slower + British documentary = less "AI rush"
+  default: british_male_george
+  speed: 0.78
+  pause_sec: 0.50
+  breath_sec: 0.28
+  unit_gap_sec: 0.16
+
+music:
+  bed: bed
+  volume: 0.11
+
+style_lock:
+  color_grade: cinematic_dark
+  lighting: cinematic dramatic lighting, vertical portrait framing
+  mood: investigative, urgent, addictive
+  composition: vertical 9:16, editorial, subject-forward
+  forbidden: text, words, letters, watermarks, logos, signs, writing
+  always_include: cinematic depth of field, premium quality, no readable branding
+
+script:
+  auto_humanize: true
+  script_polish: true
+  cta_text: "Follow for more 60-second docs"
+  hook_patterns: [date_dollar, paradox, single_fact]
+  system_prompt: |
+    You write viral documentary Shorts for a faceless YouTube channel.
+    Write for the EAR — spoken aloud by TTS, not a blog post.
+
+    STORY SHAPE:
+    1) Cold open on a concrete crisis / dollar / year in the first breath.
+    2) One twist that flips the viewer's assumption.
+    3) Land the punch + soft CTA.
+
+    SPOKEN STYLE (mandatory):
+    - Short sentences. Fragments ok. Contractions speech ("it's", "didn't").
+    - Max ~16 words per sentence. Mix 5-word punches with 12-word explainers.
+    - Sound like a calm documentary narrator telling a wild true story.
+    - No "I". No "hey guys". No listicle tone.
+    - NO AI filler: game-changer, mind-blowing, let's dive in, buckle up, here's the thing.
+  writing_rules:
+    - "Open on a specific crisis moment, paradox, or dollar figure — not a generic question"
+    - "First 8 words must include a YEAR, $, or proper name"
+    - "Every beat advances ONE story thread"
+    - "Use at least two [pause] markers and one [breath] in the full short"
+    - "Avoid AI clichés: game-changer, mind-blowing, let's dive in, buckle up, here's the thing"
+  humanization_rules:
+    - "Add [pause] before major reveals"
+    - "Add [pause] before dollar or percent shocks"
+    - "Insert [breath] every 3 sentences"
+    - "Keep [slow] before the final CTA line"
+  emotion_palette: [curiosity, tension, shock, revelation, resolve]
+
+image:
+  reuse_default: true
+  width: 1080
+  height: 1920
+  prompt_prefix: |
+    Ultra realistic vertical 9:16 cinematic documentary frame.
+    Dramatic lighting. Minimal composition. No text or logos.
+
+video:
+  resolution: "1080x1920"
+  fps: 30
+  format: mp4
+  max_visual_segment_seconds: 4
+
+captions:
+  enabled: true
+  font_name: Arial
+  font_size: 66
+  primary_color: "#FFFFFF"
+  outline_color: "#000000"
+  outline: 4
+  margin_v: 240
+  max_chars_per_line: 26
+  shadow: 2
+  position: lower_third
+
+hashtags:
+  - "#Shorts"
+  - "#Documentary"
+  - "#Business"

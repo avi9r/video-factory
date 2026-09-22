@@ -42,9 +42,9 @@ def _ease_expr(frames: int) -> str:
     return f"({t})*({t})*(3-2*({t}))"
 
 
-def _zoompan_filter(effect: str, frames: int, fps: int) -> str:
+def _zoompan_filter(effect: str, frames: int, fps: int, output_size: str = OUTPUT_SIZE) -> str:
     ease = _ease_expr(frames)
-    base = f"d={frames}:s={OUTPUT_SIZE}:fps={fps}"
+    base = f"d={frames}:s={output_size}:fps={fps}"
     z_delta = MAX_ZOOM
     z_pan = PAN_ZOOM
 
@@ -218,6 +218,7 @@ def ken_burns(
     duration_seconds: float,
     effect: str = "zoom_in",
     fps: int = 30,
+    output_size: str = OUTPUT_SIZE,
 ) -> str:
     if effect not in EFFECTS:
         raise ValueError(f"Unknown effect: {effect}. Must be one of {EFFECTS}")
@@ -227,8 +228,11 @@ def ken_burns(
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
 
-    zoompan = _zoompan_filter(effect, frames, fps)
-    vf = f"{UPSCALE_FILTER},{zoompan},format=yuv420p"
+    # Vertical: upscale on height; landscape: upscale on width
+    w, h = (int(x) for x in output_size.split("x"))
+    upscale = "scale=-2:4000:flags=lanczos" if h > w else UPSCALE_FILTER
+    zoompan = _zoompan_filter(effect, frames, fps, output_size=output_size)
+    vf = f"{upscale},{zoompan},format=yuv420p"
 
     _log(f"ken_burns {effect} ({duration_seconds:.1f}s, {frames}f) -> {out.name}")
     _run_ffmpeg([

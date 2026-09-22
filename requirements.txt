@@ -16,4 +16,6 @@ fal-client
 huggingface_hub
 aiofiles
 websockets
-python-multipart
+yfinance
+matplotlib
+pandas

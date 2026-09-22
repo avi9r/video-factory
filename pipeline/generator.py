@@ -1297,6 +1297,67 @@ async def regenerate_stage(
     )
 
 
+def change_long_voice(
+    job_id: str,
+    niche_id: str | None = None,
+    *,
+    voice: str | None = None,
+    speed: float | None = None,
+) -> dict:
+    """Re-TTS + reassemble a long video with a new voice (keeps script + images)."""
+    job_dir = find_job_dir(job_id)
+    if job_dir is None:
+        raise ValueError(f"Job not found: {job_id}")
+
+    status = get_job_status(job_id)
+    niche_id = niche_id or status.get("niche_id")
+    if not niche_id:
+        raise ValueError(f"niche_id required for job {job_id}")
+
+    channel = load_channel(niche_id)
+    voice_cfg = channel.get("voice") or {}
+    if not voice:
+        voice = voice_cfg.get("default")
+    if speed is None:
+        speed = float(voice_cfg.get("speed", 0.85))
+    else:
+        speed = float(speed)
+
+    script_data = dict((status.get("steps", {}).get("script", {}) or {}).get("data") or {})
+    script_data["voice"] = voice
+    script_data["speed"] = speed
+    update_job(job_id, "script", status.get("steps", {}).get("script", {}).get("status", "approved"), script_data, niche_id=niche_id)
+
+    reset_job_from_step(job_id, "audio", niche_id=niche_id)
+    _clear_artifacts(job_dir, "audio")
+
+    script_path = job_dir / "script_approved.json"
+    if not script_path.exists():
+        script_path = job_dir / "script.json"
+    if not script_path.exists():
+        raise ValueError("No script found — generate the video first")
+    with open(script_path, encoding="utf-8") as f:
+        script = json.load(f)
+    if not (job_dir / "script_approved.json").exists():
+        save_json(job_dir / "script_approved.json", script)
+
+    audio_mode = status.get("audio_mode", "ai")
+    if audio_mode == "human":
+        raise ValueError("Voice change only works for AI / hybrid voiceover jobs")
+
+    result = continue_after_approval(
+        job_id, niche_id, script, audio_mode, voice, speed, from_step="audio"
+    )
+    _log(f"[{job_id}] voice changed -> {voice} @ {speed}")
+    return {
+        "job_id": job_id,
+        "voice": voice,
+        "speed": speed,
+        "final_video": f"/output/{niche_id}/{job_id}/final_video.mp4",
+        "result": result,
+    }
+
+
 def remove_job(job_id: str) -> None:
     """Delete a job and all its artifacts."""
     delete_job(job_id)

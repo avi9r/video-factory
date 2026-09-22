@@ -208,6 +208,20 @@
     }
     .copy-row { display: flex; gap: 0.5rem; margin-top: 0.35rem; }
     .copy-row button { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+    .voice-change-panel {
+      margin-top: 1.25rem; padding: 1rem; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--surface);
+    }
+    .voice-change-panel h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.75rem; }
+    .voice-change-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+    .voice-change-row label { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .voice-change-row select, .voice-change-row input[type="range"] {
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      padding: 0.45rem 0.65rem; border-radius: 8px; font-size: 0.85rem; min-width: 180px;
+    }
+    .voice-change-row input[type="range"] { min-width: 140px; padding: 0; }
+    .voice-change-panel .hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.65rem; }
+    .voice-change-panel #voiceChangeMsg { font-size: 0.8rem; color: var(--primary); margin-top: 0.5rem; min-height: 1.2em; }
     .thumb-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin-top: 1rem; }
     .thumb-row img { max-width: 240px; border-radius: 8px; border: 1px solid var(--border); }
 
@@ -236,6 +250,23 @@
     .overview-card h4 { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.35rem; }
     .overview-card p { font-size: 0.85rem; font-weight: 600; }
 
+    .mode-toggle {
+      display: inline-flex; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.2rem; margin-bottom: 1rem; gap: 0.15rem;
+    }
+    .mode-toggle button {
+      background: transparent; color: var(--muted); border: none;
+      padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.8rem;
+    }
+    .mode-toggle button.active { background: var(--primary); color: #000; }
+    .check-row {
+      display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.85rem;
+      font-size: 0.85rem; color: var(--text);
+    }
+    .check-row input { width: auto; margin: 0; }
+    .asset-card.vertical img, .asset-card.vertical video { aspect-ratio: 9/16; max-height: 420px; margin: 0 auto; }
+    .output-hero.vertical video { max-width: 320px; margin: 0 auto; aspect-ratio: 9/16; max-height: 560px; }
+
     @media (max-width: 768px) {
       .shell { flex-direction: column; }
       .sidebar { width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
@@ -263,6 +294,7 @@
       <aside class="sidebar">
         <div class="sidebar-head">
           <button type="button" onclick="showNewVideo()">+ New Video</button>
+          <button type="button" class="secondary" onclick="showNewVideo('short')">+ New Short</button>
         </div>
         <div class="jobs-scroll" id="jobsList"></div>
       </aside>
@@ -271,6 +303,12 @@
         <!-- New video panel (default) -->
         <div class="panel" id="newVideoPanel">
           <div class="form-card">
+            <div class="mode-toggle" role="tablist">
+              <button type="button" class="active" id="modeLongBtn" onclick="setCreateMode('long')">Long video</button>
+              <button type="button" id="modeShortBtn" onclick="setCreateMode('short')">Short</button>
+            </div>
+
+            <div id="longForm">
             <h2>Create a new video</h2>
             <p class="hint">Configure script, images, and audio — then track progress in the job list.</p>
 
@@ -355,6 +393,75 @@
               <button id="generateBtn" onclick="startGeneration()">Generate Video</button>
               <button id="manualScriptBtn" class="secondary" style="display:none" onclick="openManualScript()">Open Script Editor</button>
             </div>
+            </div>
+
+            <div id="shortForm" style="display:none">
+            <h2>Create a Short / Reel</h2>
+            <p class="hint" id="shortHint">Vertical 9:16 · 30s–2min · YAML short profile for permanent context.</p>
+
+            <label id="shortPromptLabel">Prompt / context</label>
+            <textarea id="shortPrompt" rows="3" placeholder="e.g. Kodak invented the digital camera in 1975 — then buried it"></textarea>
+
+            <div id="shortImageBlock">
+            <label id="shortImageLabel">Image (required)</label>
+            <input type="file" id="shortImage" accept="image/jpeg,image/png,image/webp">
+
+            <label class="check-row">
+              <input type="checkbox" id="shortReuseImage" checked>
+              Reuse this image in the video (Ken Burns). Uncheck to use it as style context and generate extra B-roll.
+            </label>
+            </div>
+            <p id="shortResearchNote" class="hint" style="display:none;margin-bottom:0.85rem">
+              Business Insight auto-builds a year-wise stock chart from the company name — image upload is optional.
+            </p>
+
+            <div class="row">
+              <div>
+                <label>Duration</label>
+                <select id="shortDuration">
+                  <option value="30">30 sec</option>
+                  <option value="60" selected>1 min</option>
+                  <option value="90">1.5 min</option>
+                  <option value="120">2 min</option>
+                </select>
+              </div>
+              <div>
+                <label>Hook style</label>
+                <select id="shortHookStyle">
+                  <option value="">Auto (from YAML)</option>
+                  <option value="date_dollar">Date / dollar</option>
+                  <option value="paradox">Paradox</option>
+                  <option value="single_fact">Single fact</option>
+                  <option value="story">Mini story</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Voice</label>
+                <select id="shortVoice"></select>
+              </div>
+              <div>
+                <label>Speed: <span id="shortSpeedVal">0.78</span></label>
+                <input type="range" id="shortSpeed" min="0.5" max="1.2" step="0.05" value="0.78" style="margin-bottom:0">
+              </div>
+            </div>
+
+            <label class="check-row">
+              <input type="checkbox" id="shortAutoApprove" checked>
+              Auto-approve script (faster). Uncheck to review before assembly.
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="shortQuietMusic">
+              Quiet music (VO only)
+            </label>
+
+            <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button id="generateShortBtn" onclick="startShortGeneration()">Generate Short</button>
+            </div>
+            </div>
+
             <p class="error-msg" id="errorMsg"></p>
           </div>
         </div>
@@ -398,6 +505,7 @@
   <script>
     const API = '';
     const STEP_NAMES = ['script', 'images', 'thumbnail', 'audio', 'assembly', 'complete'];
+    const SHORT_STEP_NAMES = ['script', 'visuals', 'audio', 'assembly', 'complete'];
     const REGEN_STAGES = [
       { id: 'script', label: 'Script' },
       { id: 'images', label: 'Images' },
@@ -411,66 +519,165 @@
     let pollInterval = null;
     let jobStatusCache = null;
     let scriptDataCache = null;
+    let createMode = 'long';
+    let longChannelsCache = [];
+    let shortChannelsCache = [];
 
     const TOPIC_PLACEHOLDERS = {
       finance: 'e.g. Why millionaires still feel broke',
       business: 'e.g. How Costco broke every retail rule',
+      quick_docs: 'e.g. Kodak buried the first digital camera',
     };
     const CHANNEL_DEFAULT_STYLE = { finance: 'cartoon', business: 'realistic' };
 
-    const CHANNEL_HANDLES = { business: '@CorporateArc', finance: '@WiredBroke' };
+    const CHANNEL_HANDLES = { business: '@CorporateArc', finance: '@WiredBroke', quick_docs: '@QuickDocs' };
+
+    function populateChannelSelect(channels) {
+      const sel = document.getElementById('channel');
+      sel.innerHTML = '';
+      channels.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.niche_id;
+        opt.textContent = c.name;
+        opt.dataset.handle = CHANNEL_HANDLES[c.niche_id] || c.channel_handle || '';
+        sel.appendChild(opt);
+      });
+      updateChannelHandle();
+    }
+
+    function updateChannelHandle() {
+      const sel = document.getElementById('channel');
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('channelHandle').textContent = opt?.dataset.handle || '';
+    }
+
+    async function setCreateMode(mode) {
+      createMode = mode === 'short' ? 'short' : 'long';
+      document.getElementById('modeLongBtn').classList.toggle('active', createMode === 'long');
+      document.getElementById('modeShortBtn').classList.toggle('active', createMode === 'short');
+      document.getElementById('longForm').style.display = createMode === 'long' ? 'block' : 'none';
+      document.getElementById('shortForm').style.display = createMode === 'short' ? 'block' : 'none';
+      if (createMode === 'short') {
+        if (!shortChannelsCache.length) {
+          const data = await fetch(`${API}/channels/shorts/list`).then(r => r.json());
+          shortChannelsCache = data.channels || [];
+        }
+        populateChannelSelect(shortChannelsCache);
+        updateShortChannelUI();
+      } else {
+        populateChannelSelect(longChannelsCache);
+      }
+      loadJobs();
+    }
+
+    function currentShortChannelMeta() {
+      const id = document.getElementById('channel').value;
+      return shortChannelsCache.find(c => c.niche_id === id) || {};
+    }
+
+    function applyShortChannelVoice() {
+      const meta = currentShortChannelMeta();
+      const voiceCfg = meta.voice || {};
+      const voiceSel = document.getElementById('shortVoice');
+      const speedEl = document.getElementById('shortSpeed');
+      if (voiceCfg.default && [...voiceSel.options].some(o => o.value === voiceCfg.default)) {
+        voiceSel.value = voiceCfg.default;
+      }
+      if (voiceCfg.speed != null) {
+        const s = Number(voiceCfg.speed).toFixed(2);
+        speedEl.value = s;
+        document.getElementById('shortSpeedVal').textContent = s;
+      }
+    }
+
+    function updateShortChannelUI() {
+      if (createMode !== 'short') return;
+      const meta = currentShortChannelMeta();
+      const optional = !!meta.image_optional;
+      const isStock = meta.research_type === 'stock_chart';
+      document.getElementById('shortPromptLabel').textContent = isStock
+        ? 'Company name (or ticker)'
+        : 'Prompt / context';
+      document.getElementById('shortPrompt').placeholder = meta.prompt_placeholder
+        || (isStock ? 'e.g. NVIDIA or Apple' : 'e.g. Kodak buried the first digital camera');
+      document.getElementById('shortImageLabel').textContent = optional
+        ? 'Image (optional — chart auto-generated)'
+        : 'Image (required)';
+      document.getElementById('shortResearchNote').style.display = isStock ? 'block' : 'none';
+      document.getElementById('shortHint').textContent = isStock
+        ? 'Business Insight · enter a company · year-wise chart + news/event narration · 9:16'
+        : 'Vertical 9:16 · 30s–2min · YAML short profile for permanent context.';
+      document.getElementById('channelHandle').textContent = meta.channel_handle || '';
+      applyShortChannelVoice();
+    }
 
     // —— Init ——
     async function init() {
       const channels = await fetch(`${API}/channels/list`).then(r => r.json());
+      longChannelsCache = channels.channels || [];
+      populateChannelSelect(longChannelsCache);
       const sel = document.getElementById('channel');
-      channels.channels.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.niche_id;
-        opt.textContent = c.name;
-        opt.dataset.handle = CHANNEL_HANDLES[c.niche_id] || '';
-        sel.appendChild(opt);
+      sel.addEventListener('change', () => {
+        updateChannelHandle();
+        if (createMode === 'long') { applyChannelStyleDefault(); updateTopicPlaceholder(); }
+        if (createMode === 'short') updateShortChannelUI();
+        loadJobs();
       });
-      function updateChannelHandle() {
-        const opt = sel.options[sel.selectedIndex];
-        document.getElementById('channelHandle').textContent = opt?.dataset.handle || '';
-      }
-      sel.addEventListener('change', () => { updateChannelHandle(); applyChannelStyleDefault(); updateTopicPlaceholder(); loadJobs(); });
       updateChannelHandle();
 
       const voices = await fetch(`${API}/audio/voices`).then(r => r.json());
-      const vsel = document.getElementById('voice');
-      voices.voices.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = v;
-        opt.textContent = v.replace(/_/g, ' ');
-        vsel.appendChild(opt);
+      const voiceSel = document.getElementById('voice');
+      const shortVoiceSel = document.getElementById('shortVoice');
+      (voices.voices || Object.keys(voices)).forEach?.(v => {});
+      const voiceList = Array.isArray(voices.voices) ? voices.voices
+        : (voices.voices ? Object.keys(voices.voices) : Object.keys(voices));
+      // Prefer API shape { voices: [{id,name}] } or {voices: {key: id}}
+      let keys = [];
+      if (Array.isArray(voices.voices)) {
+        keys = voices.voices.map(v => (typeof v === 'string' ? v : v.id || v.key)).filter(Boolean);
+      } else if (voices.voices && typeof voices.voices === 'object') {
+        keys = Object.keys(voices.voices);
+      } else if (Array.isArray(voices)) {
+        keys = voices;
+      }
+      if (!keys.length) keys = ['male_deep', 'british_male_george', 'female_warm'];
+      keys.forEach(k => {
+        const o1 = document.createElement('option');
+        o1.value = k; o1.textContent = k;
+        voiceSel.appendChild(o1);
+        const o2 = document.createElement('option');
+        o2.value = k; o2.textContent = k;
+        shortVoiceSel.appendChild(o2);
       });
-
+      const savedVoice = localStorage.getItem('ytf_voice');
+      if (savedVoice) {
+        voiceSel.value = savedVoice;
+        shortVoiceSel.value = savedVoice;
+      }
       const savedSpeed = localStorage.getItem('ytf_speed');
       if (savedSpeed) {
         document.getElementById('speed').value = savedSpeed;
         document.getElementById('speedVal').textContent = savedSpeed;
       }
-      const savedVoice = localStorage.getItem('ytf_voice');
-      if (savedVoice) vsel.value = savedVoice;
-
-      document.getElementById('speed').oninput = e => {
+      document.getElementById('speed').addEventListener('input', e => {
         document.getElementById('speedVal').textContent = e.target.value;
-        localStorage.setItem('ytf_speed', e.target.value);
-      };
-      vsel.addEventListener('change', () => localStorage.setItem('ytf_voice', vsel.value));
+      });
+      document.getElementById('shortSpeed').addEventListener('input', e => {
+        document.getElementById('shortSpeedVal').textContent = e.target.value;
+      });
+
+      applyChannelStyleDefault();
+      updateTopicPlaceholder();
+      onScriptModeChange();
       document.getElementById('audioMode').addEventListener('change', toggleVoiceSection);
       toggleVoiceSection();
-      loadModePrefs();
-      updateTopicPlaceholder();
       await loadJobs();
-
       const params = new URLSearchParams(location.search);
+      if (params.get('mode') === 'short') await setCreateMode('short');
       if (params.get('job_id')) selectJob(params.get('job_id'));
     }
 
-    function showNewVideo() {
+    function showNewVideo(mode) {
       selectedJobId = null;
       jobStatusCache = null;
       history.replaceState(null, '', location.pathname);
@@ -478,6 +685,9 @@
       document.getElementById('newVideoPanel').style.display = 'block';
       document.getElementById('jobPanel').style.display = 'none';
       document.querySelectorAll('.job-item').forEach(el => el.classList.remove('active'));
+      if (mode === 'short') setCreateMode('short');
+      if (mode === 'short') setCreateMode('short');
+      else if (mode === 'long') setCreateMode('long');
     }
 
     // —— Sidebar jobs ——
@@ -569,7 +779,9 @@
       // Pipeline
       const pipe = document.getElementById('pipeline');
       pipe.innerHTML = '';
-      STEP_NAMES.forEach(name => {
+      const isShort = status.job_kind === 'short' || !!status.steps?.visuals;
+      const steps = isShort ? SHORT_STEP_NAMES : STEP_NAMES;
+      steps.forEach(name => {
         const step = status.steps?.[name] || { status: 'pending' };
         const el = document.createElement('div');
         el.className = 'pipe-step';
@@ -584,7 +796,11 @@
       const actions = document.getElementById('wsActions');
       let html = '';
       if (status.steps?.script?.status === 'pending_review') {
-        html += `<button onclick="location.href='/ui/review.html?job_id=${status.job_id}'">Review Script</button>`;
+        if (isShort) {
+          html += `<button onclick="approveShortNow('${status.job_id}', '${status.niche_id}')">Approve Short Script</button>`;
+        } else {
+          html += `<button onclick="location.href='/ui/review.html?job_id=${status.job_id}'">Review Script</button>`;
+        }
       }
       if (status.steps?.images?.status === 'pending_upload') {
         const url = status.steps.images.data?.assets_url || `/ui/assets.html?job_id=${status.job_id}`;
@@ -671,39 +887,69 @@
     function renderOverviewTab(panel) {
       const s = jobStatusCache;
       if (!s) { panel.innerHTML = '<p class="empty-tab">No data</p>'; return; }
+      const isShort = s.job_kind === 'short' || !!s.steps?.visuals;
+      const stages = isShort
+        ? [
+            { id: 'script', label: 'Script' },
+            { id: 'visuals', label: 'Visuals' },
+            { id: 'audio', label: 'Audio' },
+            { id: 'assembly', label: 'Assembly' },
+          ]
+        : REGEN_STAGES;
       let html = '<div class="overview-grid">';
-      REGEN_STAGES.forEach(st => {
+      stages.forEach(st => {
         const step = s.steps?.[st.id] || { status: 'pending' };
         const icon = step.status === 'complete' || step.status === 'approved' ? '✓'
           : step.status === 'error' ? '✗' : step.status === 'running' ? '…' : '○';
-        html += `<div class="overview-card" onclick="switchTab('${st.id === 'assembly' ? 'output' : st.id}')">
+        const tab = (st.id === 'assembly' || st.id === 'visuals') ? (st.id === 'assembly' ? 'output' : 'images') : st.id;
+        html += `<div class="overview-card" onclick="switchTab('${tab}')">
           <h4>${st.label}</h4><p>${icon} ${step.status}</p></div>`;
       });
       html += '</div>';
-      html += '<div style="margin-top:1.25rem"><h4 style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem">REGENERATE STAGE</h4><div style="display:flex;gap:0.5rem;flex-wrap:wrap">';
-      REGEN_STAGES.forEach(st => {
-        html += `<button class="ghost" onclick="regenerateStage('${selectedJobId}','${st.id}')">${st.label}</button>`;
-      });
-      html += '</div></div>';
+      if (!isShort) {
+        html += '<div style="margin-top:1.25rem"><h4 style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem">REGENERATE STAGE</h4><div style="display:flex;gap:0.5rem;flex-wrap:wrap">';
+        REGEN_STAGES.forEach(st => {
+          html += `<button class="ghost" onclick="regenerateStage('${selectedJobId}','${st.id}')">${st.label}</button>`;
+        });
+        html += '</div></div>';
+      }
       panel.innerHTML = html;
     }
 
     async function renderOutputTab(panel) {
       const s = jobStatusCache;
-      if (!s || s.overall_status !== 'complete') {
+      if (!s) {
+        panel.innerHTML = '<p class="empty-tab">Select a job to see output.</p>';
+        return;
+      }
+      if (s.overall_status === 'generating' || s.steps?.audio?.status === 'running' || s.steps?.assembly?.status === 'running') {
+        const voiceHint = s.steps?.audio?.data?.voice || s.steps?.script?.data?.voice || '';
+        panel.innerHTML = `<p class="empty-tab">Rebuilding video${voiceHint ? ` with <strong>${escapeHtml(voiceHint)}</strong>` : ''}…<br><span style="font-size:0.8rem">Audio + assembly in progress. This tab refreshes when done.</span></p>`;
+        return;
+      }
+      if (s.overall_status !== 'complete') {
         panel.innerHTML = '<p class="empty-tab">Final video will appear here when the job completes.<br><span style="font-size:0.8rem">Select this tab after generation finishes.</span></p>';
         return;
       }
 
-      const outputPath = s.steps?.complete?.data?.output_path || s.steps?.assembly?.data?.output_path;
+      const isShort = s.job_kind === 'short' || !!s.steps?.visuals;
+      const outputPath = s.steps?.complete?.data?.final_video
+        || s.steps?.complete?.data?.output_path
+        || s.steps?.assembly?.data?.final_video
+        || s.steps?.assembly?.data?.output_path;
       const thumbPath = s.steps?.thumbnail?.data?.thumbnail_path;
       const nicheId = s.niche_id;
       const jobId = s.job_id;
 
       let videoUrl = '';
-      if (outputPath) {
-        const rel = outputPath.split('/output/').pop() || `${nicheId}/${jobId}/final_video.mp4`;
+      if (typeof outputPath === 'string' && outputPath.startsWith('/output/')) {
+        videoUrl = outputPath;
+      } else if (outputPath) {
+        const rel = String(outputPath).split('/output/').pop()
+          || (isShort ? `shorts/${nicheId}/${jobId}/final_short.mp4` : `${nicheId}/${jobId}/final_video.mp4`);
         videoUrl = `/output/${rel}`;
+      } else if (isShort) {
+        videoUrl = `/output/shorts/${nicheId}/${jobId}/final_short.mp4`;
       }
 
       let title = '', desc = '', tags = '';
@@ -720,9 +966,25 @@
         thumbHtml = `<div class="thumb-row"><img src="/output/${rel}" alt="Thumbnail"><a href="/output/${rel}" download><button class="secondary">Download Thumbnail</button></a></div>`;
       }
 
+      const currentVoice = s.steps?.script?.data?.voice
+        || s.steps?.audio?.data?.voice
+        || s.steps?.complete?.data?.voice
+        || '';
+      const currentSpeed = s.steps?.script?.data?.speed
+        ?? s.steps?.audio?.data?.speed
+        ?? s.steps?.complete?.data?.speed
+        ?? (isShort ? 0.78 : 0.85);
+
+      const voiceOpts = Array.from(document.getElementById('voice')?.options || [])
+        .map(o => o.value)
+        .filter(Boolean);
+      const voiceSelectHtml = voiceOpts.length
+        ? voiceOpts.map(v => `<option value="${v}"${v === currentVoice ? ' selected' : ''}>${v}</option>`).join('')
+        : '<option value="british_male_george">british_male_george</option>';
+
       panel.innerHTML = `
-        <div class="output-hero">
-          ${videoUrl ? `<video id="heroVideo" controls preload="metadata" src="${videoUrl}"></video>` : '<p class="empty-tab">Video file not found</p>'}
+        <div class="output-hero${isShort ? ' vertical' : ''}">
+          ${videoUrl ? `<video id="heroVideo" controls preload="metadata" src="${videoUrl}?t=${Date.now()}"></video>` : '<p class="empty-tab">Video file not found</p>'}
         </div>
         <div class="output-meta">
           <h3>Publish metadata</h3>
@@ -741,9 +1003,63 @@
             <textarea id="tagsOut" rows="2" readonly>${escapeHtml(tags)}</textarea>
             <div class="copy-row"><button class="secondary" onclick="copyField('tagsOut')">Copy</button></div>
           </div>
-          ${videoUrl ? `<a href="${videoUrl}" download><button style="margin-top:0.5rem">Download Video</button></a>` : ''}
+          ${videoUrl ? `<a href="${videoUrl}" download><button style="margin-top:0.5rem">Download ${isShort ? 'Short' : 'Video'}</button></a>` : ''}
+          ${isShort ? `<a href="/output/shorts/${nicheId}/${jobId}/captions.srt" download style="margin-left:0.5rem"><button class="secondary" style="margin-top:0.5rem">Download Captions</button></a>` : ''}
           ${thumbHtml}
+
+          <div class="voice-change-panel">
+            <h3>Change voice</h3>
+            <div class="voice-change-row">
+              <div>
+                <label>Voice</label>
+                <select id="changeVoiceSelect">${voiceSelectHtml}</select>
+              </div>
+              <div>
+                <label>Speed: <span id="changeSpeedVal">${Number(currentSpeed).toFixed(2)}</span></label>
+                <input type="range" id="changeSpeed" min="0.5" max="1.2" step="0.05" value="${Number(currentSpeed).toFixed(2)}">
+              </div>
+              <button id="changeVoiceBtn" onclick="changeJobVoice('${jobId}', '${nicheId}')">Apply new voice</button>
+            </div>
+            <p class="hint">Keeps the same script and images. Only regenerates voiceover and rebuilds the final video.</p>
+            <div id="voiceChangeMsg"></div>
+          </div>
         </div>`;
+      document.getElementById('changeSpeed')?.addEventListener('input', e => {
+        document.getElementById('changeSpeedVal').textContent = e.target.value;
+      });
+    }
+
+    async function changeJobVoice(jobId, nicheId) {
+      const btn = document.getElementById('changeVoiceBtn');
+      const msg = document.getElementById('voiceChangeMsg');
+      const voice = document.getElementById('changeVoiceSelect')?.value;
+      const speed = parseFloat(document.getElementById('changeSpeed')?.value || '0.8');
+      if (!voice) return;
+      if (btn) btn.disabled = true;
+      if (msg) msg.textContent = 'Changing voice… this usually takes 1–3 minutes.';
+      try {
+        const res = await fetch(`${API}/audio/change-voice`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job_id: jobId, niche_id: nicheId, voice, speed }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Voice change failed');
+        if (msg) msg.textContent = `Started with ${voice} @ ${speed}. Watching progress…`;
+        // Background task may not have flipped status yet — force poll loop
+        jobStatusCache = await fetch(`${API}/status/${jobId}`).then(r => r.json());
+        if (jobStatusCache.overall_status === 'complete') {
+          jobStatusCache.overall_status = 'generating';
+          jobStatusCache.steps = jobStatusCache.steps || {};
+          jobStatusCache.steps.audio = { ...(jobStatusCache.steps.audio || {}), status: 'running', data: { voice, speed } };
+        }
+        renderWorkspace(jobStatusCache);
+        if (activeTab === 'output') loadTabContent('output');
+        startPollingIfNeeded();
+      } catch (e) {
+        if (msg) msg.textContent = e.message || String(e);
+        if (btn) btn.disabled = false;
+      }
     }
 
     function renderScriptTab(data, jobId) {
@@ -911,6 +1227,57 @@
         }
       } catch (e) { showError(e.message); }
       finally { document.getElementById('generateBtn').disabled = false; }
+    }
+
+    async function startShortGeneration() {
+      const prompt = document.getElementById('shortPrompt').value.trim();
+      const fileInput = document.getElementById('shortImage');
+      const meta = currentShortChannelMeta();
+      const imageOptional = !!meta.image_optional;
+      if (!prompt) {
+        showError(meta.research_type === 'stock_chart' ? 'Enter a company name or ticker' : 'Enter a prompt');
+        return;
+      }
+      if (!imageOptional && (!fileInput.files || !fileInput.files[0])) {
+        showError('Image is required for Shorts');
+        return;
+      }
+      document.getElementById('generateShortBtn').disabled = true;
+      document.getElementById('errorMsg').textContent = '';
+      try {
+        const fd = new FormData();
+        fd.append('prompt', prompt);
+        fd.append('niche_id', document.getElementById('channel').value);
+        fd.append('duration_seconds', document.getElementById('shortDuration').value);
+        fd.append('voice', document.getElementById('shortVoice').value);
+        fd.append('speed', document.getElementById('shortSpeed').value);
+        fd.append('reuse_image', document.getElementById('shortReuseImage').checked ? 'true' : 'false');
+        fd.append('auto_approve', document.getElementById('shortAutoApprove').checked ? 'true' : 'false');
+        fd.append('quiet_music', document.getElementById('shortQuietMusic').checked ? 'true' : 'false');
+        const hook = document.getElementById('shortHookStyle').value;
+        if (hook) fd.append('hook_style', hook);
+        if (fileInput.files && fileInput.files[0]) fd.append('image', fileInput.files[0]);
+
+        const res = await fetch(`${API}/generate/short`, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail) || 'Short failed');
+        localStorage.setItem('ytf_voice', document.getElementById('shortVoice').value);
+        await loadJobs();
+        selectJob(data.job_id);
+      } catch (e) { showError(e.message); }
+      finally { document.getElementById('generateShortBtn').disabled = false; }
+    }
+
+    async function approveShortNow(jobId, nicheId) {
+      try {
+        const res = await fetch(`${API}/generate/short/approve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job_id: jobId, niche_id: nicheId }),
+        });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Approve failed');
+        selectJob(jobId);
+      } catch (e) { alert(e.message); }
     }
 
     async function regenerateStage(jobId, stage) {
